@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -68,16 +69,12 @@ public class QualityReportService {
 
     private Integer getIntSafely(DocumentContext jsonContext, String metricKey) {
         List<String> result = jsonContext.read("$['component']['measures'][?(@.metric == '" + metricKey + "')]['value']");
-        if (null == result || result.isEmpty())
-            return null;
-        return Integer.parseInt(result.get(0));
+        return ObjectUtils.isEmpty(result)? null : Integer.parseInt(result.get(0));
     }
 
     private Float getFloatSafely(DocumentContext jsonContext, String metricKey) {
         List<String> result = jsonContext.read("$['component']['measures'][?(@.metric == '" + metricKey + "')]['value']");
-        if (null == result || result.isEmpty())
-            return null;
-        return Float.parseFloat(result.get(0));
+        return ObjectUtils.isEmpty(result)? null : Float.parseFloat(result.get(0));
     }
 
 
