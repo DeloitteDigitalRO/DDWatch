@@ -2,8 +2,10 @@ package com.deloitte.ddwatch.dtos;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class QualityReportDTO {
+public class QualityReportDTO implements Serializable {
     String name;
     String key;
 

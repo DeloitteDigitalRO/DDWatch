@@ -1,5 +1,6 @@
 package com.deloitte.ddwatch.configurations;
 
+import com.deloitte.ddwatch.mockunit.ProjectMock;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -19,5 +20,10 @@ public class ApplicationConfig {
     @Scope("prototype")
     public ModelMapper modelMapper() {
         return new ModelMapper();
+    }
+
+    @Bean
+    public ProjectMock projectMock() {
+        return new ProjectMock();
     }
 }

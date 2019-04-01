@@ -35,7 +35,7 @@ public class ProjectMock implements MockUnit<Project> {
         return filler(() -> new Project())
                 .setter(Project::setName, from(PROJECT_NAMES))
                 .setter(Project::setDeliveryLead, names().full())
-                .setter(Project::setDeliveryLead, emails())
+                .setter(Project::setDeliveryLeadEmail, emails())
                 .setter(Project::setDescription, markovs().loremIpsum())
                 .setter(Project::setDeliveryStatus, from(ProjectStatus.class))
                 .setter(Project::setQualityStatus, from(ProjectStatus.class))
@@ -49,6 +49,7 @@ public class ProjectMock implements MockUnit<Project> {
         ProjectMock pm = new ProjectMock();
 
         Project p = pm.get();
+
 
         List<Project> plist = pm.list(10).get();
 

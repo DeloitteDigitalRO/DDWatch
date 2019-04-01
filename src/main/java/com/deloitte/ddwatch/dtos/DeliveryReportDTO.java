@@ -1,4 +1,6 @@
 package com.deloitte.ddwatch.dtos;
 
-public class DeliveryReportDTO {
+import java.io.Serializable;
+
+public class DeliveryReportDTO implements Serializable {
 }

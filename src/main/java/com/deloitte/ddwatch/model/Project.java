@@ -26,10 +26,10 @@ public class Project {
     ProjectStatus deliveryStatus;
     ProjectStatus qualityStatus;
 
-    Set<QualityReport> qualityReports;
+//    Set<QualityReport> qualityReports;
     LocalDateTime lastQualityReport;
 
-    Set<DeliveryReport> deliveryReports;
+//    Set<DeliveryReport> deliveryReports;
     LocalDateTime lastDeliveryReport;
 
     String sonarQubeUrl;
