@@ -1,6 +1,7 @@
 package com.deloitte.ddwatch.model;
 
 import lombok.Data;
+import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -9,6 +10,8 @@ import java.util.Set;
 @Data
 public class Project {
 
+    @Id
+    String id;
     String name;
     List<String> tags;
 
