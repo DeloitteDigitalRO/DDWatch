@@ -78,6 +78,12 @@
 			<version>0.1.0</version>
 		</dependency>
 
+        <dependency>
+            <groupId>net.andreinc.mockneat</groupId>
+            <artifactId>mockneat</artifactId>
+            <version>0.3.6</version>
+        </dependency>
+
 	</dependencies>
 
 	<build>
