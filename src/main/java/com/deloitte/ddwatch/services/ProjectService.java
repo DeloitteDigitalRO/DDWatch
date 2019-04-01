@@ -22,7 +22,7 @@ public class ProjectService {
         return project;
     }
 
-    public Project readById(String id) {
+    public Project readById(Long id) {
         Optional<Project> project = projectRepository.findById(id);
         if (project.isPresent()) {
             throw new RuntimeException("No such project found");
@@ -31,7 +31,7 @@ public class ProjectService {
     }
 
     public List<Project> getAll() {
-
+        init();
         List<Project> projects = projectRepository.findAll();
         return projects;
     }

@@ -18,7 +18,7 @@ public class Project {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    String id;
+    Long id;
     String name;
 //    List<String> tags;
 
@@ -29,10 +29,12 @@ public class Project {
     ProjectStatus deliveryStatus;
     ProjectStatus qualityStatus;
 
-//    Set<QualityReport> qualityReports;
+    @OneToMany(mappedBy = "project")
+    Set<QualityReport> qualityReports;
     LocalDateTime lastQualityReport;
 
-//    Set<DeliveryReport> deliveryReports;
+    @OneToMany(mappedBy = "project")
+    Set<DeliveryReport> deliveryReports;
     LocalDateTime lastDeliveryReport;
 
     String sonarQubeUrl;
