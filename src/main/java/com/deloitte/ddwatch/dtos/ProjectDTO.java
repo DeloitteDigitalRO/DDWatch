@@ -13,7 +13,7 @@ import java.util.Set;
 public class ProjectDTO implements Serializable {
     String id;
     String name;
-    List<String> tags;
+//    List<String> tags;
 
     String description;
     String deliveryLead;

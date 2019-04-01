@@ -38,7 +38,7 @@ public class ProjectMock implements MockUnit<Project> {
                 .setter(Project::setQualityStatus, from(ProjectStatus.class))
                 .setter(Project::setLastQualityReport, thisMonth)
                 .setter(Project::setLastDeliveryReport, thisMonth)
-                .setter(Project::setTags, words().nouns().list(10))
+//                .setter(Project::setTags, words().nouns().list(10))
                 .supplier();
     }
 
