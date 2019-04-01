@@ -1,13 +1,17 @@
 package com.deloitte.ddwatch.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
+import static net.andreinc.mockneat.unit.objects.Filler.filler;
+
 @Data
+@NoArgsConstructor
 public class Project {
 
     @Id
