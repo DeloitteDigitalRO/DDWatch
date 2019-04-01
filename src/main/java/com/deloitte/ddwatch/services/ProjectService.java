@@ -24,7 +24,7 @@ public class ProjectService {
 
     public Project readById(String id) {
         Optional<Project> project = projectRepository.findById(id);
-        if (project.isEmpty()) {
+        if (project.isPresent()) {
             throw new RuntimeException("No such project found");
         }
         return project.get();
