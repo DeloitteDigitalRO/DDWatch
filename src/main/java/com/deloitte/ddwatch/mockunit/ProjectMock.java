@@ -2,13 +2,13 @@ package com.deloitte.ddwatch.mockunit;
 
 import com.deloitte.ddwatch.model.Project;
 import com.deloitte.ddwatch.model.ProjectStatus;
-import jdk.nashorn.internal.ir.PropertyKey;
 import net.andreinc.mockneat.abstraction.MockUnit;
 import net.andreinc.mockneat.abstraction.MockUnitLocalDate;
 import net.andreinc.mockneat.unit.objects.Froms;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.function.Supplier;
 
 import static net.andreinc.mockneat.unit.objects.Filler.filler;
@@ -29,7 +29,7 @@ public class ProjectMock implements MockUnit<Project> {
 
         MockUnit<LocalDateTime> thisMonth = localDates()
                                             .thisMonth()
-                                            .map(v -> LocalDateTime.of(v, LocalTime.of(0,0))
+                                            .map(v -> LocalDateTime.of(v, LocalTime.of(0,0)));
 
 
         return filler(() -> new Project())
@@ -45,4 +45,13 @@ public class ProjectMock implements MockUnit<Project> {
                 .supplier();
     }
 
+    public static void main(String[] args) {
+        ProjectMock pm = new ProjectMock();
+
+        Project p = pm.get();
+
+        List<Project> plist = pm.list(10).get();
+
+        pm.map(tp -> { tp.setName("ABC"); return tp;}).list(10).consume(System.out::println);
+    }
 }
