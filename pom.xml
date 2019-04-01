@@ -87,12 +87,10 @@
 
 	<build>
 		<plugins>
-
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -100,60 +98,6 @@
 					<source>8</source>
 					<target>8</target>
 				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>io.fabric8</groupId>
-				<artifactId>docker-maven-plugin</artifactId>
-				<version>0.18.1</version>
-				<configuration>
-					<logDate>default</logDate>
-					<autoPull>true</autoPull>
-					<images>
-						<image>
-							<alias>db</alias>
-							<name>postgres:9</name>
-							<build>
-								<ports>
-									<port>5432</port>
-								</ports>
-								<dockerFileDir>${project.basedir}/docker</dockerFileDir>
-							</build>
-							<run>
-								<ports>
-									<port>5433:5432</port>
-								</ports>
-								<wait>
-									<log>database system is ready to accept connections</log>
-									<time>20000</time>
-									<kill>500</kill>
-									<shutdown>100</shutdown>
-								</wait>
-								<log>
-									<prefix>DB</prefix>
-									<color>yellow</color>
-								</log>
-							</run>
-						</image>
-					</images>
-				</configuration>
-				<executions>
-					<execution>
-						<id>start</id>
-						<phase>pre-integration-test</phase>
-						<goals>
-							<goal>build</goal>
-							<goal>start</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>stop</id>
-						<phase>post-integration-test</phase>
-						<goals>
-							<goal>stop</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>
