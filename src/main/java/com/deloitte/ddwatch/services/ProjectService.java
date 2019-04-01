@@ -1,9 +1,13 @@
 package com.deloitte.ddwatch.services;
 
+import com.deloitte.ddwatch.dtos.ProjectDTO;
 import com.deloitte.ddwatch.mockunit.ProjectMock;
 import com.deloitte.ddwatch.model.Project;
 import com.deloitte.ddwatch.model.QualityReport;
+import com.deloitte.ddwatch.model.Tag;
 import com.deloitte.ddwatch.repositories.ProjectRepository;
+import com.deloitte.ddwatch.repositories.TagRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -25,9 +29,20 @@ public class ProjectService {
     ProjectMock projectMock;
     @Autowired
     QualityReportService qualityReportService;
+    @Autowired
+    TagRepository tagRepository;
 
 
-    public Project create(Project project) {
+    public Project create(ProjectDTO projectDTO) {
+        ModelMapper modelMapper = new ModelMapper();
+
+        Project project = modelMapper.map(projectDTO, Project.class);
+
+        for(String tagName : projectDTO.getTagNames()) {
+            Tag tag = tagRepository.findByName(tagName);
+            project.addTag(tag);
+        }
+
         project = projectRepository.save(project);
         return project;
     }
@@ -62,15 +77,8 @@ public class ProjectService {
         String sonarBaseUrl = project.getSonarQubeUrl();
 
         QualityReport qualityReport = qualityReportService.refreshReport(sonarBaseUrl);
-
-        List<QualityReport> qualityReports = project.getQualityReports();
-        if (ObjectUtils.isEmpty(qualityReports)) {
-            qualityReports = new ArrayList<>();
-        }
         project.setLastQualityReport(qualityReport.getUpdateDate());
-        project.setQualityReports(qualityReports);
-        qualityReport.setProject(project);
-        qualityReports.add(qualityReport);
+        project.addQualityReport(qualityReport);
 
         return project;
     }

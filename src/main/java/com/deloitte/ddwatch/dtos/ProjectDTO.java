@@ -28,6 +28,8 @@ public class ProjectDTO implements Serializable {
 //    Set<DeliveryReportDTO> deliveryReports;
     LocalDateTime lastDeliveryReport;
 
+    List<String> tagNames;
+
     String sonarQubeUrl;
 
 

@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -14,7 +15,6 @@ import static net.andreinc.mockneat.unit.objects.Filler.filler;
 @NoArgsConstructor
 @Entity
 @Table(name = "Project")
-@Cacheable(false)
 public class Project {
 
     @Id
@@ -31,12 +31,33 @@ public class Project {
     ProjectStatus qualityStatus;
 
     @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    List<QualityReport> qualityReports;
+    List<QualityReport> qualityReports = new ArrayList<>();
     LocalDateTime lastQualityReport;
 
     @OneToMany(mappedBy = "project")
     List<DeliveryReport> deliveryReports;
     LocalDateTime lastDeliveryReport;
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "project_tag",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private List<Tag> tags = new ArrayList<>();
+
     String sonarQubeUrl;
+
+    public void addQualityReport(QualityReport qualityReport) {
+        qualityReports.add(qualityReport);
+        qualityReport.setProject(this);
+    }
+
+    public void addTag(Tag tag) {
+        tags.add(tag);
+        tag.getProjects().add(this);
+    }
+
+    public void removeTag(Tag tag) {
+        tags.remove(tag);
+        tag.getProjects().remove(this);
+    }
 }

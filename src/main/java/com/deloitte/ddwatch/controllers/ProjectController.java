@@ -25,11 +25,7 @@ public class ProjectController {
 
     @PostMapping
     public ResponseEntity<Long> create(@RequestBody ProjectDTO projectDTO) {
-        ModelMapper modelMapper = new ModelMapper();
-
-        Project project = modelMapper.map(projectDTO, Project.class);
-
-        project = projectService.create(project);
+        Project project = projectService.create(projectDTO);
         return new ResponseEntity<>(project.getId(), HttpStatus.CREATED);
     }
 
