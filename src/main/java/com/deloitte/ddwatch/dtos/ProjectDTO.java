@@ -22,7 +22,7 @@ public class ProjectDTO implements Serializable {
     String deliveryStatus;
     String qualityStatus;
 
-//    Set<QualityReportDTO> qualityReports;
+    List<QualityReportDTO> qualityReports;
     LocalDateTime lastQualityReport;
 
 //    Set<DeliveryReportDTO> deliveryReports;

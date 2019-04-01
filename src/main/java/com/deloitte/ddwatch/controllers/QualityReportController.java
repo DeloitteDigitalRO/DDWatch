@@ -19,14 +19,14 @@ public class QualityReportController {
     @Autowired
     QualityReportService qualityReportService;
 
-    @GetMapping
-    public ResponseEntity<List<QualityReportDTO> > getAllReports() {
-        List<QualityReportDTO> reports = qualityReportService.createDemoReport();
-        return new ResponseEntity<>(reports, HttpStatus.OK);
-    }
-
-    @GetMapping("/{componentKey}")
-    public ResponseEntity<QualityReportDTO> getReport(@PathVariable String componentKey) {
-        return new ResponseEntity<>(qualityReportService.createReport(componentKey), HttpStatus.OK);
-    }
+//    @GetMapping
+//    public ResponseEntity<List<QualityReportDTO> > getAllReports() {
+//        List<QualityReportDTO> reports = qualityReportService.createDemoReport();
+//        return new ResponseEntity<>(reports, HttpStatus.OK);
+//    }
+//
+//    @GetMapping("/{componentKey}")
+//    public ResponseEntity<QualityReportDTO> getReport(@PathVariable String componentKey) {
+//        return new ResponseEntity<>(qualityReportService.createReport(componentKey), HttpStatus.OK);
+//    }
 }

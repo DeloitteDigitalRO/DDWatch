@@ -1,16 +1,14 @@
 package com.deloitte.ddwatch.controllers;
 
 import com.deloitte.ddwatch.dtos.ProjectDTO;
+import com.deloitte.ddwatch.model.Project;
 import com.deloitte.ddwatch.services.ProjectService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,9 +24,13 @@ public class ProjectController {
 
 
     @PostMapping
-    public ResponseEntity<String> create(@RequestBody ProjectDTO projectDTO) {
+    public ResponseEntity<Long> create(@RequestBody ProjectDTO projectDTO) {
+        ModelMapper modelMapper = new ModelMapper();
 
-        return null;
+        Project project = modelMapper.map(projectDTO, Project.class);
+
+        project = projectService.create(project);
+        return new ResponseEntity<>(project.getId(), HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -40,6 +42,23 @@ public class ProjectController {
                                         .map(p -> modelMapper.map(p, ProjectDTO.class))
                                         .collect(Collectors.toList());
         return new ResponseEntity(projectDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProjectDTO> getById(@PathVariable String id) {
+        ModelMapper modelMapper = new ModelMapper();
+
+        ProjectDTO projectDTO = modelMapper.map(projectService.readById(Long.parseLong(id)), ProjectDTO.class);
+        return new ResponseEntity<>(projectDTO, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/refreshReport")
+    public ResponseEntity<ProjectDTO> refreshReport(@PathVariable String id) {
+        ModelMapper modelMapper = new ModelMapper();
+
+        Project project = projectService.refreshReport(Long.parseLong(id));
+        ProjectDTO projectDTO = modelMapper.map(project, ProjectDTO.class);
+        return new ResponseEntity<>(projectDTO, HttpStatus.OK);
     }
 
 }

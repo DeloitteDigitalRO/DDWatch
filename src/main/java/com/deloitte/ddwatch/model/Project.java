@@ -14,6 +14,7 @@ import static net.andreinc.mockneat.unit.objects.Filler.filler;
 @NoArgsConstructor
 @Entity
 @Table(name = "Project")
+@Cacheable(false)
 public class Project {
 
     @Id
@@ -29,12 +30,12 @@ public class Project {
     ProjectStatus deliveryStatus;
     ProjectStatus qualityStatus;
 
-    @OneToMany(mappedBy = "project")
-    Set<QualityReport> qualityReports;
+    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    List<QualityReport> qualityReports;
     LocalDateTime lastQualityReport;
 
     @OneToMany(mappedBy = "project")
-    Set<DeliveryReport> deliveryReports;
+    List<DeliveryReport> deliveryReports;
     LocalDateTime lastDeliveryReport;
 
     String sonarQubeUrl;
