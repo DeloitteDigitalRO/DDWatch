@@ -2,10 +2,7 @@ package com.deloitte.ddwatch.mockunit;
 
 import com.deloitte.ddwatch.model.Project;
 import com.deloitte.ddwatch.model.ProjectStatus;
-import jdk.nashorn.internal.ir.PropertyKey;
 import net.andreinc.mockneat.abstraction.MockUnit;
-import net.andreinc.mockneat.abstraction.MockUnitLocalDate;
-import net.andreinc.mockneat.unit.objects.Froms;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -18,7 +15,6 @@ import static net.andreinc.mockneat.unit.text.Words.words;
 import static net.andreinc.mockneat.unit.time.LocalDates.localDates;
 import static net.andreinc.mockneat.unit.user.Emails.emails;
 import static net.andreinc.mockneat.unit.user.Names.names;
-import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.regex;
 
 public class ProjectMock implements MockUnit<Project> {
 
@@ -29,7 +25,7 @@ public class ProjectMock implements MockUnit<Project> {
 
         MockUnit<LocalDateTime> thisMonth = localDates()
                                             .thisMonth()
-                                            .map(v -> LocalDateTime.of(v, LocalTime.of(0,0))
+                                            .map(v -> LocalDateTime.of(v, LocalTime.of(0,0)));
 
 
         return filler(() -> new Project())
