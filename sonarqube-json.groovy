@@ -1,57 +1,59 @@
 #!/usr/bin/env groovy
-import java.util.logging.Logger
+import ch.qos.logback.classic.Level
+import com.jayway.jsonpath.JsonPath
 
-import java.util.zip.ZipOutputStream
-import java.util.zip.ZipEntry
+@Grab(group='ch.qos.logback', module='logback-classic', version='1.0.13')
+@Grab(group='com.jayway.jsonpath', module='json-path', version='2.4.0')
+
+import java.util.logging.Logger
+import groovy.json.JsonSlurper
 
 import static groovy.json.JsonOutput.prettyPrint as pretty
 import static groovy.json.JsonOutput.toJson as toJson
-import groovy.json.JsonSlurper
+
+
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Setup script logging
 // ---------------------------------------------------------------------------------------------------------------------
+
 log = Logger.getAnonymousLogger()
 System.setProperty("java.util.logging.SimpleFormatter.format", "[%1\$tF %1\$tT] [%4\$-7s] %5\$s %n")
-
+// A "hack" to disable logging for 'com.jayway.jsonpath'
+org.slf4j.LoggerFactory.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME).setLevel(Level.ERROR)
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Script Constants & Utils & Helper classes
-// ---------------------------------------------------------------------------------------------------------------------
-
+// ---------------------------------------------------------------------------------------------------------------------\
 def version = "v0.1"
 def propsFileName = "sonarqube-json.properties"
 def now = new Date().format("yyyyMMdd-HHMMss.SSS")
+def outputFileName = "sonarqube-export-${now}.json"
+def outputFile = new File(outputFileName)
+
 
 // Metrics related
+def parseInt = { String str -> Integer.parseInt(str) }
+def parseFloat = { String str -> Float.parseFloat(str) }
+
 def metricsQParams = [
-        "ncloc",
-        "complexity",
-        "coverage",
-        "cognitive_complexity",
-        "duplicated_blocks",
-        "duplicated_lines",
-        "duplicated_lines_density",
-        "violations",
-        "code_smells",
-        "bugs",
-        "vulnerabilities",
-        "branch_coverage",
-        "line_coverage"
+        "ncloc" : parseInt,
+         "complexity" : parseInt,
+         "coverage" : parseFloat,
+         "cognitive_complexity" : parseInt,
+         "duplicated_blocks" : parseInt,
+        "duplicated_lines" : parseInt,
+        "duplicated_lines_density" : parseFloat,
+        "violations" : parseInt,
+        "code_smells" : parseInt,
+        "bugs" : parseInt,
+        "vulnerabilities" : parseInt,
+        "branch_coverage" : parseFloat,
+        "line_coverage" : parseFloat
         // You can add here new metrics
 ]
-def metricsParam = metricsQParams.join(",")
-def metricsFileName = "metrics-${now}.json"
-def metricsFile = new File(metricsFileName)
-
-// Issues
-def issuesFileName = "issues-${now}.json"
-def issuesFile = new File(issuesFileName)
-
-// Zip Archive related
-def filesToZip = [ metricsFile, issuesFile ]
-def zipArchiveFileName = "sonarQube-${now}.zip"
-
+def metricsParam = (metricsQParams.keySet() as String[]).join(",")
+def metricsJPExpr = { p -> "\$['component']['measures'][?(@.metric == '${p}')]['value']" }
 
 // Get util method
 def GET(String url) {
@@ -99,37 +101,28 @@ log.info "\tcomponent.key=$compKey"
 log.info "Getting metrics."
 
 def metricsUrl = "${sonarUrl}/api/measures/component?componentKey=${compKey}&metricKeys=${metricsParam}"
-def metricsResponse = GET(metricsUrl)
+def metricsRaw = GET(metricsUrl)
 
-log.info "Response body: ${pretty(metricsResponse)}"
+def metricsJsonPath = JsonPath.parse(metricsRaw)
+def metrics = (metricsQParams.keySet() as String[]).collectEntries
+              { [it, (metricsQParams[it])(metricsJsonPath.read(metricsJPExpr(it))[0])] }
 
-// ---------------------------------------------------------------------------------------------------------------------
-// Writing metrics to file
-// ---------------------------------------------------------------------------------------------------------------------
-
-log.info "Writing metrics to temporary file: ${metricsFileName}."
-
-if (metricsFile.canWrite()) {
-    log.error "Cannot write to file location: ${metricsFileName}."
-    return -1
-}
-
-metricsFile.write(metricsResponse)
+log.info "Response body: ${metrics}"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // GET issues
 // ---------------------------------------------------------------------------------------------------------------------
 log.info "Getting issues."
 
-def issueUrlForTypeAndSeverity = { types, severities ->
+def issueUrlForTypeAndSeverity = { String types, String severities ->
     "${sonarUrl}/api/issues/search?componentKeys=${compKey}&types=${types}&severities=${severities}"
 }
 
-def issueUrlForType = { type ->
+def issueUrlForType = { String type ->
     return "${sonarUrl}/api/issues/search?componentKeys=${compKey}&types=${type}"
 }
 
-def totals = { url ->
+def totals = { String url ->
     def slurp = new JsonSlurper()
     return slurp.parseText(GET(url))["total"]
 }
@@ -171,55 +164,22 @@ def issues = [
 log.info "Aggregating issues into file."
 log.info "Issues report:"
 
-def issuesResponse = pretty(toJson(issues))
-
-log.info "${issuesResponse}"
+log.info "${issues}"
 
 // ---------------------------------------------------------------------------------------------------------------------
-// Writing metrics to file
+// Agreggating results
 // ---------------------------------------------------------------------------------------------------------------------
 
-log.info "Writing issues to temporary file: ${issuesFileName}."
+def aggr = pretty(toJson([
+        "metrics" : metrics,
+        "issues" : issues
+]))
 
-if (issuesFile.canWrite()) {
-    log.error "Cannot write to file location: ${issuesFileName}."
-    return -1
-}
+log.info "Writing files to ${outputFileName}."
 
-issuesFile.write(issuesResponse)
+outputFile.write(aggr)
 
-// ---------------------------------------------------------------------------------------------------------------------
-// Zipping files
-// ---------------------------------------------------------------------------------------------------------------------
+log.info "Files succesfuly written."
 
 
-log.info "Creating zip archive with the full report."
-
-ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipArchiveFileName))
-
-filesToZip.each {
-    file ->
-        zos.putNextEntry(new ZipEntry(file.name))
-        byte[] buffer = new byte[1024]
-        log.info "Adding ${file.name} to zip archive."
-        file.withInputStream { i ->
-            l = i.read(buffer)
-            if (l>0)
-                zos.write(buffer, 0, l)
-        }
-        zos.closeEntry()
-}
-zos.close()
-
-// ---------------------------------------------------------------------------------------------------------------------
-// Cleanup
-// ---------------------------------------------------------------------------------------------------------------------
-
-filesToZip.each {
-    file ->
-        log.info "Deleting temporary file: ${file.name}"
-        file.delete()
-}
-
-log.info "Success. Results were archived in: ${zipArchiveFileName}."
 
