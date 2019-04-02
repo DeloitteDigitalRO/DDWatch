@@ -1,14 +1,22 @@
 #!/usr/bin/env groovy
-
 import java.util.logging.Logger
 
 import java.util.zip.ZipOutputStream
 import java.util.zip.ZipEntry
 
 import static groovy.json.JsonOutput.prettyPrint as pretty
+import static groovy.json.JsonOutput.toJson as toJson
+import groovy.json.JsonSlurper
 
 // ---------------------------------------------------------------------------------------------------------------------
-// Script Constants & Utils
+// Setup script logging
+// ---------------------------------------------------------------------------------------------------------------------
+log = Logger.getAnonymousLogger()
+System.setProperty("java.util.logging.SimpleFormatter.format", "[%1\$tF %1\$tT] [%4\$-7s] %5\$s %n")
+
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Script Constants & Utils & Helper classes
 // ---------------------------------------------------------------------------------------------------------------------
 
 def version = "v0.1"
@@ -36,16 +44,32 @@ def metricsParam = metricsQParams.join(",")
 def metricsFileName = "metrics-${now}.json"
 def metricsFile = new File(metricsFileName)
 
+// Issues
+def issuesFileName = "issues-${now}.json"
+def issuesFile = new File(issuesFileName)
+
 // Zip Archive related
-def filesToZip = [ metricsFile ]
+def filesToZip = [ metricsFile, issuesFile ]
 def zipArchiveFileName = "sonarQube-${now}.zip"
 
-// ---------------------------------------------------------------------------------------------------------------------
-// Setup script logging
-// ---------------------------------------------------------------------------------------------------------------------
-def log = Logger.getAnonymousLogger()
-System.setProperty("java.util.logging.SimpleFormatter.format", "[%1\$tF %1\$tT] [%4\$-7s] %5\$s %n")
 
+// Get util method
+def GET(String url) {
+    log.info "GET Request: '${url}'"
+
+    def get = new URL(url).openConnection()
+    def rCode = get.getResponseCode()
+
+    log.info "Response code: '${rCode}'"
+
+    if (rCode!=200) {
+        log.error "Error calling the API. Please check if sonar.url=${sonarUrl} and the component.key=${compKey} " +
+                "are coorect and SonarQube is up and running and WEB APIs are enabled."
+        System.exit(-1)
+    }
+
+    return get.getInputStream().getText()
+}
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Read script properties file
@@ -72,25 +96,10 @@ log.info "\tcomponent.key=$compKey"
 // ---------------------------------------------------------------------------------------------------------------------
 // GET Metrics
 // ---------------------------------------------------------------------------------------------------------------------
+log.info "Getting metrics."
+
 def metricsUrl = "${sonarUrl}/api/measures/component?componentKey=${compKey}&metricKeys=${metricsParam}"
-
-log.info "GET Metrics Request: ${sonarUrl}api/measures/component?componentKey=${compKey}&metricKeys=..."
-metricsQParams.each {
-    log.info "\t ${it},"
-}
-
-def get = new URL(metricsUrl).openConnection()
-def responseCode = get.getResponseCode()
-
-log.info "Response code: ${responseCode}."
-
-if (responseCode!=200) {
-    log.error "Error calling the API. Please check if sonar.url=${sonarUrl} and the component.key=${compKey} " +
-            "are coorect and SonarQube is up and running and WEB APIs are enabled."
-    return -1
-}
-
-def metricsResponse = get.getInputStream().getText()
+def metricsResponse = GET(metricsUrl)
 
 log.info "Response body: ${pretty(metricsResponse)}"
 
@@ -107,9 +116,80 @@ if (metricsFile.canWrite()) {
 
 metricsFile.write(metricsResponse)
 
+// ---------------------------------------------------------------------------------------------------------------------
+// GET issues
+// ---------------------------------------------------------------------------------------------------------------------
+log.info "Getting issues."
+
+def issueUrlForTypeAndSeverity = { types, severities ->
+    "${sonarUrl}/api/issues/search?componentKeys=${compKey}&types=${types}&severities=${severities}"
+}
+
+def issueUrlForType = { type ->
+    return "${sonarUrl}/api/issues/search?componentKeys=${compKey}&types=${type}"
+}
+
+def totals = { url ->
+    def slurp = new JsonSlurper()
+    return slurp.parseText(GET(url))["total"]
+}
+
+
+def issues = [
+        "bugs" : [
+                "total" : totals(issueUrlForType("BUG")),
+                "severity" : [
+                        "info"          : totals(issueUrlForTypeAndSeverity("BUG", "INFO")),
+                        "minor"         : totals(issueUrlForTypeAndSeverity("BUG", "MINOR")),
+                        "major"         : totals(issueUrlForTypeAndSeverity("BUG", "MAJOR")),
+                        "critical"      : totals(issueUrlForTypeAndSeverity("BUG", "CRITICAL")),
+                        "blockers"      : totals(issueUrlForTypeAndSeverity("BUG", "BLOCKER"))
+                ]
+        ],
+        "codeSmells" : [
+                "total" : totals(issueUrlForType("CODE_SMELL")),
+                "severity" : [
+                        "info"          : totals(issueUrlForTypeAndSeverity("CODE_SMELL", "INFO")),
+                        "minor"         : totals(issueUrlForTypeAndSeverity("CODE_SMELL", "MINOR")),
+                        "major"         : totals(issueUrlForTypeAndSeverity("CODE_SMELL", "MAJOR")),
+                        "critical"      : totals(issueUrlForTypeAndSeverity("CODE_SMELL", "CRITICAL")),
+                        "blockers"      : totals(issueUrlForTypeAndSeverity("CODE_SMELL", "BLOCKER"))
+                ]
+        ],
+        "vulnerabilities" : [
+                "total" : totals(issueUrlForType("VULNERABILITY")),
+                "severity" : [
+                        "info"          : totals(issueUrlForTypeAndSeverity("VULNERABILITY", "INFO")),
+                        "minor"         : totals(issueUrlForTypeAndSeverity("VULNERABILITY", "MINOR")),
+                        "major"         : totals(issueUrlForTypeAndSeverity("VULNERABILITY", "MAJOR")),
+                        "critical"      : totals(issueUrlForTypeAndSeverity("VULNERABILITY", "CRITICAL")),
+                        "blockers"      : totals(issueUrlForTypeAndSeverity("VULNERABILITY", "BLOCKER"))
+                ]
+        ]
+]
+
+log.info "Aggregating issues into file."
+log.info "Issues report:"
+
+def issuesResponse = pretty(toJson(issues))
+
+log.info "${issuesResponse}"
 
 // ---------------------------------------------------------------------------------------------------------------------
-// Zipping file metrics to file
+// Writing metrics to file
+// ---------------------------------------------------------------------------------------------------------------------
+
+log.info "Writing issues to temporary file: ${issuesFileName}."
+
+if (issuesFile.canWrite()) {
+    log.error "Cannot write to file location: ${issuesFileName}."
+    return -1
+}
+
+issuesFile.write(issuesResponse)
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Zipping files
 // ---------------------------------------------------------------------------------------------------------------------
 
 
@@ -120,7 +200,7 @@ ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipArchiveFileNam
 filesToZip.each {
     file ->
         zos.putNextEntry(new ZipEntry(file.name))
-        def buffer = new byte[1024]
+        byte[] buffer = new byte[1024]
         log.info "Adding ${file.name} to zip archive."
         file.withInputStream { i ->
             l = i.read(buffer)
@@ -142,3 +222,4 @@ filesToZip.each {
 }
 
 log.info "Success. Results were archived in: ${zipArchiveFileName}."
+
