@@ -6,31 +6,28 @@ import com.deloitte.ddwatch.model.Project;
 import com.deloitte.ddwatch.model.QualityReport;
 import com.deloitte.ddwatch.model.Tag;
 import com.deloitte.ddwatch.repositories.ProjectRepository;
-import com.deloitte.ddwatch.repositories.TagRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 
-import javax.persistence.EntityManager;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectService {
 
     @Autowired
-    ProjectRepository projectRepository;
+    private ProjectRepository projectRepository;
     @Autowired
-    ProjectMock projectMock;
+    private ProjectMock projectMock;
     @Autowired
-    QualityReportService qualityReportService;
+    private QualityReportService qualityReportService;
     @Autowired
-    TagRepository tagRepository;
+    private TagService tagService;
+    @Autowired
+    private ModelMapper modelMapper;
 
 
     public Project create(ProjectDTO projectDTO) {
@@ -39,7 +36,7 @@ public class ProjectService {
         Project project = modelMapper.map(projectDTO, Project.class);
 
         for(String tagName : projectDTO.getTagNames()) {
-            Tag tag = tagRepository.findByName(tagName);
+            Tag tag = tagService.safelyGetByName(tagName);
             project.addTag(tag);
         }
 
@@ -47,8 +44,8 @@ public class ProjectService {
         return project;
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.READ_COMMITTED)
-    public Project readById(Long id) {
+
+    public Project safelyGet(Long id) {
         Optional<Project> project = projectRepository.findById(id);
         if (!project.isPresent()) {
             throw new RuntimeException("No such project found");
@@ -56,12 +53,37 @@ public class ProjectService {
         return project.get();
     }
 
-    public List<Project> getAll() {
-        init();
-        List<Project> projects = projectRepository.findAll();
-        return projects;
+
+    public ProjectDTO findById(Long id) {
+        Project project = safelyGet(id);
+        ProjectDTO projectDTO = modelMapper.map(project, ProjectDTO.class);
+        return projectDTO;
     }
 
+
+    public List<ProjectDTO> findByTag(String tagName) {
+        Tag tag = tagService.safelyGetByName(tagName);
+        List<Project> projects = tag.getProjects();
+
+        List<ProjectDTO> projectDTOS = projects
+                .stream()
+                .map(p -> modelMapper.map(p, ProjectDTO.class))
+                .collect(Collectors.toList());
+        return projectDTOS;
+    }
+
+
+    public List<ProjectDTO> findAll() {
+        init();
+        List<Project> projects = projectRepository.findAll();
+
+        List<ProjectDTO> projectDTOS = projects
+                .stream()
+                .map(p -> modelMapper.map(p, ProjectDTO.class))
+                .collect(Collectors.toList());
+
+        return projectDTOS;
+    }
 
 
     private void init() {
@@ -71,15 +93,18 @@ public class ProjectService {
 
     }
 
+
     @Transactional
-    public Project refreshReport(long id) {
-        Project project = readById(id);
+    public ProjectDTO addReport(long id) {
+        Project project = safelyGet(id);
         String sonarBaseUrl = project.getSonarQubeUrl();
 
         QualityReport qualityReport = qualityReportService.refreshReport(sonarBaseUrl);
         project.setLastQualityReport(qualityReport.getUpdateDate());
         project.addQualityReport(qualityReport);
 
-        return project;
+        ProjectDTO projectDTO = modelMapper.map(project, ProjectDTO.class);
+
+        return projectDTO;
     }
 }
