@@ -12,12 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -35,13 +31,6 @@ public class QualityReportService {
         return componentKeys;
     }
 
-//    public List<QualityReport> createDemoReport() {
-//        List<QualityReport> reports = new ArrayList<>();
-//        for(String key : getProjectKeys()) {
-//            reports.add(createReport(key));
-//        }
-//        return reports;
-//    }
 
     public QualityReport createReportFromUrl(String baseUrl, String componentKey) {
         String resourceUrl = baseUrl + "/api/measures/component?componentKey=" + componentKey + "&metricKeys=ncloc,complexity,coverage,cognitive_complexity,duplicated_blocks," +
@@ -51,50 +40,49 @@ public class QualityReportService {
         ResponseEntity<String> response = restTemplate.getForEntity(resourceUrl, String.class);
         DocumentContext jsonContext = JsonPath.parse(response.getBody());
 
-        QualityReport qualityReport = createReport(jsonContext);
-        
+        QualityReport qualityReport = new QualityReport();
+
+        setMetrics(jsonContext, qualityReport);
         setIssues(baseUrl, componentKey, qualityReport);
+
         String defectDensity = qualityReport.getTotalIssues().toString() + "/" + qualityReport.getLinesOfCode().toString();
         qualityReport.setDefectDensity(defectDensity);
         return qualityReport;
     }
 
-//    public QualityReport createReport(String componentKey) {
-//        String fooResourceUrl = "http://localhost:9000/api/measures/component?componentKey=" + componentKey + "&metricKeys=ncloc,complexity,coverage,cognitive_complexity,duplicated_blocks," +
-//                "duplicated_lines,duplicated_lines_density,violations,code_smells,bugs,vulnerabilities,branch_coverage,line_coverage";
-//
-//        return createReportFromUrl(fooResourceUrl);
-//    }
 
-    public QualityReport createReportFromFile(String filename) {
-        filename = filename.replace("sonarQube", "metrics") + ".json";
-        QualityReport qualityReport = null;
+    public QualityReport createReportFromFile(InputStream inputStream) {
 
-        File file = new File(filename);
-        DocumentContext jsonContext = null;
-        try {
-            jsonContext = JsonPath.parse(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        qualityReport = createReport(jsonContext);
+        DocumentContext jsonContext = jsonContext = JsonPath.parse(inputStream);
+
+        QualityReport qualityReport = new QualityReport();
+        qualityReport.setOverallCoverage(((Double)jsonContext.read("$.metrics.coverage")).floatValue());
+        qualityReport.setCyclomaticComplexity(jsonContext.read("$.metrics.complexity"));
+        qualityReport.setLinesOfCode(jsonContext.read("$.metrics.ncloc"));
+        qualityReport.setCognitiveComplexity(jsonContext.read("$.metrics.cognitive_complexity"));
+        qualityReport.setDuplicatedBlocks(jsonContext.read("$.metrics.duplicated_blocks"));
+        qualityReport.setDuplicatedLines(jsonContext.read("$.metrics.duplicated_lines"));
+        qualityReport.setDuplicatedLinesDensity(((Double)jsonContext.read("$.metrics.duplicated_lines_density")).floatValue());
+        qualityReport.setTotalIssues(jsonContext.read("$.metrics.violations"));
+        qualityReport.setCodeSmels(jsonContext.read("$.metrics.code_smells"));
+        qualityReport.setTotalBugs(jsonContext.read("$.metrics.bugs"));
+        qualityReport.setTotalVulnerabilities(jsonContext.read("$.metrics.vulnerabilities"));
+        //TODO
+//        qualityReport.setConditionsCoverage(((Double)jsonContext.read("$.metrics.branch_coverage")).floatValue());
+        qualityReport.setLineCoverage(((Double)jsonContext.read("$.metrics.line_coverage")).floatValue());
+
+        qualityReport.setUpdateDate(LocalDateTime.now());
+
+//        QualityReport qualityReport = createReport(jsonContext);
 
         return qualityReport;
     }
     
 
-//    public QualityReport createReportFromUrl(String url) {
-//        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-//        DocumentContext jsonContext = JsonPath.parse(response.getBody());
-//        
-//        return createReport(jsonContext);
-//    }
 
-    public QualityReport createReport(DocumentContext jsonContext) {
+    public void setMetrics(DocumentContext jsonContext, QualityReport qualityReport) {
         String name = jsonContext.read("$.component.name");
         String key = jsonContext.read("$.component.key");
-
-        QualityReport qualityReport = new QualityReport();
 
         qualityReport.setName(name);
         qualityReport.setKey(key);
@@ -112,7 +100,6 @@ public class QualityReportService {
         qualityReport.setConditionsCoverage(getFloatSafely(jsonContext, "branch_coverage"));
         qualityReport.setLineCoverage(getFloatSafely(jsonContext, "line_coverage"));
         qualityReport.setUpdateDate(LocalDateTime.now());
-        return qualityReport;
     }
 
     private Integer getIntSafely(DocumentContext jsonContext, String metricKey) {

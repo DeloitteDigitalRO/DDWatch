@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -109,11 +110,11 @@ public class ProjectService {
     }
 
     @Transactional
-    public ProjectDTO addReport(long id, String filename) {
+    public ProjectDTO addReport(long id, InputStream inputStream) {
         Project project = safelyGet(id);
         String sonarBaseUrl = project.getSonarQubeUrl();
 
-        QualityReport qualityReport = qualityReportService.createReportFromFile(filename);
+        QualityReport qualityReport = qualityReportService.createReportFromFile(inputStream);
         project.setLastQualityReport(qualityReport.getUpdateDate());
         project.addQualityReport(qualityReport);
 
