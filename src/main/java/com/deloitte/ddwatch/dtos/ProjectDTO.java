@@ -31,6 +31,5 @@ public class ProjectDTO implements Serializable {
     List<String> tagNames;
 
     String sonarQubeUrl;
-
-
+    String sonarComponentKey;
 }

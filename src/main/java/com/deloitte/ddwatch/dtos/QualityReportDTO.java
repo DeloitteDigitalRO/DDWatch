@@ -14,18 +14,20 @@ public class QualityReportDTO implements Serializable {
     Integer blockerBugs;
     Integer criticalBugs;
     Integer majorBugs;
+    Integer minorBugs;
     Integer otherBugs;
 
     Integer linesOfCode;
-    Integer defectDensity; //no of bugs/no of lines
+    String defectDensity; //no of bugs/no of lines
 
     Integer totalIssues; //violations
 
     Integer totalVulnerabilities;
-    Integer blockers;
-    Integer criticals;
-    Integer majors;
-    Integer others;
+    Integer blockerVulnerabilities;
+    Integer criticalVulnerabilities;
+    Integer majorVulnerabilities;
+    Integer minorVulnerabilities;
+    Integer otherVulnerabilities;
 
     Integer codeSmels;
     Integer duplicatedLines;

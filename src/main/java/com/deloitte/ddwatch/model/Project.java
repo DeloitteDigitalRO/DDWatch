@@ -45,6 +45,7 @@ public class Project {
     private List<Tag> tags = new ArrayList<>();
 
     String sonarQubeUrl;
+    String sonarComponentKey;
 
     public void addQualityReport(QualityReport qualityReport) {
         qualityReports.add(qualityReport);

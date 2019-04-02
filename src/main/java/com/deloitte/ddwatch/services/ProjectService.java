@@ -99,7 +99,7 @@ public class ProjectService {
         Project project = safelyGet(id);
         String sonarBaseUrl = project.getSonarQubeUrl();
 
-        QualityReport qualityReport = qualityReportService.refreshReport(sonarBaseUrl);
+        QualityReport qualityReport = qualityReportService.createReport(sonarBaseUrl, project.getSonarComponentKey());
         project.setLastQualityReport(qualityReport.getUpdateDate());
         project.addQualityReport(qualityReport);
 

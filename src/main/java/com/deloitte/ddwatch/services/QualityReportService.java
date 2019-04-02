@@ -1,25 +1,19 @@
 package com.deloitte.ddwatch.services;
 
-import com.deloitte.ddwatch.dtos.QualityReportDTO;
-import com.deloitte.ddwatch.model.Project;
+
 import com.deloitte.ddwatch.model.QualityReport;
 import com.deloitte.ddwatch.repositories.QualityReportRepository;
-import com.jayway.jsonpath.Criteria;
 import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.Filter;
 import com.jayway.jsonpath.JsonPath;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class QualityReportService {
@@ -44,11 +38,15 @@ public class QualityReportService {
         return reports;
     }
 
-    public QualityReport refreshReport(String url) {
-        String resourceUrl = url + "&metricKeys=ncloc,complexity,coverage,cognitive_complexity,duplicated_blocks," +
+    public QualityReport createReport(String baseUrl, String componentKey) {
+        String resourceUrl = baseUrl + "/api/measures/component?componentKey=" + componentKey + "&metricKeys=ncloc,complexity,coverage,cognitive_complexity,duplicated_blocks," +
                 "duplicated_lines,duplicated_lines_density,violations,code_smells,bugs,vulnerabilities,branch_coverage,line_coverage";
 
-        return createReportFromUrl(resourceUrl);
+        QualityReport qualityReport = createReportFromUrl(resourceUrl);
+        setIssues(baseUrl, componentKey, qualityReport);
+        String defectDensity = qualityReport.getTotalIssues().toString() + "/" + qualityReport.getLinesOfCode().toString();
+        qualityReport.setDefectDensity(defectDensity);
+        return qualityReport;
     }
 
     public QualityReport createReport(String componentKey) {
@@ -97,5 +95,79 @@ public class QualityReportService {
     }
 
 
+    public void setIssues(String baseUrl, String componentKey, QualityReport qualityReport) {
+
+        String url = baseUrl + "/api/issues/search?componentKeys=" + componentKey;
+
+        setBlockerBugs(url, qualityReport);
+        setCriticalBugs(url, qualityReport);
+        setMajorBugs(url, qualityReport);
+        setMinorBugs(url, qualityReport);
+        setOtherBugs(url, qualityReport);
+
+        setBlockerVulnerabilities(url, qualityReport);
+        setCriticalVulnerabilities(url, qualityReport);
+        setMajorVulnerabilities(url, qualityReport);
+        setMinorVulnerabilities(url, qualityReport);
+        setOtherVulnerabilities(url, qualityReport);
+
+    }
+
+    private void setOtherBugs(String url, QualityReport qualityReport) {
+        url = url + "&types=BUG&severities=INFO&status=OPEN";
+        qualityReport.setOtherBugs(getNumberOfIssues(url));
+    }
+
+    private void setMajorBugs(String url, QualityReport qualityReport) {
+        url = url + "&types=BUG&severities=MAJOR&status=OPEN";
+        qualityReport.setMajorBugs(getNumberOfIssues(url));
+    }
+
+    private void setMinorBugs(String url, QualityReport qualityReport) {
+        url = url + "&types=BUG&severities=MINOR&status=OPEN";
+        qualityReport.setMinorBugs(getNumberOfIssues(url));
+    }
+
+    private void setCriticalBugs(String url, QualityReport qualityReport) {
+        url = url + "&types=BUG&severities=CRITICAL&status=OPEN";
+        qualityReport.setCriticalBugs(getNumberOfIssues(url));
+    }
+
+    private void setBlockerBugs(String url, QualityReport qualityReport) {
+        url = url + "&types=BUG&severities=BLOCKER&status=OPEN";
+        qualityReport.setBlockerBugs(getNumberOfIssues(url));
+    }
+
+    private void setOtherVulnerabilities(String url, QualityReport qualityReport) {
+        url = url + "&types=VULNERABILITY&severities=INFO&status=OPEN";
+        qualityReport.setOtherVulnerabilities(getNumberOfIssues(url));
+    }
+
+    private void setMajorVulnerabilities(String url, QualityReport qualityReport) {
+        url = url + "&types=VULNERABILITY&severities=MAJOR&status=OPEN";
+        qualityReport.setMajorVulnerabilities(getNumberOfIssues(url));
+    }
+
+    private void setMinorVulnerabilities(String url, QualityReport qualityReport) {
+        url = url + "&types=VULNERABILITY&severities=MINOR&status=OPEN";
+        qualityReport.setMinorVulnerabilities(getNumberOfIssues(url));
+    }
+
+    private void setCriticalVulnerabilities(String url, QualityReport qualityReport) {
+        url = url + "&types=VULNERABILITY&severities=CRITICAL&status=OPEN";
+        qualityReport.setCriticalVulnerabilities(getNumberOfIssues(url));
+    }
+
+    private void setBlockerVulnerabilities(String url, QualityReport qualityReport) {
+        url = url + "&types=VULNERABILITY&severities=BLOCKER&status=OPEN";
+        qualityReport.setBlockerVulnerabilities(getNumberOfIssues(url));
+    }
+
+
+    private Integer getNumberOfIssues(String url) {
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+        DocumentContext jsonContext = JsonPath.parse(response.getBody());
+        return jsonContext.read("$.total");
+    }
 
 }
