@@ -5,12 +5,17 @@ import com.deloitte.ddwatch.model.QualityReport;
 import com.deloitte.ddwatch.repositories.QualityReportRepository;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,35 +35,62 @@ public class QualityReportService {
         return componentKeys;
     }
 
-    public List<QualityReport> createDemoReport() {
-        List<QualityReport> reports = new ArrayList<>();
-        for(String key : getProjectKeys()) {
-            reports.add(createReport(key));
-        }
-        return reports;
-    }
+//    public List<QualityReport> createDemoReport() {
+//        List<QualityReport> reports = new ArrayList<>();
+//        for(String key : getProjectKeys()) {
+//            reports.add(createReport(key));
+//        }
+//        return reports;
+//    }
 
-    public QualityReport createReport(String baseUrl, String componentKey) {
+    public QualityReport createReportFromUrl(String baseUrl, String componentKey) {
         String resourceUrl = baseUrl + "/api/measures/component?componentKey=" + componentKey + "&metricKeys=ncloc,complexity,coverage,cognitive_complexity,duplicated_blocks," +
                 "duplicated_lines,duplicated_lines_density,violations,code_smells,bugs,vulnerabilities,branch_coverage,line_coverage";
 
-        QualityReport qualityReport = createReportFromUrl(resourceUrl);
+
+        ResponseEntity<String> response = restTemplate.getForEntity(resourceUrl, String.class);
+        DocumentContext jsonContext = JsonPath.parse(response.getBody());
+
+        QualityReport qualityReport = createReport(jsonContext);
+        
         setIssues(baseUrl, componentKey, qualityReport);
         String defectDensity = qualityReport.getTotalIssues().toString() + "/" + qualityReport.getLinesOfCode().toString();
         qualityReport.setDefectDensity(defectDensity);
         return qualityReport;
     }
 
-    public QualityReport createReport(String componentKey) {
-        String fooResourceUrl = "http://localhost:9000/api/measures/component?componentKey=" + componentKey + "&metricKeys=ncloc,complexity,coverage,cognitive_complexity,duplicated_blocks," +
-                "duplicated_lines,duplicated_lines_density,violations,code_smells,bugs,vulnerabilities,branch_coverage,line_coverage";
+//    public QualityReport createReport(String componentKey) {
+//        String fooResourceUrl = "http://localhost:9000/api/measures/component?componentKey=" + componentKey + "&metricKeys=ncloc,complexity,coverage,cognitive_complexity,duplicated_blocks," +
+//                "duplicated_lines,duplicated_lines_density,violations,code_smells,bugs,vulnerabilities,branch_coverage,line_coverage";
+//
+//        return createReportFromUrl(fooResourceUrl);
+//    }
 
-        return createReportFromUrl(fooResourceUrl);
+    public QualityReport createReportFromFile(String filename) {
+        filename = filename.replace("sonarQube", "metrics") + ".json";
+        QualityReport qualityReport = null;
+
+        File file = new File(filename);
+        DocumentContext jsonContext = null;
+        try {
+            jsonContext = JsonPath.parse(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        qualityReport = createReport(jsonContext);
+
+        return qualityReport;
     }
+    
 
-    public QualityReport createReportFromUrl(String url) {
-        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-        DocumentContext jsonContext = JsonPath.parse(response.getBody());
+//    public QualityReport createReportFromUrl(String url) {
+//        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+//        DocumentContext jsonContext = JsonPath.parse(response.getBody());
+//        
+//        return createReport(jsonContext);
+//    }
+
+    public QualityReport createReport(DocumentContext jsonContext) {
         String name = jsonContext.read("$.component.name");
         String key = jsonContext.read("$.component.key");
 
@@ -80,7 +112,6 @@ public class QualityReportService {
         qualityReport.setConditionsCoverage(getFloatSafely(jsonContext, "branch_coverage"));
         qualityReport.setLineCoverage(getFloatSafely(jsonContext, "line_coverage"));
         qualityReport.setUpdateDate(LocalDateTime.now());
-
         return qualityReport;
     }
 
@@ -163,11 +194,9 @@ public class QualityReportService {
         qualityReport.setBlockerVulnerabilities(getNumberOfIssues(url));
     }
 
-
     private Integer getNumberOfIssues(String url) {
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
         DocumentContext jsonContext = JsonPath.parse(response.getBody());
         return jsonContext.read("$.total");
     }
-
 }

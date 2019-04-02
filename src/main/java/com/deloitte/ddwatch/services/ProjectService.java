@@ -99,7 +99,21 @@ public class ProjectService {
         Project project = safelyGet(id);
         String sonarBaseUrl = project.getSonarQubeUrl();
 
-        QualityReport qualityReport = qualityReportService.createReport(sonarBaseUrl, project.getSonarComponentKey());
+        QualityReport qualityReport = qualityReportService.createReportFromUrl(sonarBaseUrl, project.getSonarComponentKey());
+        project.setLastQualityReport(qualityReport.getUpdateDate());
+        project.addQualityReport(qualityReport);
+
+        ProjectDTO projectDTO = modelMapper.map(project, ProjectDTO.class);
+
+        return projectDTO;
+    }
+
+    @Transactional
+    public ProjectDTO addReport(long id, String filename) {
+        Project project = safelyGet(id);
+        String sonarBaseUrl = project.getSonarQubeUrl();
+
+        QualityReport qualityReport = qualityReportService.createReportFromFile(filename);
         project.setLastQualityReport(qualityReport.getUpdateDate());
         project.addQualityReport(qualityReport);
 
