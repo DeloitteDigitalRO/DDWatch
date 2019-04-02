@@ -33,8 +33,8 @@ def outputFile = new File(outputFileName)
 
 
 // Metrics related
-def parseInt = { String str -> Integer.parseInt(str) }
-def parseFloat = { String str -> Float.parseFloat(str) }
+def parseInt = { String str -> (str != null) ? Integer.parseInt(str) : null }
+def parseFloat = { String str -> (str != null) ? Float.parseFloat(str) : null }
 
 def metricsQParams = [
         "ncloc" : parseInt,
