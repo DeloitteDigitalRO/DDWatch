@@ -21,7 +21,6 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
     String name;
-//    List<String> tags;
 
     String description;
     String deliveryLead;
@@ -31,6 +30,7 @@ public class Project {
     ProjectStatus qualityStatus;
 
     @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OrderBy(value = "updateDate DESC")
     List<QualityReport> qualityReports = new ArrayList<>();
     LocalDateTime lastQualityReport;
 

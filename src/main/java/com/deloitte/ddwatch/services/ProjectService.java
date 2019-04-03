@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -99,7 +100,21 @@ public class ProjectService {
         Project project = safelyGet(id);
         String sonarBaseUrl = project.getSonarQubeUrl();
 
-        QualityReport qualityReport = qualityReportService.createReport(sonarBaseUrl, project.getSonarComponentKey());
+        QualityReport qualityReport = qualityReportService.createReportFromUrl(sonarBaseUrl, project.getSonarComponentKey());
+        project.setLastQualityReport(qualityReport.getUpdateDate());
+        project.addQualityReport(qualityReport);
+
+        ProjectDTO projectDTO = modelMapper.map(project, ProjectDTO.class);
+
+        return projectDTO;
+    }
+
+    @Transactional
+    public ProjectDTO addReport(long id, InputStream inputStream) {
+        Project project = safelyGet(id);
+        String sonarBaseUrl = project.getSonarQubeUrl();
+
+        QualityReport qualityReport = qualityReportService.createReportFromFile(inputStream);
         project.setLastQualityReport(qualityReport.getUpdateDate());
         project.addQualityReport(qualityReport);
 
