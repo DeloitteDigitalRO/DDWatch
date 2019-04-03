@@ -3,6 +3,7 @@ package com.deloitte.ddwatch.services;
 import com.deloitte.ddwatch.dtos.ProjectDTO;
 import com.deloitte.ddwatch.mockunit.ProjectMock;
 import com.deloitte.ddwatch.model.Project;
+import com.deloitte.ddwatch.model.QualityReport;
 import com.deloitte.ddwatch.model.SonarQubeReport;
 import com.deloitte.ddwatch.model.Tag;
 import com.deloitte.ddwatch.repositories.ProjectRepository;
@@ -11,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,8 +25,6 @@ public class ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
     @Autowired
-    private ProjectMock projectMock;
-    @Autowired
     private SonarQubeReportService sonarQubeReportService;
     @Autowired
     private TagService tagService;
@@ -32,8 +33,6 @@ public class ProjectService {
 
 
     public Project create(ProjectDTO projectDTO) {
-        ModelMapper modelMapper = new ModelMapper();
-
         Project project = modelMapper.map(projectDTO, Project.class);
 
         for(String tagName : projectDTO.getTagNames()) {
@@ -75,7 +74,6 @@ public class ProjectService {
 
 
     public List<ProjectDTO> findAll() {
-        init();
         List<Project> projects = projectRepository.findAll();
 
         List<ProjectDTO> projectDTOS = projects
@@ -87,13 +85,6 @@ public class ProjectService {
     }
 
 
-    private void init() {
-        List<Project> plist = projectMock.list(10).get();
-
-        projectRepository.saveAll(plist);
-
-    }
-
 
     @Transactional
     public ProjectDTO addReport(long id) {
@@ -101,8 +92,13 @@ public class ProjectService {
         String sonarBaseUrl = project.getSonarQubeUrl();
 
         SonarQubeReport sonarQubeReport = sonarQubeReportService.createReportFromUrl(sonarBaseUrl, project.getSonarComponentKey());
-        project.setLastQualityReport(sonarQubeReport.getUpdateDate());
-        project.addQualityReport(sonarQubeReport);
+
+        QualityReport qualityReport = new QualityReport();
+        qualityReport.setUpdateDate(LocalDateTime.now());
+        project.setLastQualityReport(qualityReport.getUpdateDate());
+
+        qualityReport.addSonarQubeReport(sonarQubeReport);
+        project.addQualityReport(qualityReport);
 
         ProjectDTO projectDTO = modelMapper.map(project, ProjectDTO.class);
 
@@ -110,15 +106,21 @@ public class ProjectService {
     }
 
     @Transactional
-    public ProjectDTO addReport(long id, InputStream inputStream) {
+    public ProjectDTO addReport(long id, InputStream inputStream) throws IOException {
         Project project = safelyGet(id);
-        String sonarBaseUrl = project.getSonarQubeUrl();
 
         SonarQubeReport sonarQubeReport = sonarQubeReportService.createReportFromFile(inputStream);
-        project.setLastQualityReport(sonarQubeReport.getUpdateDate());
-        project.addQualityReport(sonarQubeReport);
+
+        QualityReport qualityReport = new QualityReport();
+        qualityReport.setUpdateDate(LocalDateTime.now());
+        project.setLastQualityReport(qualityReport.getUpdateDate());
+
+
+        qualityReport.addSonarQubeReport(sonarQubeReport);
+        project.addQualityReport(qualityReport);
 
         ProjectDTO projectDTO = modelMapper.map(project, ProjectDTO.class);
+        inputStream.close();
 
         return projectDTO;
     }

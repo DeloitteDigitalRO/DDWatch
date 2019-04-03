@@ -47,5 +47,4 @@ public class SonarQubeReportDTO implements Serializable {
     Double lineCoverage;
     Double conditionsCoverage;
 
-    LocalDateTime updateDate;
 }

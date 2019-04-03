@@ -40,8 +40,8 @@ public class Project {
     ProjectStatus qualityStatus;
 
     @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @OrderBy(value = "updateDate DESC")
-    List<SonarQubeReport> sonarQubeReports = new ArrayList<>();
+//    @OrderBy(value = "updateDate DESC")
+    List<QualityReport> qualityReports = new ArrayList<>();
 
     @Column(name = "last_quality_report")
     LocalDateTime lastQualityReport;
@@ -64,9 +64,9 @@ public class Project {
     @Column(name = "sonarqube_component_url", length = 256)
     String sonarComponentKey;
 
-    public void addQualityReport(SonarQubeReport sonarQubeReport) {
-        sonarQubeReports.add(sonarQubeReport);
-        sonarQubeReport.setProject(this);
+    public void addQualityReport(QualityReport qualityReport) {
+        qualityReports.add(qualityReport);
+        qualityReport.setProject(this);
     }
 
     public void addTag(Tag tag) {

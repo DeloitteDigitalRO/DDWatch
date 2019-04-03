@@ -91,7 +91,7 @@ public class SonarQubeReportService {
         String defectDensity = sonarQubeReport.getTotalIssues().toString() + "/" + sonarQubeReport.getLinesOfCode().toString();
         sonarQubeReport.setDefectDensity(defectDensity);
 
-        sonarQubeReport.setUpdateDate(LocalDateTime.now());
+//        sonarQubeReport.setUpdateDate(LocalDateTime.now());
 
         return sonarQubeReport;
     }
@@ -117,7 +117,7 @@ public class SonarQubeReportService {
         sonarQubeReport.setTotalVulnerabilities(getIntSafely(jsonContext, "vulnerabilities"));
         sonarQubeReport.setConditionsCoverage(getDoubleSafely(jsonContext, "branch_coverage"));
         sonarQubeReport.setLineCoverage(getDoubleSafely(jsonContext, "line_coverage"));
-        sonarQubeReport.setUpdateDate(LocalDateTime.now());
+//        sonarQubeReport.setUpdateDate(LocalDateTime.now());
     }
 
     private Integer getIntSafely(DocumentContext jsonContext, String metricKey) {
