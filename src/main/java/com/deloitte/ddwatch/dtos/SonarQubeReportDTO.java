@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-public class QualityReportDTO implements Serializable {
+public class SonarQubeReportDTO implements Serializable {
     String name;
     String key;
 

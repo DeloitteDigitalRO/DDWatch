@@ -3,10 +3,6 @@ package com.deloitte.ddwatch.controllers;
 import com.deloitte.ddwatch.dtos.ProjectDTO;
 import com.deloitte.ddwatch.model.Project;
 import com.deloitte.ddwatch.services.ProjectService;
-import com.deloitte.ddwatch.services.QualityReportService;
-import net.lingala.zip4j.core.ZipFile;
-import net.lingala.zip4j.exception.ZipException;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,12 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.UUID;
 
 @Controller
 @RequestMapping("/projects")

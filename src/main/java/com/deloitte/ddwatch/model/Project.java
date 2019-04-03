@@ -7,9 +7,6 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-
-import static net.andreinc.mockneat.unit.objects.Filler.filler;
 
 @Data
 @NoArgsConstructor
@@ -31,7 +28,7 @@ public class Project {
 
     @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @OrderBy(value = "updateDate DESC")
-    List<QualityReport> qualityReports = new ArrayList<>();
+    List<SonarQubeReport> sonarQubeReports = new ArrayList<>();
     LocalDateTime lastQualityReport;
 
     @OneToMany(mappedBy = "project")
@@ -47,9 +44,9 @@ public class Project {
     String sonarQubeUrl;
     String sonarComponentKey;
 
-    public void addQualityReport(QualityReport qualityReport) {
-        qualityReports.add(qualityReport);
-        qualityReport.setProject(this);
+    public void addQualityReport(SonarQubeReport sonarQubeReport) {
+        sonarQubeReports.add(sonarQubeReport);
+        sonarQubeReport.setProject(this);
     }
 
     public void addTag(Tag tag) {

@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "QualityReport")
-public class QualityReport {
+@Table(name = "SonarQubeReport")
+public class SonarQubeReport {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

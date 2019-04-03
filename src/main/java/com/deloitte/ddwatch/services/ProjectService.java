@@ -3,7 +3,7 @@ package com.deloitte.ddwatch.services;
 import com.deloitte.ddwatch.dtos.ProjectDTO;
 import com.deloitte.ddwatch.mockunit.ProjectMock;
 import com.deloitte.ddwatch.model.Project;
-import com.deloitte.ddwatch.model.QualityReport;
+import com.deloitte.ddwatch.model.SonarQubeReport;
 import com.deloitte.ddwatch.model.Tag;
 import com.deloitte.ddwatch.repositories.ProjectRepository;
 import org.modelmapper.ModelMapper;
@@ -24,7 +24,7 @@ public class ProjectService {
     @Autowired
     private ProjectMock projectMock;
     @Autowired
-    private QualityReportService qualityReportService;
+    private SonarQubeReportService sonarQubeReportService;
     @Autowired
     private TagService tagService;
     @Autowired
@@ -100,9 +100,9 @@ public class ProjectService {
         Project project = safelyGet(id);
         String sonarBaseUrl = project.getSonarQubeUrl();
 
-        QualityReport qualityReport = qualityReportService.createReportFromUrl(sonarBaseUrl, project.getSonarComponentKey());
-        project.setLastQualityReport(qualityReport.getUpdateDate());
-        project.addQualityReport(qualityReport);
+        SonarQubeReport sonarQubeReport = sonarQubeReportService.createReportFromUrl(sonarBaseUrl, project.getSonarComponentKey());
+        project.setLastQualityReport(sonarQubeReport.getUpdateDate());
+        project.addQualityReport(sonarQubeReport);
 
         ProjectDTO projectDTO = modelMapper.map(project, ProjectDTO.class);
 
@@ -114,9 +114,9 @@ public class ProjectService {
         Project project = safelyGet(id);
         String sonarBaseUrl = project.getSonarQubeUrl();
 
-        QualityReport qualityReport = qualityReportService.createReportFromFile(inputStream);
-        project.setLastQualityReport(qualityReport.getUpdateDate());
-        project.addQualityReport(qualityReport);
+        SonarQubeReport sonarQubeReport = sonarQubeReportService.createReportFromFile(inputStream);
+        project.setLastQualityReport(sonarQubeReport.getUpdateDate());
+        project.addQualityReport(sonarQubeReport);
 
         ProjectDTO projectDTO = modelMapper.map(project, ProjectDTO.class);
 

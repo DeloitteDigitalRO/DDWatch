@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -22,7 +21,7 @@ public class ProjectDTO implements Serializable {
     String deliveryStatus;
     String qualityStatus;
 
-    List<QualityReportDTO> qualityReports;
+    List<SonarQubeReportDTO> sonarQubeReports;
     LocalDateTime lastQualityReport;
 
 //    Set<DeliveryReportDTO> deliveryReports;
