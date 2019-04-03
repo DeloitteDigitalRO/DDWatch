@@ -112,19 +112,19 @@ SonarClient sc = new SonarClient()
 Map export = [
 
         metrics : [
-                "ncloc"                     :       sc.metric("ncloc"),
-                "complexity"                :       sc.metric("complexity"),
-                "coverage"                  :       sc.metric("coverage"),
-                "cognitive_complexity"      :       sc.metric("cognitive_complexity"),
-                "duplicated_blocks"         :       sc.metric("duplicated_blocks"),
-                "duplicated_lines"          :       sc.metric("duplicated_lines"),
-                "duplicated_lines_density"  :       sc.metric("duplicated_lines_density"),
-                "violations"                :       sc.metric("violations"),
-                "code_smells"               :       sc.metric("code_smells"),
-                "bugs"                      :       sc.metric("bugs"),
-                "vulnerabilities"           :       sc.metric("vulnerabilities"),
-                "branch_coverage"           :       sc.metric("branch_coverage"),
-                "line_coverage"             :       sc.metric("line_coverage")
+                "ncloc"                     :       sc.metric("ncloc", toInt),
+                "complexity"                :       sc.metric("complexity", toInt),
+                "coverage"                  :       sc.metric("coverage", toFloat),
+                "cognitive_complexity"      :       sc.metric("cognitive_complexity", toInt),
+                "duplicated_blocks"         :       sc.metric("duplicated_blocks", toInt),
+                "duplicated_lines"          :       sc.metric("duplicated_lines", toInt),
+                "duplicated_lines_density"  :       sc.metric("duplicated_lines_density", toFloat),
+                "violations"                :       sc.metric("violations", toInt),
+                "code_smells"               :       sc.metric("code_smells", toInt),
+                "bugs"                      :       sc.metric("bugs", toInt),
+                "vulnerabilities"           :       sc.metric("vulnerabilities", toInt),
+                "branch_coverage"           :       sc.metric("branch_coverage", toFloat),
+                "line_coverage"             :       sc.metric("line_coverage", toFloat)
         ],
 
 
