@@ -45,7 +45,7 @@ public class ProjectDTO implements Serializable {
     @OneOfStrings({"R", "G", "A"})
     String qualityStatus;
 
-    List<SonarQubeReportDTO> sonarQubeReports;
+    List<QualityReportDTO> qualityReports;
     LocalDateTime lastQualityReport;
 
 //    Set<DeliveryReportDTO> deliveryReports;

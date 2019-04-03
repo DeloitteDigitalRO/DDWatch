@@ -9,16 +9,15 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "SonarQubeReport")
+@Table(name = "sonar_qube_report")
 public class SonarQubeReport {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "project_id")
-    private Project project;
+    @OneToOne
+    @MapsId
+    private QualityReport qualityReport;
 
     String name;
     String key;
@@ -59,6 +58,4 @@ public class SonarQubeReport {
     Double overallCoverage;
     Double lineCoverage;
     Double conditionsCoverage;
-
-    LocalDateTime updateDate;
 }

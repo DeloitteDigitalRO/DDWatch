@@ -50,21 +50,4 @@ public class ProjectController {
         return new ResponseEntity<>(projectDTO, HttpStatus.OK);
     }
 
-
-    @PutMapping("/{id}/addReport")
-    public ResponseEntity<ProjectDTO> addReport(@PathVariable String id) {
-        ProjectDTO projectDTO  = projectService.addReport(Long.parseLong(id));
-        return new ResponseEntity<>(projectDTO, HttpStatus.OK);
-    }
-
-    @PutMapping("/{id}/uploadReportFile")
-    public ResponseEntity<ProjectDTO> uploadReportFile(@RequestParam("file") MultipartFile file, @PathVariable String id) throws IOException {
-
-
-        InputStream inputStream = file.getInputStream();
-
-        ProjectDTO projectDTO = projectService.addReport(Long.parseLong(id), inputStream);
-
-        return new ResponseEntity<>(projectDTO, HttpStatus.OK);
-    }
 }
