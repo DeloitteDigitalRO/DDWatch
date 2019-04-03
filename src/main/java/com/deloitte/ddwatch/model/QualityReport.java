@@ -42,17 +42,23 @@ public class QualityReport {
     Integer minorVulnerabilities;
     Integer otherVulnerabilities;
 
-    Integer codeSmels;
+    Integer totalCodeSmells;
+    Integer blockerCodeSmells;
+    Integer criticalCodeSmells;
+    Integer majorCodeSmells;
+    Integer minorCodeSmells;
+    Integer otherCodeSmells;
+
     Integer duplicatedLines;
-    Float duplicatedLinesDensity;
+    Double duplicatedLinesDensity;
     Integer duplicatedBlocks;
 
     Integer cyclomaticComplexity;
     Integer cognitiveComplexity;
 
-    Float overallCoverage;
-    Float lineCoverage;
-    Float conditionsCoverage;
+    Double overallCoverage;
+    Double lineCoverage;
+    Double conditionsCoverage;
 
     LocalDateTime updateDate;
 }

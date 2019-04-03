@@ -5,7 +5,6 @@ import com.deloitte.ddwatch.model.QualityReport;
 import com.deloitte.ddwatch.repositories.QualityReportRepository;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
-import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -53,52 +52,71 @@ public class QualityReportService {
 
     public QualityReport createReportFromFile(InputStream inputStream) {
 
-        DocumentContext jsonContext = jsonContext = JsonPath.parse(inputStream);
+        DocumentContext jsonContext  = JsonPath.parse(inputStream);
 
         QualityReport qualityReport = new QualityReport();
-        qualityReport.setOverallCoverage(((Double)jsonContext.read("$.metrics.coverage")).floatValue());
+        qualityReport.setOverallCoverage(jsonContext.read("$.metrics.coverage"));
         qualityReport.setCyclomaticComplexity(jsonContext.read("$.metrics.complexity"));
         qualityReport.setLinesOfCode(jsonContext.read("$.metrics.ncloc"));
         qualityReport.setCognitiveComplexity(jsonContext.read("$.metrics.cognitive_complexity"));
         qualityReport.setDuplicatedBlocks(jsonContext.read("$.metrics.duplicated_blocks"));
         qualityReport.setDuplicatedLines(jsonContext.read("$.metrics.duplicated_lines"));
-        qualityReport.setDuplicatedLinesDensity(((Double)jsonContext.read("$.metrics.duplicated_lines_density")).floatValue());
+        qualityReport.setDuplicatedLinesDensity(jsonContext.read("$.metrics.duplicated_lines_density"));
         qualityReport.setTotalIssues(jsonContext.read("$.metrics.violations"));
-        qualityReport.setCodeSmels(jsonContext.read("$.metrics.code_smells"));
+        qualityReport.setTotalCodeSmells(jsonContext.read("$.metrics.code_smells"));
         qualityReport.setTotalBugs(jsonContext.read("$.metrics.bugs"));
         qualityReport.setTotalVulnerabilities(jsonContext.read("$.metrics.vulnerabilities"));
-        //TODO
-//        qualityReport.setConditionsCoverage(((Double)jsonContext.read("$.metrics.branch_coverage")).floatValue());
-        qualityReport.setLineCoverage(((Double)jsonContext.read("$.metrics.line_coverage")).floatValue());
+        qualityReport.setConditionsCoverage(jsonContext.read("$.metrics.branch_coverage"));
+        qualityReport.setLineCoverage(jsonContext.read("$.metrics.line_coverage"));
+
+
+        qualityReport.setBlockerBugs(jsonContext.read("$.issues.bugs.severity.blockers"));
+        qualityReport.setCriticalBugs(jsonContext.read("$.issues.bugs.severity.critical"));
+        qualityReport.setMajorBugs(jsonContext.read("$.issues.bugs.severity.major"));
+        qualityReport.setMinorBugs(jsonContext.read("$.issues.bugs.severity.minor"));
+        qualityReport.setOtherBugs(jsonContext.read("$.issues.bugs.severity.info"));
+
+        qualityReport.setBlockerVulnerabilities(jsonContext.read("$.issues.vulnerabilities.severity.blockers"));
+        qualityReport.setCriticalVulnerabilities(jsonContext.read("$.issues.vulnerabilities.severity.critical"));
+        qualityReport.setMajorVulnerabilities(jsonContext.read("$.issues.vulnerabilities.severity.major"));
+        qualityReport.setMinorVulnerabilities(jsonContext.read("$.issues.vulnerabilities.severity.minor"));
+        qualityReport.setOtherVulnerabilities(jsonContext.read("$.issues.vulnerabilities.severity.info"));
+
+        qualityReport.setBlockerCodeSmells(jsonContext.read("$.issues.codeSmells.severity.blockers"));
+        qualityReport.setCriticalCodeSmells(jsonContext.read("$.issues.codeSmells.severity.critical"));
+        qualityReport.setMajorCodeSmells(jsonContext.read("$.issues.codeSmells.severity.major"));
+        qualityReport.setMinorCodeSmells(jsonContext.read("$.issues.codeSmells.severity.minor"));
+        qualityReport.setOtherCodeSmells(jsonContext.read("$.issues.codeSmells.severity.info"));
+
+        String defectDensity = qualityReport.getTotalIssues().toString() + "/" + qualityReport.getLinesOfCode().toString();
+        qualityReport.setDefectDensity(defectDensity);
 
         qualityReport.setUpdateDate(LocalDateTime.now());
-
-//        QualityReport qualityReport = createReport(jsonContext);
-
+        
         return qualityReport;
     }
     
 
 
-    public void setMetrics(DocumentContext jsonContext, QualityReport qualityReport) {
+    private void setMetrics(DocumentContext jsonContext, QualityReport qualityReport) {
         String name = jsonContext.read("$.component.name");
         String key = jsonContext.read("$.component.key");
 
         qualityReport.setName(name);
         qualityReport.setKey(key);
-        qualityReport.setOverallCoverage(getFloatSafely(jsonContext, "coverage"));
+        qualityReport.setOverallCoverage(getDoubleSafely(jsonContext, "coverage"));
         qualityReport.setCyclomaticComplexity(getIntSafely(jsonContext, "complexity"));
         qualityReport.setLinesOfCode(getIntSafely(jsonContext, "ncloc"));
         qualityReport.setCognitiveComplexity(getIntSafely(jsonContext, "cognitive_complexity"));
         qualityReport.setDuplicatedBlocks(getIntSafely(jsonContext, "duplicated_blocks"));
         qualityReport.setDuplicatedLines(getIntSafely(jsonContext, "duplicated_lines"));
-        qualityReport.setDuplicatedLinesDensity(getFloatSafely(jsonContext, "duplicated_lines_density"));
+        qualityReport.setDuplicatedLinesDensity(getDoubleSafely(jsonContext, "duplicated_lines_density"));
         qualityReport.setTotalIssues(getIntSafely(jsonContext, "violations"));
-        qualityReport.setCodeSmels(getIntSafely(jsonContext, "code_smells"));
+        qualityReport.setTotalCodeSmells(getIntSafely(jsonContext, "code_smells"));
         qualityReport.setTotalBugs(getIntSafely(jsonContext, "bugs"));
         qualityReport.setTotalVulnerabilities(getIntSafely(jsonContext, "vulnerabilities"));
-        qualityReport.setConditionsCoverage(getFloatSafely(jsonContext, "branch_coverage"));
-        qualityReport.setLineCoverage(getFloatSafely(jsonContext, "line_coverage"));
+        qualityReport.setConditionsCoverage(getDoubleSafely(jsonContext, "branch_coverage"));
+        qualityReport.setLineCoverage(getDoubleSafely(jsonContext, "line_coverage"));
         qualityReport.setUpdateDate(LocalDateTime.now());
     }
 
@@ -107,13 +125,13 @@ public class QualityReportService {
         return ObjectUtils.isEmpty(result)? null : Integer.parseInt(result.get(0));
     }
 
-    private Float getFloatSafely(DocumentContext jsonContext, String metricKey) {
+    private Double getDoubleSafely(DocumentContext jsonContext, String metricKey) {
         List<String> result = jsonContext.read("$['component']['measures'][?(@.metric == '" + metricKey + "')]['value']");
-        return ObjectUtils.isEmpty(result)? null : Float.parseFloat(result.get(0));
+        return ObjectUtils.isEmpty(result)? null : Double.parseDouble(result.get(0));
     }
 
 
-    public void setIssues(String baseUrl, String componentKey, QualityReport qualityReport) {
+    private void setIssues(String baseUrl, String componentKey, QualityReport qualityReport) {
 
         String url = baseUrl + "/api/issues/search?componentKeys=" + componentKey;
 
@@ -129,6 +147,11 @@ public class QualityReportService {
         setMinorVulnerabilities(url, qualityReport);
         setOtherVulnerabilities(url, qualityReport);
 
+        setBlockerCodeSmells(url, qualityReport);
+        setCriticalCodeSmells(url, qualityReport);
+        setMajorCodeSmells(url, qualityReport);
+        setMinorCodeSmells(url, qualityReport);
+        setOtherCodeSmells(url, qualityReport);
     }
 
     private void setOtherBugs(String url, QualityReport qualityReport) {
@@ -186,4 +209,30 @@ public class QualityReportService {
         DocumentContext jsonContext = JsonPath.parse(response.getBody());
         return jsonContext.read("$.total");
     }
+
+    private void setOtherCodeSmells(String url, QualityReport qualityReport) {
+        url = url + "&types=CODE_SMELL&severities=INFO&status=OPEN";
+        qualityReport.setOtherCodeSmells(getNumberOfIssues(url));
+    }
+
+    private void setMajorCodeSmells(String url, QualityReport qualityReport) {
+        url = url + "&types=CODE_SMELL&severities=MAJOR&status=OPEN";
+        qualityReport.setMajorCodeSmells(getNumberOfIssues(url));
+    }
+
+    private void setMinorCodeSmells(String url, QualityReport qualityReport) {
+        url = url + "&types=CODE_SMELL&severities=MINOR&status=OPEN";
+        qualityReport.setMinorCodeSmells(getNumberOfIssues(url));
+    }
+
+    private void setCriticalCodeSmells(String url, QualityReport qualityReport) {
+        url = url + "&types=CODE_SMELL&severities=CRITICAL&status=OPEN";
+        qualityReport.setCriticalCodeSmells(getNumberOfIssues(url));
+    }
+
+    private void setBlockerCodeSmells(String url, QualityReport qualityReport) {
+        url = url + "&types=CODE_SMELL&severities=BLOCKER&status=OPEN";
+        qualityReport.setBlockerCodeSmells(getNumberOfIssues(url));
+    }
+
 }

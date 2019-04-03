@@ -82,7 +82,7 @@ class SonarClient {
                 "${this.sonarUrl}/api/measures/component?componentKey=${this.compKey}&metricKeys=${metricName}"
         String getResult = getReq(url)
         def result = slurp.parseText(getResult)
-        def value = toType(result.component.measures[0].value)
+        def value = toType(result?.component?.measures[0]?.value)
         log.info "Extracting value: ${value}"
         return value
 
@@ -97,7 +97,7 @@ class SonarClient {
                 "${this.sonarUrl}/api/issues/search?componentKeys=${this.compKey}&types=${type}&severities=${severity}"
         String getResult = getReq(url)
         def result = slurp.parseText(getResult)
-        def value = toType(result.total)
+        def value = toType(result?.total)
         log.info "Extracting value: ${value}"
         return value
     }
