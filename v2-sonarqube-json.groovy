@@ -1,10 +1,14 @@
 #!/usr/bin/env groovy
 import java.util.logging.Logger
 
+@Grab(group="net.andreinc.ansiscape", module="ansiscape", version="0.0.2")
+
 import groovy.json.JsonSlurper
 
 import static groovy.json.JsonOutput.prettyPrint as pretty
 import static groovy.json.JsonOutput.toJson as json
+
+import net.andreinc.ansiscape.AnsiScape
 
 import static SonarClient.*
 import static Constants.*
@@ -17,6 +21,8 @@ class Constants {
     static final String now = "${new Date().format("yyyyMMdd-HHMMss.SSS")}"
     static final File outputFile = new File("sonarqube-export-${now}.json")
     static final File configFile = new File("v2-sonarqube-json.properties")
+    static final AnsiScape color = new AnsiScape()
+    static final info = { text -> log.info "${color.format(text)}"}
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -39,11 +45,11 @@ class SonarClient {
     final JsonSlurper slurp = new JsonSlurper()
 
     SonarClient() {
-        log.info "Initializing SonarClient."
-        log.info "Reading script configuration file: '${configFile.name}'."
+        info "Initializing {blackBg {bold {white SonarClient}{green .}}}"
+        info "Reading script configuration file: '{blue {u ${configFile.name}}}'."
 
         if (!configFile.exists()) {
-            log.info "Configuration file doesn't exist."
+            info "{red Configuration file doesn't exist.}"
         }
 
         Properties props = new Properties()
@@ -52,23 +58,23 @@ class SonarClient {
         this.sonarUrl = props.getProperty("sonar.url")
         this.compKey = props.getProperty("component.key")
 
-        log.info "Configuration read:"
-        log.info "\tsonar.url=${this.sonarUrl}"
-        log.info "\tcomponent.key=${this.compKey}"
+        info "Configuration read:"
+        info "\tsonar.url=${this.sonarUrl}"
+        info "\tcomponent.key=${this.compKey}"
     }
 
     private String getReq(String url) {
-        log.info "GET Request: '${url}'"
+        info "{b GET} Request: '${url}'"
 
         def result = new URL(url).openConnection()
         def code = result.getResponseCode()
 
-        log.info "Response code: '${code}'"
+        info "Response code: '${code}'"
 
         if (code != 200) {
-            log.error "Error calling the API. Please check if sonar.url=${this.sonarUrl} and " +
+            info "{red Error calling the API. Please check if sonar.url=${this.sonarUrl} and " +
                     "the component.key=${this.compKey} " +
-                    "are coorect and SonarQube is up and running and WEB APIs are enabled. Exiting."
+                    "are coorect and SonarQube is up and running and WEB APIs are enabled. Exiting.}"
             System.exit(-1)
         }
 
@@ -77,13 +83,13 @@ class SonarClient {
 
     def metric(String metricName, toType = { x -> x}) {
 
-        log.info " => GET Metric: ${metricName}"
+        info " => {b GET} Metric: {green ${metricName}}"
         String url =
                 "${this.sonarUrl}/api/measures/component?componentKey=${this.compKey}&metricKeys=${metricName}"
         String getResult = getReq(url)
         def result = slurp.parseText(getResult)
         def value = toType(result?.component?.measures[0]?.value)
-        log.info "Extracting value: ${value}"
+        info "Extracting value: {blue ${value}}"
         return value
 
     }
@@ -92,13 +98,13 @@ class SonarClient {
               String severity = "INFO,MINOR,MAJOR,CRITICAL,BLOCKER",
               toType = {x -> x}) {
 
-        log.info " => GET Issue: ${type} / ${severity}"
+        info " => {b GET} Issue: {green ${type} / ${severity}}"
         String url =
                 "${this.sonarUrl}/api/issues/search?componentKeys=${this.compKey}&types=${type}&severities=${severity}"
         String getResult = getReq(url)
         def result = slurp.parseText(getResult)
         def value = toType(result?.total)
-        log.info "Extracting value: ${value}"
+        info "Extracting value: ${value}"
         return value
     }
 }
@@ -172,13 +178,13 @@ Map export = [
 
 String output = pretty(json(export))
 
-log.info "Results have been aggregated:"
+info "Results have been aggregated:"
 log.info "\n\n${output}\n"
 
-log.info "Writing content to file: ${outputFile.name}"
+info "Writing content to file: {u {blue ${outputFile.name}}}"
 outputFile.write(output)
 
-log.info "Job done."
+info "{b {blue Job done.}}"
 
 
 
