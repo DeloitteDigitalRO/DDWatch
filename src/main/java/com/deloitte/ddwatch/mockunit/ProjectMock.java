@@ -11,8 +11,6 @@ import java.util.function.Supplier;
 
 import static net.andreinc.mockneat.unit.objects.Filler.filler;
 import static net.andreinc.mockneat.unit.objects.From.from;
-import static net.andreinc.mockneat.unit.text.Markovs.markovs;
-import static net.andreinc.mockneat.unit.text.Words.words;
 import static net.andreinc.mockneat.unit.time.LocalDates.localDates;
 import static net.andreinc.mockneat.unit.user.Emails.emails;
 import static net.andreinc.mockneat.unit.user.Names.names;

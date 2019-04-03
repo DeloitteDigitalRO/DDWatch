@@ -20,6 +20,7 @@ public class Tag {
     @ManyToMany(mappedBy = "tags")
     private List<Project> projects = new ArrayList<>();
 
+    @Column(name = "name", length = 32)
     private String name;
 
 }
