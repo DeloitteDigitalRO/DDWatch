@@ -5,6 +5,7 @@ import com.deloitte.ddwatch.dtos.QualityReportDTO;
 import com.deloitte.ddwatch.services.ProjectService;
 import com.deloitte.ddwatch.services.QualityReportService;
 import com.deloitte.ddwatch.services.SonarQubeReportService;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,15 +27,16 @@ public class QualityReportController {
     private QualityReportService qualityReportService;
 
     @PutMapping("/addReport")
-    public ResponseEntity<ProjectDTO> addReport(@PathVariable String id) {
-        ProjectDTO projectDTO  = projectService.addReport(Long.parseLong(id));
+    public ResponseEntity<ProjectDTO> addReport(@PathVariable String id, @RequestBody QualityReportDTO qualityReportDTO) {
+        ProjectDTO projectDTO  = projectService.addReport(Long.parseLong(id), qualityReportDTO);
         return new ResponseEntity<>(projectDTO, HttpStatus.OK);
     }
 
     @PutMapping("/uploadReportFile")
-    public ResponseEntity<ProjectDTO> uploadReportFile(@RequestParam("file") MultipartFile file, @PathVariable String id) throws IOException {
+    public ResponseEntity<ProjectDTO> uploadReportFile(@RequestParam("file") MultipartFile file, @PathVariable String id, @RequestParam("body") String body) throws IOException {
         InputStream inputStream = file.getInputStream();
-        ProjectDTO projectDTO = projectService.addReport(Long.parseLong(id), inputStream);
+        QualityReportDTO qualityReportDTO = new Gson().fromJson(body, QualityReportDTO.class);
+        ProjectDTO projectDTO = projectService.addReport(Long.parseLong(id), inputStream, qualityReportDTO);
         return new ResponseEntity<>(projectDTO, HttpStatus.OK);
     }
 

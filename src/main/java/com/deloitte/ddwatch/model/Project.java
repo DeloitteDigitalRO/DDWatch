@@ -83,8 +83,7 @@ public class Project {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Project project = (Project) o;
-        return Objects.equals(getId(), project.getId()) &&
-                Objects.equals(getName(), project.getName()) &&
+        return Objects.equals(getName(), project.getName()) &&
                 Objects.equals(getDescription(), project.getDescription()) &&
                 Objects.equals(getDeliveryLead(), project.getDeliveryLead()) &&
                 Objects.equals(getDeliveryLeadEmail(), project.getDeliveryLeadEmail()) &&
@@ -100,6 +99,6 @@ public class Project {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getDescription(), getDeliveryLead(), getDeliveryLeadEmail(), getTechnicalLead(), getTechnicalLeadEmail(), getDeliveryStatus(), getQualityStatus(), getLastQualityReport(), getLastDeliveryReport(), getSonarQubeUrl(), getSonarComponentKey());
+        return Objects.hash(getName(), getDescription(), getDeliveryLead(), getDeliveryLeadEmail(), getTechnicalLead(), getTechnicalLeadEmail(), getDeliveryStatus(), getQualityStatus(), getLastQualityReport(), getLastDeliveryReport(), getSonarQubeUrl(), getSonarComponentKey());
     }
 }
