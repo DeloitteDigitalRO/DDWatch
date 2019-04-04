@@ -99,6 +99,59 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>0.18.1</version>
+				<configuration>
+					<logDate>default</logDate>
+					<autoPull>true</autoPull>
+					<images>
+						<image>
+							<alias>db</alias>
+							<name>postgres:11</name>
+							<build>
+								<ports>
+									<port>5432</port>
+								</ports>
+								<dockerFileDir>${project.basedir}/src/main/resources</dockerFileDir>
+							</build>
+							<run>
+								<ports>
+									<port>5432:5432</port>
+								</ports>
+								<wait>
+									<log>database system is ready to accept connections</log>
+									<time>20000</time>
+									<kill>500</kill>
+									<shutdown>100</shutdown>
+								</wait>
+								<log>
+									<prefix>DB</prefix>
+									<color>yellow</color>
+								</log>
+							</run>
+						</image>
+					</images>
+				</configuration>
+				<executions>
+					<execution>
+						<id>start</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>build</goal>
+							<goal>start</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>stop</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>stop</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
