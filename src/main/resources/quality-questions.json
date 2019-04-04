@@ -3,62 +3,27 @@
     {
       "id" : "Q1",
       "text" : "Does the project has an unified coding standard (eg.: Google Java Coding Standard)",
-      "answers" : [
-        {
-          "value" : "yes"
-        },
-        {
-          "value" : "no"
-        }
-      ]
+      "answers" : [ "yes", "no"]
     },
     {
       "id" : "Q2",
       "text" : "Is the coding standard imposed / enforced in an automatic way ? (eg.: codingstyle integrated in the build)",
-      "answers" : [
-        {
-          "value" : "yes"
-        },
-        {
-          "value" : "no"
-        }
-      ]
+      "answers" : [ "yes", "no"]
     },
     {
       "id" : "Q3",
       "text" : "Does the project has an automatic tool / plugin to check for library updates ?",
-      "answers" : [
-        {
-          "value" : "yes"
-        },
-        {
-          "value" : "no"
-        }
-      ]
+      "answers" : [ "yes", "no"]
     },
     {
       "id" : "Q4",
       "text" : "Are the libraries used by the project up to date ?",
-      "answers" : [
-        {
-          "value" : "yes"
-        },
-        {
-          "value" : "no"
-        }
-      ]
+      "answers" : [ "yes", "no"]
     },
     {
       "id" : "Q5",
       "text" : "Have the licenses of the libraries / tools used by the project have been reviewed ?",
-      "answers" : [
-        {
-          "value" : "yes"
-        },
-        {
-          "value" : "no"
-        }
-      ]
+      "answers" : [ "yes", "no"]
     }
   ]
 }

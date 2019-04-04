@@ -5,8 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Data
 @NoArgsConstructor
@@ -41,7 +40,7 @@ public class Project {
 
     @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 //    @OrderBy(value = "updateDate DESC")
-    List<QualityReport> qualityReports = new ArrayList<>();
+    Set<QualityReport> qualityReports = new HashSet<>();
 
     @Column(name = "last_quality_report")
     LocalDateTime lastQualityReport;
@@ -77,5 +76,30 @@ public class Project {
     public void removeTag(Tag tag) {
         tags.remove(tag);
         tag.getProjects().remove(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Project project = (Project) o;
+        return Objects.equals(getId(), project.getId()) &&
+                Objects.equals(getName(), project.getName()) &&
+                Objects.equals(getDescription(), project.getDescription()) &&
+                Objects.equals(getDeliveryLead(), project.getDeliveryLead()) &&
+                Objects.equals(getDeliveryLeadEmail(), project.getDeliveryLeadEmail()) &&
+                Objects.equals(getTechnicalLead(), project.getTechnicalLead()) &&
+                Objects.equals(getTechnicalLeadEmail(), project.getTechnicalLeadEmail()) &&
+                getDeliveryStatus() == project.getDeliveryStatus() &&
+                getQualityStatus() == project.getQualityStatus() &&
+                Objects.equals(getLastQualityReport(), project.getLastQualityReport()) &&
+                Objects.equals(getLastDeliveryReport(), project.getLastDeliveryReport()) &&
+                Objects.equals(getSonarQubeUrl(), project.getSonarQubeUrl()) &&
+                Objects.equals(getSonarComponentKey(), project.getSonarComponentKey());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getDescription(), getDeliveryLead(), getDeliveryLeadEmail(), getTechnicalLead(), getTechnicalLeadEmail(), getDeliveryStatus(), getQualityStatus(), getLastQualityReport(), getLastDeliveryReport(), getSonarQubeUrl(), getSonarComponentKey());
     }
 }

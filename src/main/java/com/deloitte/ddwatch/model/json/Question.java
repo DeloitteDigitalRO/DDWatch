@@ -13,5 +13,5 @@ public class Question {
 
     String id;
     String text;
-    Set<Map<String, String>> answers;
+    Set<String> answers;
 }

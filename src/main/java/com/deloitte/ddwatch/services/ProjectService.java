@@ -1,11 +1,12 @@
 package com.deloitte.ddwatch.services;
 
 import com.deloitte.ddwatch.dtos.ProjectDTO;
+import com.deloitte.ddwatch.dtos.QualityQuestionsAnswersDTO;
+import com.deloitte.ddwatch.dtos.QualityReportDTO;
+import com.deloitte.ddwatch.dtos.SonarQubeReportDTO;
 import com.deloitte.ddwatch.mockunit.ProjectMock;
-import com.deloitte.ddwatch.model.Project;
-import com.deloitte.ddwatch.model.QualityReport;
-import com.deloitte.ddwatch.model.SonarQubeReport;
-import com.deloitte.ddwatch.model.Tag;
+import com.deloitte.ddwatch.model.*;
+import com.deloitte.ddwatch.model.json.Question;
 import com.deloitte.ddwatch.repositories.ProjectRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -30,6 +33,10 @@ public class ProjectService {
     private TagService tagService;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private QualityReportService qualityReportService;
+    @Autowired
+    private Map<String, Question> qualityQuestionsMap;
 
 
     public Project create(ProjectDTO projectDTO) {
@@ -57,6 +64,8 @@ public class ProjectService {
     public ProjectDTO findById(Long id) {
         Project project = safelyGet(id);
         ProjectDTO projectDTO = modelMapper.map(project, ProjectDTO.class);
+        convertAnswers(projectDTO, project);
+
         return projectDTO;
     }
 
@@ -92,15 +101,8 @@ public class ProjectService {
         String sonarBaseUrl = project.getSonarQubeUrl();
 
         SonarQubeReport sonarQubeReport = sonarQubeReportService.createReportFromUrl(sonarBaseUrl, project.getSonarComponentKey());
+        ProjectDTO projectDTO = addReport(project, sonarQubeReport);
 
-        QualityReport qualityReport = new QualityReport();
-        qualityReport.setUpdateDate(LocalDateTime.now());
-        project.setLastQualityReport(qualityReport.getUpdateDate());
-
-        qualityReport.addSonarQubeReport(sonarQubeReport);
-        project.addQualityReport(qualityReport);
-
-        ProjectDTO projectDTO = modelMapper.map(project, ProjectDTO.class);
 
         return projectDTO;
     }
@@ -108,10 +110,17 @@ public class ProjectService {
     @Transactional
     public ProjectDTO addReport(long id, InputStream inputStream) throws IOException {
         Project project = safelyGet(id);
-
         SonarQubeReport sonarQubeReport = sonarQubeReportService.createReportFromFile(inputStream);
+        ProjectDTO projectDTO = addReport(project, sonarQubeReport);
+        inputStream.close();
+        return projectDTO;
+    }
+
+    private ProjectDTO addReport(Project project, SonarQubeReport sonarQubeReport) {
+
 
         QualityReport qualityReport = new QualityReport();
+//        qualityReport = qualityReportService.getReport();
         qualityReport.setUpdateDate(LocalDateTime.now());
         project.setLastQualityReport(qualityReport.getUpdateDate());
 
@@ -120,8 +129,64 @@ public class ProjectService {
         project.addQualityReport(qualityReport);
 
         ProjectDTO projectDTO = modelMapper.map(project, ProjectDTO.class);
-        inputStream.close();
+        convertAnswers(projectDTO, project);
 
         return projectDTO;
+    }
+
+    @Transactional
+    public ProjectDTO test(long id, QualityReportDTO qualityReportDTO) {
+        Project project = safelyGet(id);
+
+        QualityReport qualityReport = qualityReportService.test(qualityReportDTO);
+        project.addQualityReport(qualityReport);
+
+
+
+        ProjectDTO projectDTO = modelMapper.map(project, ProjectDTO.class);
+        convertAnswers(projectDTO, project);
+
+//        List<QualityReportDTO> qualityReportDTOS = new ArrayList<>();
+//        for(QualityReport qr : project.getQualityReports()) {
+//            QualityReportDTO qrDTO = new QualityReportDTO();
+//            List<QualityQuestionsAnswersDTO> answersDTOS = new ArrayList<>();
+//            for(QualityQuestionsAnswers answer : qr.getQuestionsAnswers()) {
+//                QualityQuestionsAnswersDTO answerDTO = new QualityQuestionsAnswersDTO();
+//                answerDTO.setQuestionId(answer.getQuestionId());
+//                answerDTO.setText(qualityQuestionsMap.get(answerDTO.getQuestionId()).getText());
+//                answerDTO.setAnswer(answer.getAnswer());
+//                answersDTOS.add(answerDTO);
+//            }
+//            qrDTO.setQualityQuestionsAnswers(answersDTOS);
+//            qualityReportDTOS.add(qrDTO);
+//        }
+//        projectDTO.setQualityReports(qualityReportDTOS);
+
+
+
+        return projectDTO;
+    }
+
+    private void convertAnswers(ProjectDTO projectDTO, Project project) {
+//        List<QualityReportDTO> qualityReportDTOS = new ArrayList<>();
+//        for(QualityReport qr : project.getQualityReports()) {
+//            QualityReportDTO qrDTO = new QualityReportDTO();
+//            SonarQubeReport sonarQubeReport = qr.getSonarQubeReport();
+//            if (sonarQubeReport != null) {
+//                qrDTO.setSonarQubeReport(modelMapper.map(qr.getSonarQubeReport(), SonarQubeReportDTO.class));
+//            }
+//            qrDTO.setUpdateDate(qr.getUpdateDate());
+//            List<QualityQuestionsAnswersDTO> answersDTOS = new ArrayList<>();
+//            for(QualityQuestionsAnswers answer : qr.getQuestionsAnswers()) {
+//                QualityQuestionsAnswersDTO answerDTO = new QualityQuestionsAnswersDTO();
+//                answerDTO.setQuestionId(answer.getQuestionId());
+//                answerDTO.setText(qualityQuestionsMap.get(answerDTO.getQuestionId()).getText());
+//                answerDTO.setAnswer(answer.getAnswer());
+//                answersDTOS.add(answerDTO);
+//            }
+//            qrDTO.setQualityQuestionsAnswers(answersDTOS);
+//            qualityReportDTOS.add(qrDTO);
+//        }
+//        projectDTO.setQualityReports(qualityReportDTOS);
     }
 }
