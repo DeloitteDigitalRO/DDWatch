@@ -28,7 +28,7 @@ public class QualityReportController {
 
     @PutMapping("/addReport")
     public ResponseEntity<ProjectDTO> addReport(@PathVariable String id, @RequestBody QualityReportDTO qualityReportDTO) {
-        ProjectDTO projectDTO  = projectService.addReport(Long.parseLong(id), qualityReportDTO);
+        ProjectDTO projectDTO  = qualityReportService.addReport(Long.parseLong(id), qualityReportDTO);
         return new ResponseEntity<>(projectDTO, HttpStatus.OK);
     }
 
@@ -36,13 +36,13 @@ public class QualityReportController {
     public ResponseEntity<ProjectDTO> uploadReportFile(@RequestParam("file") MultipartFile file, @PathVariable String id, @RequestParam("body") String body) throws IOException {
         InputStream inputStream = file.getInputStream();
         QualityReportDTO qualityReportDTO = new Gson().fromJson(body, QualityReportDTO.class);
-        ProjectDTO projectDTO = projectService.addReport(Long.parseLong(id), inputStream, qualityReportDTO);
+        ProjectDTO projectDTO = qualityReportService.addReport(Long.parseLong(id), inputStream, qualityReportDTO);
         return new ResponseEntity<>(projectDTO, HttpStatus.OK);
     }
 
-    @PutMapping("/test")
-    public ResponseEntity<ProjectDTO> test(@PathVariable String id, @RequestBody QualityReportDTO qualityReportDTO) {
-        ProjectDTO projectDTO = projectService.test(Long.parseLong(id), qualityReportDTO);
-        return new ResponseEntity<>(projectDTO, HttpStatus.OK);
-    }
+//    @PutMapping("/test")
+//    public ResponseEntity<ProjectDTO> test(@PathVariable String id, @RequestBody QualityReportDTO qualityReportDTO) {
+//        ProjectDTO projectDTO = qualityReportService.createQualityReport(Long.parseLong(id), qualityReportDTO);
+//        return new ResponseEntity<>(projectDTO, HttpStatus.OK);
+//    }
 }

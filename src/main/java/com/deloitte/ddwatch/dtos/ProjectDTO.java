@@ -12,6 +12,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -51,7 +52,7 @@ public class ProjectDTO implements Serializable {
 //    Set<DeliveryReportDTO> deliveryReports;
     LocalDateTime lastDeliveryReport;
 
-    List<@Alphanumeric @Size(max=32) String> tagNames;
+    Set<@Alphanumeric @Size(max=32) String> tags;
 
     @URL
     @Size(max = 1024)

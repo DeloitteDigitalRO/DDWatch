@@ -51,11 +51,11 @@ public class Project {
     @Column(name = "last_delivery_report")
     LocalDateTime lastDeliveryReport;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "project_tag",
             joinColumns = @JoinColumn(name = "project_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    private List<Tag> tags = new ArrayList<>();
+    private Set<Tag> tags = new HashSet<>();
 
     @Column(name = "sonarqube_url", length = 1024)
     String sonarQubeUrl;
