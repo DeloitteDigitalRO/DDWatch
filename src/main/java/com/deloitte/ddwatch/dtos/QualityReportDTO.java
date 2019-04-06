@@ -13,6 +13,6 @@ public class QualityReportDTO implements Serializable {
 
     private SonarQubeReportDTO sonarQubeReport;
     private LocalDateTime updateDate;
-    private List<QualityQuestionsAnswersDTO> qualityQuestionsAnswers;
+    private List<QualityQuestionsAnswersDTO> questionsAnswers;
 
 }

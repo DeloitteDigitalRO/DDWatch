@@ -6,8 +6,11 @@ import com.deloitte.ddwatch.repositories.ProjectRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -22,6 +25,8 @@ public class ProjectService {
     private TagService tagService;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private QualityReportService qualityReportService;
 
 
     public Project create(ProjectDTO projectDTO) {
@@ -77,5 +82,25 @@ public class ProjectService {
                 .map(p -> modelMapper.map(p, ProjectDTO.class))
                 .collect(Collectors.toList());
         return projectDTOS;
+    }
+
+    @Transactional
+    public Project addReport(long id, QualityReport qualityReport) {
+        Project project = safelyGet(id);
+
+        qualityReport = qualityReportService.addReport(project.getSonarQubeUrl(), project.getSonarComponentKey(), qualityReport);
+        project.addQualityReport(qualityReport);
+        project.setLastQualityReport(qualityReport.getUpdateDate());
+        return project;
+    }
+
+    @Transactional
+    public Project addReport(long id, InputStream inputStream, QualityReport qualityReport) throws IOException {
+        Project project = safelyGet(id);
+
+        qualityReport = qualityReportService.addReport(inputStream, qualityReport);
+        project.addQualityReport(qualityReport);
+        project.setLastQualityReport(qualityReport.getUpdateDate());
+        return project;
     }
 }

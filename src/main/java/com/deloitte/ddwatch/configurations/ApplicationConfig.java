@@ -2,9 +2,11 @@ package com.deloitte.ddwatch.configurations;
 
 import com.deloitte.ddwatch.dtos.ProjectDTO;
 import com.deloitte.ddwatch.dtos.QualityQuestionsAnswersDTO;
+import com.deloitte.ddwatch.dtos.QualityReportDTO;
 import com.deloitte.ddwatch.mockunit.ProjectMock;
 import com.deloitte.ddwatch.model.Project;
 import com.deloitte.ddwatch.model.QualityQuestionsAnswers;
+import com.deloitte.ddwatch.model.QualityReport;
 import com.deloitte.ddwatch.model.Tag;
 import com.deloitte.ddwatch.model.json.QualityQuestions;
 import com.deloitte.ddwatch.model.json.Question;
@@ -13,14 +15,11 @@ import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.modelmapper.spi.MappingContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.client.RestTemplate;
 
-import javax.persistence.MapsId;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
@@ -48,6 +47,22 @@ public class ApplicationConfig {
                 d.setQuestionId(s.getQuestionId());
                 d.setAnswer(s.getAnswer());
                 d.setText(qualityQuestionsMap.get(s.getQuestionId()).getText());
+                return d;
+            }
+        };
+
+        Converter<QualityReportDTO, QualityReport> questionDTOConverter =  new Converter<QualityReportDTO, QualityReport>() {
+            public QualityReport convert(MappingContext<QualityReportDTO, QualityReport> context) {
+                QualityReportDTO s = context.getSource();
+                QualityReport d = new QualityReport();
+
+                for (QualityQuestionsAnswersDTO answerDTO : s.getQuestionsAnswers()) {
+                    QualityQuestionsAnswers answer = new QualityQuestionsAnswers();
+                    answer.setQuestionId(answerDTO.getQuestionId());
+                    answer.setAnswer(answerDTO.getAnswer());
+                    d.addQualityQuestionAnswer(answer);
+                }
+
                 return d;
             }
         };
@@ -83,6 +98,8 @@ public class ApplicationConfig {
         });
 
         modelMapper.addConverter(questionTextConverter);
+        modelMapper.addConverter(questionDTOConverter);
+
         return modelMapper;
     }
 
