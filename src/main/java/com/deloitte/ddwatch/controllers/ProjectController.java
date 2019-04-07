@@ -3,16 +3,15 @@ package com.deloitte.ddwatch.controllers;
 import com.deloitte.ddwatch.dtos.ProjectDTO;
 import com.deloitte.ddwatch.model.Project;
 import com.deloitte.ddwatch.services.ProjectService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/projects")
@@ -20,33 +19,42 @@ public class ProjectController {
 
     @Autowired
     private ProjectService projectService;
-
-
+    @Autowired
+    private ModelMapper modelMapper;
 
     @PostMapping
     public ResponseEntity<Long> create(@RequestBody ProjectDTO projectDTO) {
-        Project project = projectService.create(projectDTO);
+        Project project = modelMapper.map(projectDTO, Project.class);
+        project = projectService.create(project);
         return new ResponseEntity<>(project.getId(), HttpStatus.CREATED);
     }
 
-
     @GetMapping
     public ResponseEntity<List<ProjectDTO>> getAll() {
-        List<ProjectDTO> projectDTOS = projectService.findAll();
+        List<Project> projects = projectService.findAll();
+        List<ProjectDTO> projectDTOS = projects
+                .stream()
+                .map(p -> modelMapper.map(p, ProjectDTO.class))
+                .collect(Collectors.toList());
         return new ResponseEntity(projectDTOS, HttpStatus.OK);
     }
 
 
     @GetMapping("/query")
     public ResponseEntity<List<ProjectDTO>> getByTag(@RequestParam String tag) {
-        List<ProjectDTO> projectDTOS = projectService.findByTag(tag);
+        Set<Project> projects = projectService.findByTag(tag);
+        List<ProjectDTO> projectDTOS = projects
+                .stream()
+                .map(p -> modelMapper.map(p, ProjectDTO.class))
+                .collect(Collectors.toList());
         return new ResponseEntity(projectDTOS, HttpStatus.OK);
     }
 
 
     @GetMapping("/{id}")
     public ResponseEntity<ProjectDTO> getById(@PathVariable String id) {
-        ProjectDTO projectDTO = projectService.findById(Long.parseLong(id));
+        Project project = projectService.findById(Long.parseLong(id));
+        ProjectDTO projectDTO = modelMapper.map(project, ProjectDTO.class);
         return new ResponseEntity<>(projectDTO, HttpStatus.OK);
     }
 
