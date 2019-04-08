@@ -2,6 +2,7 @@ package com.deloitte.ddwatch.controllers;
 
 import com.deloitte.ddwatch.dtos.ProjectDTO;
 import com.deloitte.ddwatch.model.Project;
+import com.deloitte.ddwatch.model.Tag;
 import com.deloitte.ddwatch.services.ProjectService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,12 @@ public class ProjectController {
     @PostMapping
     public ResponseEntity<Long> create(@RequestBody ProjectDTO projectDTO) {
         Project project = modelMapper.map(projectDTO, Project.class);
-        project = projectService.create(project);
+        Set<Tag> tags = projectDTO.getTags()
+                .stream()
+                .map(t -> modelMapper.map(t, Tag.class))
+                .collect(Collectors.toSet());
+
+        project = projectService.create(project, tags);
         return new ResponseEntity<>(project.getId(), HttpStatus.CREATED);
     }
 

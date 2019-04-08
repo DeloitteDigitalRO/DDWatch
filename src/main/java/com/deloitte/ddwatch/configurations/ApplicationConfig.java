@@ -67,17 +67,22 @@ public class ApplicationConfig {
             }
         };
 
-        Converter<Set<String>, Set<Tag>> tagConverter2 = new Converter<Set<String>, Set<Tag>>() {
+        Converter<Set<String>, Set<Tag>> projectTagConverter = new Converter<Set<String>, Set<Tag>>() {
             public Set<Tag> convert(MappingContext<Set<String>, Set<Tag>> context) {
-                Set<Tag> tags = new HashSet<>();
-                for(String tagName : context.getSource()) {
-                    Tag tag = new Tag();
-                    tag.setName(tagName);
-                    tags.add(tag);
-                }
-                return tags;
+                return new HashSet<>();
             }
         };
+
+
+        Converter<String, Tag> stringToTagConvertor = new Converter<String, Tag>() {
+            public Tag convert(MappingContext<String, Tag> context) {
+                String tagName = context.getSource();
+                Tag tag = new Tag();
+                tag.setName(tagName);
+                return tag;
+            }
+        };
+
 
         Converter<Set<Tag>, Set<String>> tagConverter = context -> context.getSource() == null ? null :
                                     context.getSource().stream().map(Tag::getName).collect(Collectors.toSet());
@@ -93,12 +98,13 @@ public class ApplicationConfig {
 
             @Override
             protected void configure() {
-                using(tagConverter2).map(source.getTags(), destination.getTags());
+                using(projectTagConverter).map(source.getTags(), destination.getTags());
             }
         });
 
         modelMapper.addConverter(questionTextConverter);
         modelMapper.addConverter(questionDTOConverter);
+        modelMapper.addConverter(stringToTagConvertor);
 
         return modelMapper;
     }

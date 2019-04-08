@@ -2,11 +2,9 @@ package com.deloitte.ddwatch.services;
 
 import com.deloitte.ddwatch.model.*;
 import com.deloitte.ddwatch.repositories.ProjectRepository;
-import com.deloitte.ddwatch.repositories.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,32 +21,12 @@ public class ProjectService {
     private TagService tagService;
     @Autowired
     private QualityReportService qualityReportService;
-    @Autowired
-    private TagRepository tagRepository;
 
 
     @Transactional
-    public Project create(Project project) {
-        if (!ObjectUtils.isEmpty(project.getTags())) {
-            for (Tag tag : project.getTags()) {
-
-                Optional<Tag> persistedTag = tagRepository.findByName(tag.getName());
-                if(persistedTag.isPresent()) {
-                    persistedTag.get().getProjects().add(project);
-                    project.getTags().remove(tag);
-                    project.addTag(persistedTag.get());
-
-                } else {
-                    project.addTag(tag);
-                }
-//                tag.getProjects().add(project);
-//                Tag tag = tagService.safelyGetByName(tagName);
-
-//                project.addTag(tag);
-            }
-        }
+    public Project create(Project project, Set<Tag> tags) {
+        tagService.setTags(project, tags);
         project = projectRepository.save(project);
-        projectRepository.save(project);
         return project;
     }
 
