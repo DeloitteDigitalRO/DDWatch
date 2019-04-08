@@ -19,19 +19,15 @@ import java.io.IOException;
 import java.io.InputStream;
 
 @RestController
-@RequestMapping("/projects/{id}")
+@RequestMapping("/projects/{id}/qualityReports")
 public class QualityReportController {
 
     @Autowired
-    private SonarQubeReportService sonarQubeReportService;
-    @Autowired
     private ProjectService projectService;
-    @Autowired
-    private QualityReportService qualityReportService;
     @Autowired
     private ModelMapper modelMapper;
 
-    @PutMapping("/addReport")
+    @PostMapping
     public ResponseEntity<ProjectDTO> addReport(@PathVariable String id, @RequestBody QualityReportDTO qualityReportDTO) {
         QualityReport qualityReport = modelMapper.map(qualityReportDTO, QualityReport.class);
 
@@ -41,7 +37,7 @@ public class QualityReportController {
         return new ResponseEntity<>(projectDTO, HttpStatus.OK);
     }
 
-    @PutMapping("/uploadReportFile")
+    @PostMapping("/uploadFile")
     public ResponseEntity<ProjectDTO> uploadReportFile(@RequestParam("file") MultipartFile file, @PathVariable String id, @RequestParam("body") String body) throws IOException {
         InputStream inputStream = file.getInputStream();
         QualityReportDTO qualityReportDTO = new Gson().fromJson(body, QualityReportDTO.class);

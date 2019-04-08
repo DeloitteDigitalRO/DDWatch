@@ -21,6 +21,8 @@ public class ProjectService {
     private TagService tagService;
     @Autowired
     private QualityReportService qualityReportService;
+    @Autowired
+    private DeliveryReportService deliveryReportService;
 
 
     @Transactional
@@ -56,7 +58,7 @@ public class ProjectService {
     public Project addReport(long id, QualityReport qualityReport) {
         Project project = findById(id);
 
-        qualityReport = qualityReportService.addReport(project.getSonarQubeUrl(), project.getSonarComponentKey(), qualityReport);
+        qualityReport = qualityReportService.create(project.getSonarQubeUrl(), project.getSonarComponentKey(), qualityReport);
         project.addQualityReport(qualityReport);
         project.setLastQualityReport(qualityReport.getUpdateDate());
         return project;
@@ -66,9 +68,19 @@ public class ProjectService {
     public Project addReport(long id, InputStream inputStream, QualityReport qualityReport) throws IOException {
         Project project = findById(id);
 
-        qualityReport = qualityReportService.addReport(inputStream, qualityReport);
+        qualityReport = qualityReportService.create(inputStream, qualityReport);
         project.addQualityReport(qualityReport);
         project.setLastQualityReport(qualityReport.getUpdateDate());
+        return project;
+    }
+
+    @Transactional
+    public Project addDeliveryReport(long id, DeliveryReport deliveryReport) {
+        Project project = findById(id);
+
+        deliveryReport = deliveryReportService.create(deliveryReport);
+        project.addDeliveryReport(deliveryReport);
+        project.setLastDeliveryReport(deliveryReport.getUpdateDate());
         return project;
     }
 }

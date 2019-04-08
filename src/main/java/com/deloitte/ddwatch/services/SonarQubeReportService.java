@@ -19,8 +19,8 @@ public class SonarQubeReportService {
 
     @Autowired
     RestTemplate restTemplate;
-    @Autowired
-    SonarQubeReportRepository sonarQubeReportRepository;
+//    @Autowired
+//    SonarQubeReportRepository sonarQubeReportRepository;
 
     public List<String> getProjectKeys() {
         String url = "http://localhost:9000/api/components/search?qualifiers=TRK";

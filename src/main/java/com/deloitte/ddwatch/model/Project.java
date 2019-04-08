@@ -39,14 +39,15 @@ public class Project {
     ProjectStatus qualityStatus;
 
     @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-//    @OrderBy(value = "updateDate DESC")
+    @OrderBy(value = "updateDate DESC")
     Set<QualityReport> qualityReports = new HashSet<>();
 
     @Column(name = "last_quality_report")
     LocalDateTime lastQualityReport;
 
-    @OneToMany(mappedBy = "project")
-    List<DeliveryReport> deliveryReports;
+    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OrderBy(value = "updateDate DESC")
+    Set<DeliveryReport> deliveryReports = new HashSet<>();
 
     @Column(name = "last_delivery_report")
     LocalDateTime lastDeliveryReport;
@@ -66,6 +67,11 @@ public class Project {
     public void addQualityReport(QualityReport qualityReport) {
         qualityReports.add(qualityReport);
         qualityReport.setProject(this);
+    }
+
+    public void addDeliveryReport(DeliveryReport deliveryReport) {
+        deliveryReports.add(deliveryReport);
+        deliveryReport.setProject(this);
     }
 
     public void addTag(Tag tag) {

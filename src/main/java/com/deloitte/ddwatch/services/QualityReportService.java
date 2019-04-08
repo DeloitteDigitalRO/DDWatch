@@ -17,7 +17,7 @@ public class QualityReportService {
     private SonarQubeReportService sonarQubeReportService;
 
     @Transactional
-    public QualityReport addReport(String sonarBaseUrl, String sonarComponentKey, QualityReport qualityReport) {
+    public QualityReport create(String sonarBaseUrl, String sonarComponentKey, QualityReport qualityReport) {
         SonarQubeReport sonarQubeReport = sonarQubeReportService.createReportFromUrl(sonarBaseUrl, sonarComponentKey);
         qualityReport.setUpdateDate(LocalDateTime.now());
         qualityReport.addSonarQubeReport(sonarQubeReport);
@@ -25,7 +25,7 @@ public class QualityReportService {
     }
 
     @Transactional
-    public QualityReport addReport(InputStream inputStream, QualityReport qualityReport) throws IOException {
+    public QualityReport create(InputStream inputStream, QualityReport qualityReport) throws IOException {
         SonarQubeReport sonarQubeReport = sonarQubeReportService.createReportFromFile(inputStream);
         qualityReport.setUpdateDate(LocalDateTime.now());
         qualityReport.addSonarQubeReport(sonarQubeReport);

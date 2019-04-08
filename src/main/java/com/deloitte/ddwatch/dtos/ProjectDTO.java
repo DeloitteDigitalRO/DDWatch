@@ -49,7 +49,7 @@ public class ProjectDTO implements Serializable {
     List<QualityReportDTO> qualityReports;
     LocalDateTime lastQualityReport;
 
-//    Set<DeliveryReportDTO> deliveryReports;
+    Set<DeliveryReportDTO> deliveryReports;
     LocalDateTime lastDeliveryReport;
 
     Set<@Alphanumeric @Size(max=32) String> tags;
