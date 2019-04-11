@@ -1,0 +1,261 @@
+{
+	"info": {
+		"_postman_id": "68cd512a-6290-44d6-b384-45e0b32df00a",
+		"name": "DDWatch",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "CreateProject",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\n        \"name\": \"SampleProject6\",\n        \"description\": null,\n        \"deliveryLead\": \"Signe Rollerson\",\n        \"deliveryLeadEmail\": \"soothlyhide@att.net\",\n        \"technicalLead\" : \"someDude\",\n        \"technicalLeadEmail\" : \"someDude@mail.com\",\n        \"deliveryStatus\": \"AMBER\",\n        \"qualityStatus\": \"AMBER\",\n        \"sonarQubeUrl\": \"http://localhost:9000\",\n        \"sonarComponentKey\" : \"com.deloitte:ddwatch\",\n        \"tags\" : [\"tag3\", \"tag1\"]\n    }"
+				},
+				"url": {
+					"raw": "http://localhost:9090/projects",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"projects"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddQualityReport",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"questionsAnswers\": [\n        {\n            \"questionId\": \"Q1\",\n            \"answer\": \"yes\"\n        },\n        {\n            \"questionId\": \"Q2\",\n            \"answer\": \"no\"\n        },\n                {\n            \"questionId\": \"Q3\",\n            \"answer\": \"yes\"\n        },\n                {\n            \"questionId\": \"Q4\",\n            \"answer\": \"yes\"\n        }\n    ]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:9090/projects/1/qualityReports/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"projects",
+						"1",
+						"qualityReports",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddDeliveryReport",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n            \"field1\": \"value1\",\n            \"field2\": \"value2\",\n            \"field3\": \"value3\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:9090/projects/1/deliveryReports/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"projects",
+						"1",
+						"deliveryReports",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UploadQualityReportFile",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": ""
+						},
+						{
+							"key": "body",
+							"value": "{\n    \"questionsAnswers\": [\n        {\n            \"questionId\": \"Q1\",\n            \"answer\": \"yes\"\n        },\n        {\n            \"questionId\": \"Q2\",\n            \"answer\": \"no\"\n        },\n                {\n            \"questionId\": \"Q3\",\n            \"answer\": \"yes\"\n        },\n                {\n            \"questionId\": \"Q4\",\n            \"answer\": \"yes\"\n        }\n    ]\n}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:9090/projects/1/qualityReports/uploadFile",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"projects",
+						"1",
+						"qualityReports",
+						"uploadFile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateTag",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t        \"name\": \"tag2\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:9090/tags",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"tags"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetByTag",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:9090/projects/query?tag=tag2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"projects",
+						"query"
+					],
+					"query": [
+						{
+							"key": "tag",
+							"value": "tag2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetProject",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:9090/projects/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"projects",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetQualityQuestions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:9090/questions",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"questions"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
