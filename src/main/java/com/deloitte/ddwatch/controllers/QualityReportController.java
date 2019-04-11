@@ -20,6 +20,7 @@ import java.io.InputStream;
 
 @RestController
 @RequestMapping("/projects/{id}/qualityReports")
+@CrossOrigin
 public class QualityReportController {
 
     @Autowired
