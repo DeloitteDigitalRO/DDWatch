@@ -59,7 +59,7 @@ public class ProjectMock implements MockUnit<Project> {
                 .setter(Project::setDeliveryLeadEmail, emails().domain("deloittece.com"))
                 .setter(Project::setTechnicalLead, names().full())
                 .setter(Project::setTechnicalLeadEmail, emails().domain("deloittece.com"))
-                .setter(Project::setDescription, markovs().size(32).loremIpsum())
+                .constant(Project::setDescription, "Project description.")
                 .setter(Project::setDeliveryStatus, from(Status.class))
                 .setter(Project::setQualityStatus, from(Status.class))
                 .setter(Project::setLastQualityReport, thisMonth)

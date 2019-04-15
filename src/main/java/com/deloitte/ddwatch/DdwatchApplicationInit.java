@@ -40,6 +40,6 @@ public class DdwatchApplicationInit {
                     logger.info("Added project {} into the databse with id {}.", p.getName(), p.getId());
                 });
 
-        logger.info("The {} projects are now inserted into the database", numberOfMockProjects);
+        logger.info("{} projects are now inserted into the database.", numberOfMockProjects);
     }
 }
