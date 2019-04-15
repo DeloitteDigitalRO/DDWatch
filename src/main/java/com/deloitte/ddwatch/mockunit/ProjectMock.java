@@ -1,7 +1,9 @@
 package com.deloitte.ddwatch.mockunit;
 
 import com.deloitte.ddwatch.model.Project;
-import com.deloitte.ddwatch.model.ProjectStatus;
+import com.deloitte.ddwatch.model.QualityReport;
+import com.deloitte.ddwatch.model.SonarQubeReport;
+import com.deloitte.ddwatch.model.Status;
 import net.andreinc.mockneat.abstraction.MockUnit;
 import net.andreinc.mockneat.unit.seq.LongSeq;
 
@@ -15,7 +17,6 @@ import static net.andreinc.mockneat.unit.networking.URLs.urls;
 import static net.andreinc.mockneat.unit.objects.Filler.filler;
 import static net.andreinc.mockneat.unit.objects.From.from;
 import static net.andreinc.mockneat.unit.text.Formatter.fmt;
-import static net.andreinc.mockneat.unit.text.Markovs.markovs;
 import static net.andreinc.mockneat.unit.text.Strings.strings;
 import static net.andreinc.mockneat.unit.time.LocalDates.localDates;
 import static net.andreinc.mockneat.unit.types.Ints.ints;
@@ -52,8 +53,8 @@ public class ProjectMock implements MockUnit<Project> {
                 .setter(Project::setDeliveryLead, names().full())
                 .setter(Project::setDeliveryLeadEmail, emails())
 //                .setter(Project::setDescription, markovs().loremIpsum())
-                .setter(Project::setDeliveryStatus, from(ProjectStatus.class))
-                .setter(Project::setQualityStatus, from(ProjectStatus.class))
+                .setter(Project::setDeliveryStatus, from(Status.class))
+                .setter(Project::setQualityStatus, from(Status.class))
                 .setter(Project::setLastQualityReport, thisMonth)
                 .setter(Project::setLastDeliveryReport, thisMonth)
                 .setter(Project::setSonarQubeUrl, urls().append("/sonarqube/"))
