@@ -26,4 +26,15 @@ public class DeliveryReport {
 
     private LocalDateTime updateDate;
 
+    @Override
+    public String toString() {
+        return "DeliveryReport{" +
+                "id=" + id +
+                ", project=" + project +
+                ", field1='" + field1 + '\'' +
+                ", field2='" + field2 + '\'' +
+                ", field3='" + field3 + '\'' +
+                ", updateDate=" + updateDate +
+                '}';
+    }
 }

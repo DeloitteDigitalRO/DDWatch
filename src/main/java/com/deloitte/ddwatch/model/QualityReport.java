@@ -54,4 +54,16 @@ public class QualityReport {
     public int hashCode() {
         return Objects.hash(getUpdateDate());
     }
+
+    @Override
+    public String toString() {
+        return "QualityReport{" +
+                "id=" + id +
+                ", project=" + project +
+                ", sonarQubeReport=" + sonarQubeReport +
+                ", questionsAnswers=" + questionsAnswers +
+                ", qualityStatus=" + qualityStatus +
+                ", updateDate=" + updateDate +
+                '}';
+    }
 }

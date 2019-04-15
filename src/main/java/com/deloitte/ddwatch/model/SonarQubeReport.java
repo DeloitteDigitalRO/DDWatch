@@ -58,4 +58,43 @@ public class    SonarQubeReport {
     Double overallCoverage;
     Double lineCoverage;
     Double conditionsCoverage;
+
+    @Override
+    public String toString() {
+        return "SonarQubeReport{" +
+                "id=" + id +
+                ", qualityReport=" + qualityReport +
+                ", name='" + name + '\'' +
+                ", key='" + key + '\'' +
+                ", totalBugs=" + totalBugs +
+                ", blockerBugs=" + blockerBugs +
+                ", criticalBugs=" + criticalBugs +
+                ", majorBugs=" + majorBugs +
+                ", minorBugs=" + minorBugs +
+                ", otherBugs=" + otherBugs +
+                ", linesOfCode=" + linesOfCode +
+                ", defectDensity=" + defectDensity +
+                ", totalIssues=" + totalIssues +
+                ", totalVulnerabilities=" + totalVulnerabilities +
+                ", blockerVulnerabilities=" + blockerVulnerabilities +
+                ", criticalVulnerabilities=" + criticalVulnerabilities +
+                ", majorVulnerabilities=" + majorVulnerabilities +
+                ", minorVulnerabilities=" + minorVulnerabilities +
+                ", otherVulnerabilities=" + otherVulnerabilities +
+                ", totalCodeSmells=" + totalCodeSmells +
+                ", blockerCodeSmells=" + blockerCodeSmells +
+                ", criticalCodeSmells=" + criticalCodeSmells +
+                ", majorCodeSmells=" + majorCodeSmells +
+                ", minorCodeSmells=" + minorCodeSmells +
+                ", otherCodeSmells=" + otherCodeSmells +
+                ", duplicatedLines=" + duplicatedLines +
+                ", duplicatedLinesDensity=" + duplicatedLinesDensity +
+                ", duplicatedBlocks=" + duplicatedBlocks +
+                ", cyclomaticComplexity=" + cyclomaticComplexity +
+                ", cognitiveComplexity=" + cognitiveComplexity +
+                ", overallCoverage=" + overallCoverage +
+                ", lineCoverage=" + lineCoverage +
+                ", conditionsCoverage=" + conditionsCoverage +
+                '}';
+    }
 }

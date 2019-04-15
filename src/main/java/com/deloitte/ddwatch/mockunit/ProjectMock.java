@@ -18,6 +18,7 @@ import static net.andreinc.mockneat.unit.networking.URLs.urls;
 import static net.andreinc.mockneat.unit.objects.Filler.filler;
 import static net.andreinc.mockneat.unit.objects.From.from;
 import static net.andreinc.mockneat.unit.text.Formatter.fmt;
+import static net.andreinc.mockneat.unit.text.Markovs.markovs;
 import static net.andreinc.mockneat.unit.text.Strings.strings;
 import static net.andreinc.mockneat.unit.time.LocalDates.localDates;
 import static net.andreinc.mockneat.unit.types.Doubles.doubles;
@@ -26,11 +27,6 @@ import static net.andreinc.mockneat.unit.user.Emails.emails;
 import static net.andreinc.mockneat.unit.user.Names.names;
 
 public class ProjectMock implements MockUnit<Project> {
-
-    // ID related
-    public static final LongSeq projectIdGen = LongSeq.longSeq().increment(10);
-    public static final LongSeq qualityReportIdGen = LongSeq.longSeq().increment(10);
-    public static final LongSeq sonarReportIdGen = LongSeq.longSeq().increment(10);
 
     // Dates related
     public static final MockUnit<LocalDateTime> thisMonth = localDates()
@@ -51,19 +47,17 @@ public class ProjectMock implements MockUnit<Project> {
     @Override
     public Supplier<Project> supplier() {
 
-
-        long pId = projectIdGen.get();
-
         return filler(Project::new)
-                .setter(Project::setId, () -> () -> pId)
                 .setter(Project::setName,
                         fmt("P#{number}#{code}")
                                 .param("number", ints().range(0, 1000))
                                 .param("code", strings().size(3).type(LETTERS))
                 )
                 .setter(Project::setDeliveryLead, names().full())
-                .setter(Project::setDeliveryLeadEmail, emails())
-//                .setter(Project::setDescription, markovs().loremIpsum())
+                .setter(Project::setDeliveryLeadEmail, emails().domain("deloittece.com"))
+                .setter(Project::setTechnicalLead, names().full())
+                .setter(Project::setTechnicalLeadEmail, emails().domain("deloittece.com"))
+                .setter(Project::setDescription, markovs().size(32).loremIpsum())
                 .setter(Project::setDeliveryStatus, from(Status.class))
                 .setter(Project::setQualityStatus, from(Status.class))
                 .setter(Project::setLastQualityReport, thisMonth)
@@ -74,15 +68,12 @@ public class ProjectMock implements MockUnit<Project> {
                     return p;
                 })
                 .map(p -> {
-                    final long grId = qualityReportIdGen.get();
                     Set<QualityReport> qualityReports = filler(QualityReport::new)
                                                             .constant(QualityReport::setProject, p)
-                                                            .constant(QualityReport::setId, grId)
                                                             .setter(QualityReport::setUpdateDate, thisYear)
                                                             .map(thisQualityReport -> {
                                                                 thisQualityReport.setSonarQubeReport(
                                                                         filler(SonarQubeReport::new)
-                                                                                .setter(SonarQubeReport::setId, sonarReportIdGen)
                                                                                 .constant(SonarQubeReport::setQualityReport, thisQualityReport)
                                                                                 .constant(SonarQubeReport::setName, p.getName())
                                                                                 .constant(SonarQubeReport::setKey, p.getSonarComponentKey())
@@ -154,6 +145,7 @@ public class ProjectMock implements MockUnit<Project> {
                                                                                                     sqr.getTotalVulnerabilities() +
                                                                                                     sqr.getTotalCodeSmells()
                                                                                     );
+
                                                                                     return sqr;
 
                                                                                 })
@@ -167,9 +159,5 @@ public class ProjectMock implements MockUnit<Project> {
                     return p;
                 })
                 .supplier();
-    }
-
-    public static void main(String[] args) {
-        new ProjectMock().consume(System.out::println);
     }
 }

@@ -107,4 +107,26 @@ public class Project {
     public int hashCode() {
         return Objects.hash(getName(), getDescription(), getDeliveryLead(), getDeliveryLeadEmail(), getTechnicalLead(), getTechnicalLeadEmail(), getDeliveryStatus(), getQualityStatus(), getLastQualityReport(), getLastDeliveryReport(), getSonarQubeUrl(), getSonarComponentKey());
     }
+
+    @Override
+    public String toString() {
+        return "Project{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", deliveryLead='" + deliveryLead + '\'' +
+                ", deliveryLeadEmail='" + deliveryLeadEmail + '\'' +
+                ", technicalLead='" + technicalLead + '\'' +
+                ", technicalLeadEmail='" + technicalLeadEmail + '\'' +
+                ", deliveryStatus=" + deliveryStatus +
+                ", qualityStatus=" + qualityStatus +
+                ", qualityReports=" + qualityReports +
+                ", lastQualityReport=" + lastQualityReport +
+                ", deliveryReports=" + deliveryReports +
+                ", lastDeliveryReport=" + lastDeliveryReport +
+                ", tags=" + tags +
+                ", sonarQubeUrl='" + sonarQubeUrl + '\'' +
+                ", sonarComponentKey='" + sonarComponentKey + '\'' +
+                '}';
+    }
 }

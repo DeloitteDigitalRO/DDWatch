@@ -22,4 +22,13 @@ public class QualityQuestionsAnswers {
     private String questionId;
     private String answer;
 
+    @Override
+    public String toString() {
+        return "QualityQuestionsAnswers{" +
+                "id=" + id +
+                ", qualityReport=" + qualityReport +
+                ", questionId='" + questionId + '\'' +
+                ", answer='" + answer + '\'' +
+                '}';
+    }
 }

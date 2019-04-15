@@ -39,4 +39,11 @@ public enum Status {
             return RED;
         }
     }
+
+    @Override
+    public String toString() {
+        return "Status{" +
+                "priority=" + priority +
+                '}';
+    }
 }
