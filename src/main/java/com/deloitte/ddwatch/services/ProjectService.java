@@ -60,6 +60,7 @@ public class ProjectService {
 
         qualityReport = qualityReportService.create(project.getSonarQubeUrl(), project.getSonarComponentKey(), qualityReport);
         project.addQualityReport(qualityReport);
+        project.setQualityStatus(qualityReport.getQualityStatus());
         project.setLastQualityReport(qualityReport.getUpdateDate());
         return project;
     }
@@ -71,6 +72,7 @@ public class ProjectService {
         qualityReport = qualityReportService.create(inputStream, qualityReport);
         project.addQualityReport(qualityReport);
         project.setLastQualityReport(qualityReport.getUpdateDate());
+        project.setQualityStatus(qualityReport.getQualityStatus());
         return project;
     }
 

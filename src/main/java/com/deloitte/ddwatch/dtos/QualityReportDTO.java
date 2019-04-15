@@ -12,6 +12,7 @@ import java.util.List;
 public class QualityReportDTO implements Serializable {
 
     private SonarQubeReportDTO sonarQubeReport;
+    private String qualityStatus;
     private LocalDateTime updateDate;
     private List<QualityQuestionsAnswersDTO> questionsAnswers;
 

@@ -2,7 +2,6 @@ package com.deloitte.ddwatch.services;
 
 
 import com.deloitte.ddwatch.model.SonarQubeReport;
-import com.deloitte.ddwatch.repositories.SonarQubeReportRepository;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +18,6 @@ public class SonarQubeReportService {
 
     @Autowired
     RestTemplate restTemplate;
-//    @Autowired
-//    SonarQubeReportRepository sonarQubeReportRepository;
 
     public List<String> getProjectKeys() {
         String url = "http://localhost:9000/api/components/search?qualifiers=TRK";
@@ -43,7 +40,8 @@ public class SonarQubeReportService {
         setMetrics(jsonContext, sonarQubeReport);
         setIssues(baseUrl, componentKey, sonarQubeReport);
 
-        String defectDensity = sonarQubeReport.getTotalIssues().toString() + "/" + sonarQubeReport.getLinesOfCode().toString();
+//        String defectDensity = sonarQubeReport.getTotalIssues().toString() + "/" + sonarQubeReport.getLinesOfCode().toString();
+        Double defectDensity = sonarQubeReport.getTotalIssues().doubleValue() / sonarQubeReport.getLinesOfCode().doubleValue();
         sonarQubeReport.setDefectDensity(defectDensity);
         return sonarQubeReport;
     }
@@ -87,10 +85,8 @@ public class SonarQubeReportService {
         sonarQubeReport.setMinorCodeSmells(jsonContext.read("$.issues.codeSmells.severity.minor"));
         sonarQubeReport.setOtherCodeSmells(jsonContext.read("$.issues.codeSmells.severity.info"));
 
-        String defectDensity = sonarQubeReport.getTotalIssues().toString() + "/" + sonarQubeReport.getLinesOfCode().toString();
+        Double defectDensity = sonarQubeReport.getTotalIssues().doubleValue() / sonarQubeReport.getLinesOfCode().doubleValue();
         sonarQubeReport.setDefectDensity(defectDensity);
-
-//        sonarQubeReport.setUpdateDate(LocalDateTime.now());
 
         return sonarQubeReport;
     }
@@ -116,7 +112,6 @@ public class SonarQubeReportService {
         sonarQubeReport.setTotalVulnerabilities(getIntSafely(jsonContext, "vulnerabilities"));
         sonarQubeReport.setConditionsCoverage(getDoubleSafely(jsonContext, "branch_coverage"));
         sonarQubeReport.setLineCoverage(getDoubleSafely(jsonContext, "line_coverage"));
-//        sonarQubeReport.setUpdateDate(LocalDateTime.now());
     }
 
     private Integer getIntSafely(DocumentContext jsonContext, String metricKey) {

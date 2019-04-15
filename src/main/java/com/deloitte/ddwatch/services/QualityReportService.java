@@ -19,6 +19,7 @@ public class QualityReportService {
     @Transactional
     public QualityReport create(String sonarBaseUrl, String sonarComponentKey, QualityReport qualityReport) {
         SonarQubeReport sonarQubeReport = sonarQubeReportService.createReportFromUrl(sonarBaseUrl, sonarComponentKey);
+        qualityReport.setQualityStatus(calculateStatus(sonarQubeReport));
         qualityReport.setUpdateDate(LocalDateTime.now());
         qualityReport.addSonarQubeReport(sonarQubeReport);
         return qualityReport;
@@ -27,9 +28,21 @@ public class QualityReportService {
     @Transactional
     public QualityReport create(InputStream inputStream, QualityReport qualityReport) throws IOException {
         SonarQubeReport sonarQubeReport = sonarQubeReportService.createReportFromFile(inputStream);
+        qualityReport.setQualityStatus(calculateStatus(sonarQubeReport));
         qualityReport.setUpdateDate(LocalDateTime.now());
         qualityReport.addSonarQubeReport(sonarQubeReport);
         inputStream.close();
         return qualityReport;
+    }
+
+    private Status calculateStatus(SonarQubeReport sonarQubeReport) {
+        Status statusForCoverage = Status.getStatusByOverallCoverage(sonarQubeReport.getOverallCoverage());
+        Status statusForDefectDensity = Status.getStatusByDefectDensity(sonarQubeReport.getDefectDensity());
+
+        if (statusForCoverage.getPriority() < statusForDefectDensity.getPriority()) {
+            return statusForCoverage;
+        } else {
+            return statusForDefectDensity;
+        }
     }
 }

@@ -35,8 +35,8 @@ public class Project {
     @Column(name = "tech_lead_email", nullable = false, length = 128)
     String technicalLeadEmail;
 
-    ProjectStatus deliveryStatus;
-    ProjectStatus qualityStatus;
+    Status deliveryStatus;
+    Status qualityStatus;
 
     @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @OrderBy(value = "updateDate DESC")

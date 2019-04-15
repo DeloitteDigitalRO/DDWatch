@@ -40,10 +40,10 @@ public class ProjectDTO implements Serializable {
     @Size(max=128)
     String technicalLeadEmail;
 
-    @OneOfStrings({"R", "G", "A"})
+//    @OneOfStrings({"R", "G", "A"})
     String deliveryStatus;
 
-    @OneOfStrings({"R", "G", "A"})
+//    @OneOfStrings({"R", "G", "A"})
     String qualityStatus;
 
     List<QualityReportDTO> qualityReports;

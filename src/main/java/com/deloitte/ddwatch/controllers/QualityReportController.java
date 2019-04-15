@@ -7,6 +7,7 @@ import com.deloitte.ddwatch.model.QualityReport;
 import com.deloitte.ddwatch.services.ProjectService;
 import com.deloitte.ddwatch.services.QualityReportService;
 import com.deloitte.ddwatch.services.SonarQubeReportService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,7 @@ public class QualityReportController {
     @PostMapping("/uploadFile")
     public ResponseEntity<ProjectDTO> uploadReportFile(@RequestParam("file") MultipartFile file, @PathVariable String id, @RequestParam("body") String body) throws IOException {
         InputStream inputStream = file.getInputStream();
-        QualityReportDTO qualityReportDTO = new Gson().fromJson(body, QualityReportDTO.class);
+        QualityReportDTO qualityReportDTO = new ObjectMapper().readValue(body, QualityReportDTO.class);
         QualityReport qualityReport = modelMapper.map(qualityReportDTO, QualityReport.class);
 
         Project project = projectService.addReport(Long.parseLong(id), inputStream, qualityReport);
