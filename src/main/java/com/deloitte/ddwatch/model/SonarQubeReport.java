@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Table(name = "sonar_qube_report")
-public class SonarQubeReport {
+public class    SonarQubeReport {
 
     @Id
     Long id;

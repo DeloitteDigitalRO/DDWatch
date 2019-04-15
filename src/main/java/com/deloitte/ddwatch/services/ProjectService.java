@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
 
 @Service
 public class ProjectService {
@@ -30,6 +31,11 @@ public class ProjectService {
         tagService.setTags(project, tags);
         project = projectRepository.save(project);
         return project;
+    }
+
+    @Transactional
+    public Project create(Project project) {
+        return create(project, new TreeSet<>());
     }
 
 
