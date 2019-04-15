@@ -4,21 +4,28 @@ import com.deloitte.ddwatch.dtos.ProjectDTO;
 import com.deloitte.ddwatch.model.Project;
 import com.deloitte.ddwatch.model.Tag;
 import com.deloitte.ddwatch.services.ProjectService;
+import net.andreinc.jbvext.annotations.str.Alphanumeric;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/projects")
 @CrossOrigin
+@Validated
+@RequestMapping("/projects")
 public class ProjectController {
 
     private static final Logger logger = LoggerFactory.getLogger(ProjectController.class.getCanonicalName());
@@ -30,7 +37,7 @@ public class ProjectController {
     private ModelMapper modelMapper;
 
     @PostMapping
-    public ResponseEntity<Long> create(@RequestBody ProjectDTO projectDTO) {
+    public ResponseEntity<Long> create(@RequestBody @Valid ProjectDTO projectDTO) {
         Project project = modelMapper.map(projectDTO, Project.class);
         Set<Tag> tags = projectDTO.getTags()
                 .stream()
@@ -53,7 +60,7 @@ public class ProjectController {
 
 
     @GetMapping("/query")
-    public ResponseEntity<List<ProjectDTO>> getByTag(@RequestParam String tag) {
+    public ResponseEntity<List<ProjectDTO>> getByTag(@RequestParam @Alphanumeric @Size(min = 2, max = 32) String tag) {
         Set<Project> projects = projectService.findByTag(tag);
         List<ProjectDTO> projectDTOS = projects
                 .stream()
@@ -64,8 +71,8 @@ public class ProjectController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProjectDTO> getById(@PathVariable String id) {
-        Project project = projectService.findById(Long.parseLong(id));
+    public ResponseEntity<ProjectDTO> getById(@PathVariable @NotNull Long id) {
+        Project project = projectService.findById(id);
         ProjectDTO projectDTO = modelMapper.map(project, ProjectDTO.class);
         return new ResponseEntity<>(projectDTO, HttpStatus.OK);
     }

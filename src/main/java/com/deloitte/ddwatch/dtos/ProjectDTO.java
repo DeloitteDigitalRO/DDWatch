@@ -6,6 +6,7 @@ import net.andreinc.jbvext.annotations.misc.OneOfStrings;
 import net.andreinc.jbvext.annotations.str.Alphanumeric;
 import org.hibernate.validator.constraints.URL;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -40,19 +41,19 @@ public class ProjectDTO implements Serializable {
     @Size(max=128)
     String technicalLeadEmail;
 
-//    @OneOfStrings({"R", "G", "A"})
+    @OneOfStrings({"RED", "GREEN", "AMBER"})
     String deliveryStatus;
 
-//    @OneOfStrings({"R", "G", "A"})
+    @OneOfStrings({"RED", "GREEN", "AMBER"})
     String qualityStatus;
 
-    List<QualityReportDTO> qualityReports;
+    List<@Valid QualityReportDTO> qualityReports;
     LocalDateTime lastQualityReport;
 
-    Set<DeliveryReportDTO> deliveryReports;
+    Set<@Valid DeliveryReportDTO> deliveryReports;
     LocalDateTime lastDeliveryReport;
 
-    Set<@Alphanumeric @Size(max=32) String> tags;
+    Set<@Alphanumeric @Size(min = 2, max=32) String> tags;
 
     @URL
     @Size(max = 1024)

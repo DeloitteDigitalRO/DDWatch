@@ -11,11 +11,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+@Validated
 @RestController
-@RequestMapping("/projects/{id}/deliveryReports")
 @CrossOrigin
+@RequestMapping("/projects/{id}/deliveryReports")
 public class DeliveryReportController {
 
     private static Logger logger = LoggerFactory.getLogger(DeliveryReportController.class.getCanonicalName());
@@ -27,11 +32,11 @@ public class DeliveryReportController {
     private ModelMapper modelMapper;
 
     @PostMapping
-    public ResponseEntity<ProjectDTO> addReport(@PathVariable String id, @RequestBody DeliveryReportDTO deliveryReportDTO) {
+    public ResponseEntity<ProjectDTO> addReport(@PathVariable @Valid @NotNull Long id, @RequestBody @Valid DeliveryReportDTO deliveryReportDTO) {
 
         DeliveryReport deliveryReport = modelMapper.map(deliveryReportDTO, DeliveryReport.class);
 
-        Project project  = projectService.addDeliveryReport(Long.parseLong(id), deliveryReport);
+        Project project  = projectService.addDeliveryReport(id, deliveryReport);
         ProjectDTO projectDTO = modelMapper.map(project, ProjectDTO.class);
 
         return new ResponseEntity<>(projectDTO, HttpStatus.OK);
