@@ -1,15 +1,16 @@
 package com.deloitte.ddwatch.mockunit;
 
-import com.deloitte.ddwatch.model.Project;
-import com.deloitte.ddwatch.model.QualityReport;
-import com.deloitte.ddwatch.model.SonarQubeReport;
-import com.deloitte.ddwatch.model.Status;
+import com.deloitte.ddwatch.model.*;
+import com.deloitte.ddwatch.services.TagService;
+import jdk.nashorn.internal.ir.PropertyKey;
 import net.andreinc.mockneat.abstraction.MockUnit;
 import net.andreinc.mockneat.abstraction.MockUnitInt;
-import net.andreinc.mockneat.unit.seq.LongSeq;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -43,6 +44,7 @@ public class ProjectMock implements MockUnit<Project> {
     public static final MockUnitInt major = ints().range(0, 50);
     public static final MockUnitInt critical = ints().range(0, 25);
     public static final MockUnitInt blocker = ints().range(0, 5);
+    public static final List<String> possibleTags = Arrays.asList("hybris", "backend", "frontend", "scrum", "kanban", "uk", "de");
 
     @Override
     public Supplier<Project> supplier() {
@@ -159,5 +161,11 @@ public class ProjectMock implements MockUnit<Project> {
                     return p;
                 })
                 .supplier();
+    }
+
+    public static Set<Tag> generateTags() {
+        return filler(Tag::new).setter(Tag::setName, from(possibleTags))
+                .set(4)
+                .get();
     }
 }
