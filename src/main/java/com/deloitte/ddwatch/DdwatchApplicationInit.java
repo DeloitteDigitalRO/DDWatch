@@ -34,12 +34,12 @@ public class DdwatchApplicationInit {
                 .list(numberOfMockProjects)
                 .get();
 
-        logger.info("The {} projects are now inserted into the database", numberOfMockProjects);
-
         projects.stream()
                 .forEach(p -> {
-                    logger.info("Adding project {} into the databse.", p.getName());
                     projectService.create(p, generateTags());
+                    logger.info("Added project {} into the databse with id {}.", p.getName(), p.getId());
                 });
+
+        logger.info("The {} projects are now inserted into the database", numberOfMockProjects);
     }
 }
