@@ -3,6 +3,8 @@ package com.deloitte.ddwatch.services;
 import com.deloitte.ddwatch.model.Project;
 import com.deloitte.ddwatch.model.Tag;
 import com.deloitte.ddwatch.repositories.TagRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -12,6 +14,8 @@ import java.util.Set;
 
 @Service
 public class TagService {
+
+    private static final Logger logger = LoggerFactory.getLogger(TagService.class.getCanonicalName());
 
     @Autowired
     private TagRepository tagRepository;

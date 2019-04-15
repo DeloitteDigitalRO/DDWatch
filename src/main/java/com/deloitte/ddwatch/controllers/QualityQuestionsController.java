@@ -1,6 +1,8 @@
 package com.deloitte.ddwatch.controllers;
 
 import com.deloitte.ddwatch.model.json.QualityQuestions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 public class QualityQuestionsController {
 
+    private static final Logger logger = LoggerFactory.getLogger(QualityQuestions.class.getCanonicalName());
 
     @Autowired
     private QualityQuestions qualityQuestions;

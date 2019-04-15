@@ -2,6 +2,8 @@ package com.deloitte.ddwatch.services;
 
 import com.deloitte.ddwatch.model.*;
 import com.deloitte.ddwatch.repositories.ProjectRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,12 +18,17 @@ import java.util.TreeSet;
 @Service
 public class ProjectService {
 
+    private static final Logger logger = LoggerFactory.getLogger(ProjectService.class.getCanonicalName());
+
     @Autowired
     private ProjectRepository projectRepository;
+
     @Autowired
     private TagService tagService;
+
     @Autowired
     private QualityReportService qualityReportService;
+
     @Autowired
     private DeliveryReportService deliveryReportService;
 

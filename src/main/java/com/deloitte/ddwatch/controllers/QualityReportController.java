@@ -10,6 +10,8 @@ import com.deloitte.ddwatch.services.SonarQubeReportService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +26,11 @@ import java.io.InputStream;
 @CrossOrigin
 public class QualityReportController {
 
+    private static final Logger logger = LoggerFactory.getLogger(QualityReportController.class.getCanonicalName());
+
     @Autowired
     private ProjectService projectService;
+
     @Autowired
     private ModelMapper modelMapper;
 

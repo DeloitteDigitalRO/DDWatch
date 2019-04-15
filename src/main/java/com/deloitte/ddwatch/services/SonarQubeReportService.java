@@ -4,6 +4,8 @@ package com.deloitte.ddwatch.services;
 import com.deloitte.ddwatch.model.SonarQubeReport;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,8 @@ import java.util.List;
 
 @Service
 public class SonarQubeReportService {
+
+    private static final Logger logger = LoggerFactory.getLogger(SonarQubeReportService.class.getCanonicalName());
 
     @Autowired
     RestTemplate restTemplate;
