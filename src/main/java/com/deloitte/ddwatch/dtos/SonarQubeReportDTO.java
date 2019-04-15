@@ -18,7 +18,7 @@ public class SonarQubeReportDTO implements Serializable {
     Integer otherBugs;
 
     Integer linesOfCode;
-    String defectDensity; //no of bugs/no of lines
+    Double defectDensity; //no of bugs/no of lines
 
     Integer totalIssues; //violations
 

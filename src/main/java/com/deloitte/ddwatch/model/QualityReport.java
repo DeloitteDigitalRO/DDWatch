@@ -28,6 +28,8 @@ public class QualityReport {
 //    @OrderBy(value = "updateDate DESC")
     private Set<QualityQuestionsAnswers> questionsAnswers = new HashSet<>();
 
+    @Enumerated
+    private Status qualityStatus;
     private LocalDateTime updateDate;
 
     public void addSonarQubeReport(SonarQubeReport sonarQubeReport) {

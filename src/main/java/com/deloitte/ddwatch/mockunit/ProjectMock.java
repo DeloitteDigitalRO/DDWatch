@@ -2,8 +2,6 @@ package com.deloitte.ddwatch.mockunit;
 
 import com.deloitte.ddwatch.model.Project;
 import com.deloitte.ddwatch.model.ProjectStatus;
-import com.deloitte.ddwatch.model.QualityReport;
-import com.deloitte.ddwatch.model.SonarQubeReport;
 import net.andreinc.mockneat.abstraction.MockUnit;
 import net.andreinc.mockneat.unit.seq.LongSeq;
 
@@ -52,10 +50,8 @@ public class ProjectMock implements MockUnit<Project> {
                                 .param("code", strings().size(3).type(LETTERS))
                 )
                 .setter(Project::setDeliveryLead, names().full())
-                .setter(Project::setDeliveryLeadEmail, emails().domain("deloittece.com"))
-                .setter(Project::setTechnicalLead, names().full())
-                .setter(Project::setTechnicalLeadEmail, emails().domains("deloittece.com"))
-                .setter(Project::setDescription, markovs().size(32).loremIpsum())
+                .setter(Project::setDeliveryLeadEmail, emails())
+//                .setter(Project::setDescription, markovs().loremIpsum())
                 .setter(Project::setDeliveryStatus, from(ProjectStatus.class))
                 .setter(Project::setQualityStatus, from(ProjectStatus.class))
                 .setter(Project::setLastQualityReport, thisMonth)
