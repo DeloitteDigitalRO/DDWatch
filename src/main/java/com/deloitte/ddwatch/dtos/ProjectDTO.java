@@ -27,18 +27,18 @@ public class ProjectDTO implements Serializable {
     @Size(max=1024)
     String description;
 
-    @Size(max=64)
+    @Size(max = 64)
     String deliveryLead;
 
     @Email
-    @Size(max=128)
+    @Size(min = 6, max=128)
     String deliveryLeadEmail;
 
-    @Size(max=64)
+    @Size(min =3, max=64)
     String technicalLead;
 
     @Email
-    @Size(max=128)
+    @Size(min=6, max=128)
     String technicalLeadEmail;
 
     @OneOfStrings({"RED", "GREEN", "AMBER"})

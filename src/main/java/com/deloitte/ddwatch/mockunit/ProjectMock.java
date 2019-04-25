@@ -1,11 +1,8 @@
 package com.deloitte.ddwatch.mockunit;
 
 import com.deloitte.ddwatch.model.*;
-import com.deloitte.ddwatch.services.TagService;
-import jdk.nashorn.internal.ir.PropertyKey;
 import net.andreinc.mockneat.abstraction.MockUnit;
 import net.andreinc.mockneat.abstraction.MockUnitInt;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -19,7 +16,6 @@ import static net.andreinc.mockneat.unit.networking.URLs.urls;
 import static net.andreinc.mockneat.unit.objects.Filler.filler;
 import static net.andreinc.mockneat.unit.objects.From.from;
 import static net.andreinc.mockneat.unit.text.Formatter.fmt;
-import static net.andreinc.mockneat.unit.text.Markovs.markovs;
 import static net.andreinc.mockneat.unit.text.Strings.strings;
 import static net.andreinc.mockneat.unit.time.LocalDates.localDates;
 import static net.andreinc.mockneat.unit.types.Doubles.doubles;
