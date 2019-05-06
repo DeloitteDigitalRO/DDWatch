@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e250a72e-cc62-445e-9b59-231c3f43cf48">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<subDataset name="dataset1" uuid="f1335cc5-39f6-43f2-b462-eb76eaeff981">
+		<field name="id" class="java.lang.Long"/>
+		<field name="updateDate" class="java.time.LocalDateTime"/>
+		<field name="sonarQubeReport" class="com.deloitte.ddwatch.model.SonarQubeReport"/>
+	</subDataset>
+	<field name="name" class="java.lang.String"/>
+	<field name="deliveryLead" class="java.lang.String"/>
+	<field name="qualityReports" class="java.util.Set"/>
+	<title>
+		<band height="103" splitType="Stretch">
+			<staticText>
+				<reportElement x="138" y="28" width="258" height="20" uuid="e4c761fa-9402-466a-a275-20f02adcaae3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[DDwatch Report]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="146" splitType="Stretch">
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="0" y="23" width="100" height="20" uuid="46d77282-6e07-4d64-b529-8e2da8ce7c09"/>
+				<box leftPadding="10">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<paragraph lineSpacing="Fixed"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="100" y="23" width="100" height="20" uuid="46d77682-6e07-4d64-b529-8e2da8ce7c09"/>
+				<box leftPadding="10">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{deliveryLead}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement stretchType="ElementGroupHeight" x="0" y="106" width="100" height="20" uuid="07e30774-effd-449b-88b3-cfae61213e7e"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="dataset1" uuid="dd27ba5b-00f4-47a2-bead-ddf04eb6878e">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{qualityReports})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="20" width="100">
+						<textField>
+							<reportElement x="0" y="0" width="100" height="20" uuid="6a4c0814-f137-459c-ad6c-c758359b2e05"/>
+							<box leftPadding="10">
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement stretchType="ElementGroupHeight" x="100" y="106" width="100" height="20" uuid="f2d1b68b-446b-4921-8169-09abb3216264"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="dataset1" uuid="60e80fa3-0cd1-46fb-a862-143f1c4dbb19">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{qualityReports})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="20" width="100">
+						<textField>
+							<reportElement x="0" y="0" width="100" height="20" uuid="ac0efb98-df4e-48a7-b785-2332ba105519"/>
+							<box leftPadding="10">
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textFieldExpression><![CDATA[$F{updateDate}.toLocalDate()]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement stretchType="ElementGroupHeight" x="200" y="106" width="100" height="20" uuid="261eaa86-88a8-41c6-9e8a-b3d84b4dfa5a"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="dataset1" uuid="cd00e804-8d71-4803-89ec-4de1a790b7e5">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{qualityReports})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="20" width="100">
+						<textField>
+							<reportElement x="0" y="0" width="100" height="20" uuid="961b919e-6597-4c4c-85d6-a73f29890f96"/>
+							<box leftPadding="10">
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textFieldExpression><![CDATA[$F{sonarQubeReport}.getTotalBugs()]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<staticText>
+				<reportElement x="0" y="69" width="100" height="17" uuid="2965f646-c5a1-453b-abdf-90c7600433ac"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Quality Reports]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="86" width="100" height="20" uuid="b1bf9c85-8b89-4124-bf40-45a1ac5b2f5e"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isItalic="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Total Bugs]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="86" width="100" height="20" uuid="c2ea1410-bdea-4709-bc6a-0804d848221b"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isItalic="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="86" width="100" height="20" uuid="1b886b2b-f413-4223-a8b4-8743aaff6185"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isItalic="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Report id]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement stretchType="ElementGroupHeight" x="300" y="106" width="100" height="20" uuid="1692f236-eacd-4f6c-9acc-105197e75759"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="dataset1" uuid="c3004bc4-68f9-409c-b3bf-4e7f3fcd741c">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{qualityReports})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="20" width="100">
+						<textField>
+							<reportElement x="0" y="0" width="100" height="20" uuid="12d8f082-0dee-4a0f-af6c-d1ccab628c4e"/>
+							<box leftPadding="10">
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textFieldExpression><![CDATA[$F{sonarQubeReport}.getOverallCoverage()]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<staticText>
+				<reportElement x="300" y="86" width="100" height="20" uuid="fadc7d88-1f2d-492f-9601-c77e088a31bf"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isItalic="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Overall coverage]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="3" width="100" height="20" uuid="2971fd78-ce50-4ee1-ad4d-e8d499e1fa8a"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isItalic="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Project Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="3" width="100" height="20" uuid="1b886b2b-f413-4223-a8b4-8743baff6185"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isItalic="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Delivery Lead]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

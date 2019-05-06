@@ -20,10 +20,10 @@ import java.util.Map;
 @CrossOrigin
 public class PdfFromJasperController {
     private static Logger logger = LoggerFactory.getLogger(PdfFromJasperController.class.getCanonicalName());
-    JasperDesign jasperDesign;
-    JasperReport jasperReport;
-    JasperPrint jasperPrint;
-    Map<String, Object> params = new HashMap<>();
+    private JasperDesign jasperDesign;
+    private JasperReport jasperReport;
+    private JasperPrint jasperPrint;
+    private Map<String, Object> params = new HashMap<>();
 
     @Autowired
     private ProjectService projectService;
