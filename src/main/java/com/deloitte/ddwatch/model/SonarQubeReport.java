@@ -2,15 +2,16 @@ package com.deloitte.ddwatch.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @Entity
 @Table(name = "sonar_qube_report")
-public class    SonarQubeReport {
+public class SonarQubeReport {
 
     @Id
     Long id;
@@ -61,40 +62,12 @@ public class    SonarQubeReport {
 
     @Override
     public String toString() {
-        return "SonarQubeReport{" +
-                "id=" + id +
-                ", qualityReport=" + qualityReport +
-                ", name='" + name + '\'' +
-                ", key='" + key + '\'' +
-                ", totalBugs=" + totalBugs +
-                ", blockerBugs=" + blockerBugs +
-                ", criticalBugs=" + criticalBugs +
-                ", majorBugs=" + majorBugs +
-                ", minorBugs=" + minorBugs +
-                ", otherBugs=" + otherBugs +
-                ", linesOfCode=" + linesOfCode +
-                ", defectDensity=" + defectDensity +
-                ", totalIssues=" + totalIssues +
-                ", totalVulnerabilities=" + totalVulnerabilities +
-                ", blockerVulnerabilities=" + blockerVulnerabilities +
-                ", criticalVulnerabilities=" + criticalVulnerabilities +
-                ", majorVulnerabilities=" + majorVulnerabilities +
-                ", minorVulnerabilities=" + minorVulnerabilities +
-                ", otherVulnerabilities=" + otherVulnerabilities +
-                ", totalCodeSmells=" + totalCodeSmells +
-                ", blockerCodeSmells=" + blockerCodeSmells +
-                ", criticalCodeSmells=" + criticalCodeSmells +
-                ", majorCodeSmells=" + majorCodeSmells +
-                ", minorCodeSmells=" + minorCodeSmells +
-                ", otherCodeSmells=" + otherCodeSmells +
-                ", duplicatedLines=" + duplicatedLines +
-                ", duplicatedLinesDensity=" + duplicatedLinesDensity +
-                ", duplicatedBlocks=" + duplicatedBlocks +
-                ", cyclomaticComplexity=" + cyclomaticComplexity +
-                ", cognitiveComplexity=" + cognitiveComplexity +
-                ", overallCoverage=" + overallCoverage +
-                ", lineCoverage=" + lineCoverage +
-                ", conditionsCoverage=" + conditionsCoverage +
-                '}';
+        return ToStringBuilder.reflectionToString(this,
+                ToStringStyle.SHORT_PREFIX_STYLE);
+    }
+
+    public static void main(String[] args) {
+        SonarQubeReport h1 = new SonarQubeReport();
+        System.out.println(h1);
     }
 }

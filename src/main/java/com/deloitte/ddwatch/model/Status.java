@@ -1,10 +1,12 @@
 package com.deloitte.ddwatch.model;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 public enum Status {
     RED(1), GREEN(3), AMBER(2);
 
     private final int priority;
-
 
     Status(int priority) {
         this.priority = priority;
@@ -42,8 +44,7 @@ public enum Status {
 
     @Override
     public String toString() {
-        return "Status{" +
-                "priority=" + priority +
-                '}';
+        return ToStringBuilder.reflectionToString(this,
+                ToStringStyle.SHORT_PREFIX_STYLE);
     }
 }

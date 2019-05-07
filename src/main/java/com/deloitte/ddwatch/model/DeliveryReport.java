@@ -2,6 +2,8 @@ package com.deloitte.ddwatch.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -28,13 +30,7 @@ public class DeliveryReport {
 
     @Override
     public String toString() {
-        return "DeliveryReport{" +
-                "id=" + id +
-                ", project=" + project +
-                ", field1='" + field1 + '\'' +
-                ", field2='" + field2 + '\'' +
-                ", field3='" + field3 + '\'' +
-                ", updateDate=" + updateDate +
-                '}';
+        return ToStringBuilder.reflectionToString(this,
+                ToStringStyle.SHORT_PREFIX_STYLE);
     }
 }

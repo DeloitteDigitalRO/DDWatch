@@ -2,10 +2,14 @@ package com.deloitte.ddwatch.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -57,13 +61,7 @@ public class QualityReport {
 
     @Override
     public String toString() {
-        return "QualityReport{" +
-                "id=" + id +
-                ", project=" + project +
-                ", sonarQubeReport=" + sonarQubeReport +
-                ", questionsAnswers=" + questionsAnswers +
-                ", qualityStatus=" + qualityStatus +
-                ", updateDate=" + updateDate +
-                '}';
+        return ToStringBuilder.reflectionToString(this,
+                ToStringStyle.SHORT_PREFIX_STYLE);
     }
 }

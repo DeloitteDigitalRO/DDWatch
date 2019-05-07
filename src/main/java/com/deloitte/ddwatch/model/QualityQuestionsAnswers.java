@@ -2,6 +2,8 @@ package com.deloitte.ddwatch.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.*;
 
@@ -24,11 +26,7 @@ public class QualityQuestionsAnswers {
 
     @Override
     public String toString() {
-        return "QualityQuestionsAnswers{" +
-                "id=" + id +
-                ", qualityReport=" + qualityReport +
-                ", questionId='" + questionId + '\'' +
-                ", answer='" + answer + '\'' +
-                '}';
+        return ToStringBuilder.reflectionToString(this,
+                ToStringStyle.SHORT_PREFIX_STYLE);
     }
 }
