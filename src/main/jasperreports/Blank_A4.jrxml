@@ -8,21 +8,26 @@
 		<field name="sonarQubeReport" class="com.deloitte.ddwatch.model.SonarQubeReport"/>
 	</subDataset>
 	<field name="name" class="java.lang.String"/>
+	<field name="description" class="java.lang.String"/>
 	<field name="deliveryLead" class="java.lang.String"/>
 	<field name="qualityReports" class="java.util.Set"/>
 	<title>
-		<band height="103" splitType="Stretch">
+		<band height="83" splitType="Stretch">
 			<staticText>
-				<reportElement x="138" y="28" width="258" height="20" uuid="e4c761fa-9402-466a-a275-20f02adcaae3"/>
+				<reportElement x="150" y="48" width="258" height="20" uuid="e4c761fa-9402-466a-a275-20f02adcaae3"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font isBold="true" isItalic="true"/>
+					<font size="16" isBold="true" isItalic="false"/>
 				</textElement>
-				<text><![CDATA[DDwatch Report]]></text>
+				<text><![CDATA[Project Quality Reports]]></text>
 			</staticText>
+			<image>
+				<reportElement x="0" y="0" width="150" height="48" uuid="dac94e4a-9a32-4149-a47b-7feb145b24b4"/>
+				<imageExpression><![CDATA["src/main/jasperreports/dd logo.png"]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<detail>
-		<band height="146" splitType="Stretch">
+		<band height="178" splitType="Stretch">
 			<textField>
 				<reportElement isPrintRepeatedValues="false" x="0" y="23" width="100" height="20" uuid="46d77282-6e07-4d64-b529-8e2da8ce7c09"/>
 				<box leftPadding="10">
@@ -37,7 +42,20 @@
 				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement isPrintRepeatedValues="false" x="100" y="23" width="100" height="20" uuid="46d77682-6e07-4d64-b529-8e2da8ce7c09"/>
+				<reportElement isPrintRepeatedValues="false" x="100" y="23" width="150" height="20" uuid="46d77682-6e07-4d64-b529-8e2da8ce7c09"/>
+				<box leftPadding="10">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<paragraph lineSpacing="Fixed"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="250" y="23" width="80" height="20" uuid="bd1f081b-bdc8-4559-b03f-f520fcff21b6"/>
 				<box leftPadding="10">
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -199,7 +217,20 @@
 				<text><![CDATA[Project Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="100" y="3" width="100" height="20" uuid="1b886b2b-f413-4223-a8b4-8743baff6185"/>
+				<reportElement x="100" y="3" width="150" height="20" uuid="1b886b2b-f413-4223-a8b4-8743baff6185"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isItalic="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Description]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="250" y="3" width="80" height="20" uuid="d2047103-2502-4cc7-b1a4-f96def0a6de7"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -213,4 +244,12 @@
 			</staticText>
 		</band>
 	</detail>
+	<pageFooter>
+		<band height="52">
+			<textField>
+				<reportElement x="475" y="22" width="100" height="30" uuid="9ce29a88-5298-42fd-8eea-f83d3407d85e"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
 </jasperReport>
