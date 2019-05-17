@@ -1,0 +1,43 @@
+{
+  "sheet": "Metrics",
+  "empireTime": {
+    "row": 6,
+    "col": 7
+  },
+  "delivery": {
+    "row": 11,
+    "col": 7
+  },
+  "attrition": {
+    "row": 16,
+    "col": 7
+  },
+  "invoicing": {
+    "row": 22,
+    "col": 7
+  },
+  "escalation": {
+    "row": 28,
+    "col": 7
+  },
+  "changeOrder": {
+    "row": 34,
+    "col": 7
+  },
+  "testCodeCoverage": {
+    "row": 39,
+    "col": 7
+  },
+  "branchCoverage": {
+    "row": 44,
+    "col": 7
+  },
+  "duplicationDensity": {
+    "row": 49,
+    "col": 7
+  },
+  "riskOverallStatus": {
+    "row": 17,
+    "col": 15
+  }
+}
