@@ -82,7 +82,7 @@ public class ExcelParser {
         }
     }
 
-    private Object getCellVale(Sheet sheet, ExcelCell excelCell) {
+    private Object getCellValue(Sheet sheet, ExcelCell excelCell) {
         Row row = Optional.ofNullable(sheet.getRow(excelCell.getRow()))
                 .orElseThrow(() -> new ProcessingException(String.format("Could not find row %d",
                         excelCell.getRow())));
@@ -112,14 +112,14 @@ public class ExcelParser {
     }
 
     private Status getMetricStatus(Sheet sheet, ExcelCell position) {
-        return Status.getStatusByExcelCode((String) getCellVale(sheet, position));
+        return Status.getStatusByExcelCode((String) getCellValue(sheet, position));
     }
 
     private BigDecimal getNumericValue(Sheet sheet, ExcelCell position) {
-        return (BigDecimal) getCellVale(sheet, position);
+        return (BigDecimal) getCellValue(sheet, position);
     }
 
     private String getStringValue(Sheet sheet, ExcelCell position) {
-        return (String) getCellVale(sheet, position);
+        return (String) getCellValue(sheet, position);
     }
 }
