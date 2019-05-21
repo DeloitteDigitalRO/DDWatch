@@ -99,4 +99,9 @@ public class ProjectService {
         project.setLastDeliveryReport(deliveryReport.getUpdateDate());
         return project;
     }
+
+    @Transactional
+    public void removeProject(Project project) {
+        projectRepository.delete(project);
+    }
 }

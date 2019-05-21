@@ -1,13 +1,18 @@
 package com.deloitte.ddwatch.dtos;
 
 import com.deloitte.ddwatch.model.Status;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class MetricsReportDTO {
-    public MetricsReportDTO() {}
-
     private Long id;
 
     private Long projectId;
@@ -26,7 +31,7 @@ public class MetricsReportDTO {
 
     private String invoicingValue;
 
-    private Status invoicingStatus;
+    private String invoicingStatus;
 
     private String escalationSeniorityValue;
 
@@ -42,7 +47,7 @@ public class MetricsReportDTO {
 
     private String testCoverageStatus;
 
-    private String branchCoverageValue;
+    private BigDecimal branchCoverageValue;
 
     private String branchCoverageStatus;
 
