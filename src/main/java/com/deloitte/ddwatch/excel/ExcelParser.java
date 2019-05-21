@@ -89,18 +89,24 @@ public class ExcelParser {
                 .orElseThrow(() -> new ProcessingException(String.format("Could not find cell %d on row %d",
                         excelCell.getCol(), excelCell.getRow())));
 
-        Object value = null;
-        switch (excelCell.getType()) {
-            case "numeric":
-                value = new BigDecimal(cell.getNumericCellValue());
-                break;
-            case "text":
-                value = cell.getStringCellValue();
-                break;
+        Object cellValue = null;
+        try {
+            switch (excelCell.getType()) {
+                case "numeric":
+                    cellValue = new BigDecimal(cell.getNumericCellValue());
+                    break;
+                case "text":
+                    cellValue = cell.getStringCellValue();
+                    break;
+            }
+        } catch (IllegalStateException exception) {
+            log.error("{} {}", exception.getMessage(), excelCell);
+            throw new ProcessingException(String.format("Invalid type found on row %d cell %d. Expected %s",
+                    excelCell.getRow(), excelCell.getCol(), excelCell.getType()));
         }
 
-        log.info("Get cell text {} {}", excelCell, value);
-        return value;
+        log.info("Get cell value {} {}", excelCell, cellValue);
+        return cellValue;
     }
 
     private Status getMetricStatus(Sheet sheet, ExcelCell position) {
