@@ -22,6 +22,8 @@ import java.util.Optional;
 @Slf4j
 @Component
 public class ExcelParser {
+    private final String CELL_TYPE_STRING = "text";
+    private final String CELL_TYPE_NUMERIC = "numeric";
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
@@ -92,10 +94,10 @@ public class ExcelParser {
         Object cellValue = null;
         try {
             switch (excelCell.getType()) {
-                case "numeric":
+                case CELL_TYPE_NUMERIC:
                     cellValue = new BigDecimal(cell.getNumericCellValue());
                     break;
-                case "text":
+                case CELL_TYPE_STRING:
                     cellValue = cell.getStringCellValue();
                     break;
             }
