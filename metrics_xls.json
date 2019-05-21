@@ -1,43 +1,103 @@
 {
   "sheet": "Metrics",
-  "empireTime": {
+  "empireTimeValue": {
     "row": 6,
-    "col": 7
+    "col": 3,
+    "type": "numeric"
   },
-  "delivery": {
+  "deliveryValue": {
     "row": 11,
-    "col": 7
+    "col": 3,
+    "type": "numeric"
   },
-  "attrition": {
+  "attritionValue": {
     "row": 16,
-    "col": 7
+    "col": 3,
+    "type": "numeric"
   },
-  "invoicing": {
-    "row": 22,
-    "col": 7
+  "invoicingValue": {
+    "row": 21,
+    "col": 3,
+    "type": "text"
   },
-  "escalation": {
-    "row": 28,
-    "col": 7
+  "escalationSeniorityValue": {
+    "row": 27,
+    "col": 3,
+    "type": "text"
   },
-  "changeOrder": {
-    "row": 34,
-    "col": 7
+  "escalationRootCauseValue": {
+    "row": 27,
+    "col": 4,
+    "type": "text"
   },
-  "testCodeCoverage": {
+  "changeOrderValue": {
+    "row": 33,
+    "col": 3,
+    "type": "text"
+  },
+  "testCodeCoverageValue": {
     "row": 39,
-    "col": 7
+    "col": 3,
+    "type": "numeric"
   },
-  "branchCoverage": {
+  "branchCoverageValue": {
     "row": 44,
-    "col": 7
+    "col": 3,
+    "type": "numeric"
   },
-  "duplicationDensity": {
+  "duplicationDensityValue": {
     "row": 49,
-    "col": 7
+    "col": 3,
+    "type": "numeric"
+  },
+  "empireTimeStatus": {
+    "row": 6,
+    "col": 7,
+    "type": "text"
+  },
+  "deliveryStatus": {
+    "row": 11,
+    "col": 7,
+    "type": "text"
+  },
+  "attritionStatus": {
+    "row": 16,
+    "col": 7,
+    "type": "text"
+  },
+  "invoicingStatus": {
+    "row": 22,
+    "col": 7,
+    "type": "text"
+  },
+  "escalationStatus": {
+    "row": 28,
+    "col": 7,
+    "type": "text"
+  },
+  "changeOrderStatus": {
+    "row": 34,
+    "col": 7,
+    "type": "text"
+  },
+  "testCodeCoverageStatus": {
+    "row": 39,
+    "col": 7,
+    "type": "text"
+  },
+  "branchCoverageStatus": {
+    "row": 44,
+    "col": 7,
+    "type": "text"
+  },
+  "duplicationDensityStatus": {
+    "row": 49,
+    "col": 7,
+    "type": "text"
   },
   "riskOverallStatus": {
     "row": 17,
-    "col": 15
+    "col": 15,
+    "type": "text"
   }
 }

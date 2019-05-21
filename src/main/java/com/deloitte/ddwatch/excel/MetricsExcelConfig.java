@@ -4,24 +4,44 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data @NoArgsConstructor
-public class MetricsExcelConfig extends ExcelConfig{
-    private CellPosition empireTime;
+public class MetricsExcelConfig extends ExcelConfig {
+    private ExcelCell empireTimeValue;
 
-    private CellPosition delivery;
+    private ExcelCell deliveryValue;
 
-    private CellPosition attrition;
+    private ExcelCell attritionValue;
 
-    private CellPosition invoicing;
+    private ExcelCell invoicingValue;
 
-    private CellPosition escalation;
+    private ExcelCell escalationSeniorityValue;
 
-    private CellPosition changeOrder;
+    private ExcelCell escalationRootCauseValue;
 
-    private CellPosition testCodeCoverage;
+    private ExcelCell changeOrderValue;
 
-    private CellPosition branchCoverage;
+    private ExcelCell testCodeCoverageValue;
 
-    private CellPosition duplicationDensity;
+    private ExcelCell branchCoverageValue;
 
-    public CellPosition riskOverallStatus;
+    private ExcelCell duplicationDensityValue;
+
+    private ExcelCell empireTimeStatus;
+
+    private ExcelCell deliveryStatus;
+
+    private ExcelCell attritionStatus;
+
+    private ExcelCell invoicingStatus;
+
+    private ExcelCell escalationStatus;
+
+    private ExcelCell changeOrderStatus;
+
+    private ExcelCell testCodeCoverageStatus;
+
+    private ExcelCell branchCoverageStatus;
+
+    private ExcelCell duplicationDensityStatus;
+
+    public ExcelCell riskOverallStatus;
 }

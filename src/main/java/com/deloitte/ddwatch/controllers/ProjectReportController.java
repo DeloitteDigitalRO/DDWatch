@@ -1,8 +1,10 @@
 package com.deloitte.ddwatch.controllers;
 
-import com.deloitte.ddwatch.model.ProjectMetricsReport;
+import com.deloitte.ddwatch.dtos.MetricsReportDTO;
+import com.deloitte.ddwatch.model.MetricsReport;
+import com.deloitte.ddwatch.model.Project;
 import com.deloitte.ddwatch.services.ProjectReportService;
-import lombok.extern.java.Log;
+import com.deloitte.ddwatch.services.ProjectService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -19,10 +21,16 @@ public class ProjectReportController {
     @Autowired
     private ProjectReportService projectReportService;
 
-    @RequestMapping(value = "/upload", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ProjectMetricsReport> uploadProjectReport(@RequestPart MultipartFile projectReportFile) {
-       log.info("Uploaded report: {}", projectReportFile.getName());
-       ProjectMetricsReport metrics = projectReportService.parseProjectReportFile(projectReportFile);
-       return ResponseEntity.ok(metrics);
+    @Autowired
+    private ProjectService projectService;
+
+    @RequestMapping(value = "/metrics/upload", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<MetricsReportDTO> uploadMetricsReport(@RequestPart MultipartFile projectReportFile,
+                                                                @RequestParam Long projectId) {
+        log.info("Uploaded report {} for project {}", projectReportFile.getName(), projectId);
+        Project project = projectService.findById(projectId);
+        MetricsReport metrics = projectReportService.parseProjectReportFile(projectReportFile);
+        MetricsReport persistedMetrics = projectReportService.saveMetricsReport(metrics, project);
+        return ResponseEntity.ok(projectReportService.convert(persistedMetrics));
     }
 }

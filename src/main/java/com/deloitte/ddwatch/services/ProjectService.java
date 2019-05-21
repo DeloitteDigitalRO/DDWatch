@@ -1,5 +1,6 @@
 package com.deloitte.ddwatch.services;
 
+import com.deloitte.ddwatch.exceptions.NotFoundException;
 import com.deloitte.ddwatch.model.*;
 import com.deloitte.ddwatch.repositories.ProjectRepository;
 import org.slf4j.Logger;
@@ -49,7 +50,7 @@ public class ProjectService {
     public Project findById(Long id) {
         Optional<Project> project = projectRepository.findById(id);
         if (!project.isPresent()) {
-            throw new RuntimeException("No such project found");
+            throw new NotFoundException("No such project found");
         }
         return project.get();
     }
