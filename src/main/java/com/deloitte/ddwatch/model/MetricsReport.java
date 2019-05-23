@@ -84,6 +84,9 @@ public class MetricsReport {
     @Column(name = "duplication_density_status")
     private Status duplicationDensityStatus;
 
+    @Column(name = "risk_overall_value")
+    private String riskOverallValue;
+
     @Column(name = "risk_overall_status")
     private Status riskOverallStatus;
 }

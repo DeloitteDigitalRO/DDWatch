@@ -60,6 +60,7 @@ public class ExcelParser {
                 .testCoverageStatus(getMetricStatus(sheet, config.getTestCodeCoverageStatus()))
                 .branchCoverageStatus(getMetricStatus(sheet, config.getBranchCoverageStatus()))
                 .duplicationDensityStatus(getMetricStatus(sheet, config.getDuplicationDensityStatus()))
+                .riskOverallValue(getStringValue(sheet, config.getRiskOverallValue()))
                 .riskOverallStatus(getMetricStatus(sheet, config.getRiskOverallStatus()))
                 .build();
     }

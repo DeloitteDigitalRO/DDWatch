@@ -99,5 +99,10 @@
     "row": 17,
     "col": 15,
     "type": "text"
+  },
+  "riskOverallValue": {
+    "row": 20,
+    "col": 13,
+    "type": "text"
   }
 }

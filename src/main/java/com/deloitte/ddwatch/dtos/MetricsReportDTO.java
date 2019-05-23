@@ -55,5 +55,7 @@ public class MetricsReportDTO {
 
     private String duplicationDensityStatus;
 
+    private String riskOverallValue;
+
     private String riskOverallStatus;
 }

@@ -43,5 +43,7 @@ public class MetricsExcelConfig extends ExcelConfig {
 
     private ExcelCell duplicationDensityStatus;
 
+    public ExcelCell riskOverallValue;
+
     public ExcelCell riskOverallStatus;
 }
