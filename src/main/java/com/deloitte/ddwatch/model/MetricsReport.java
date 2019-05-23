@@ -15,6 +15,7 @@ import java.util.Objects;
 @Table(name = "metrics_report")
 @Data @Builder
 public class MetricsReport {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -22,6 +23,9 @@ public class MetricsReport {
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
+
+//    @OneToOne(fetch = FetchType.LAZY)
+//    private DeliveryReport deliveryReport;
 
     @Column(name = "empire_time_value")
     private Double empireTimeValue;

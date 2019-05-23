@@ -22,9 +22,8 @@ public class DeliveryReport {
     @JoinColumn(name = "project_id")
     private Project project;
 
-    private String field1;
-    private String field2;
-    private String field3;
+//    @OneToOne(mappedBy = "deliveryReport", cascade = CascadeType.ALL)
+//    private MetricsReport metricsReport;
 
     private LocalDateTime updateDate;
 
