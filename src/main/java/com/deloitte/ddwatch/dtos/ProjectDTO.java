@@ -53,6 +53,8 @@ public class ProjectDTO implements Serializable {
     Set<@Valid DeliveryReportDTO> deliveryReports;
     LocalDateTime lastDeliveryReport;
 
+    Set<@Valid MetricsReportDTO> metricsReports;
+
     Set<@Alphanumeric @Size(min = 2, max=32) String> tags;
 
     @URL

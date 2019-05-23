@@ -5,8 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -17,15 +16,15 @@ public class MetricsReportDTO {
 
     private Long projectId;
 
-    private BigDecimal empireTimeValue;
+    private Double empireTimeValue;
 
     private String empireTimeStatus;
 
-    private BigDecimal deliveryValue;
+    private Double deliveryValue;
 
     private String deliveryStatus;
 
-    private BigDecimal attritionValue;
+    private Double attritionValue;
 
     private String attritionStatus;
 
@@ -43,15 +42,15 @@ public class MetricsReportDTO {
 
     private String changeOrderStatus;
 
-    private BigDecimal testCoverageValue;
+    private Double testCoverageValue;
 
     private String testCoverageStatus;
 
-    private BigDecimal branchCoverageValue;
+    private Double branchCoverageValue;
 
     private String branchCoverageStatus;
 
-    private BigDecimal duplicationDensityValue;
+    private Double duplicationDensityValue;
 
     private String duplicationDensityStatus;
 
@@ -59,5 +58,5 @@ public class MetricsReportDTO {
 
     private String riskOverallStatus;
 
-    private Date createdOn;
+    private LocalDateTime createdOn;
 }

@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -57,6 +55,10 @@ public class Project {
     @OrderBy(value = "updateDate DESC")
     Set<DeliveryReport> deliveryReports = new HashSet<>();
 
+    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OrderBy(value = "createdOn DESC")
+    Set<MetricsReport> metricsReports = new HashSet<>();
+
     @Column(name = "last_delivery_report")
     LocalDateTime lastDeliveryReport;
 
@@ -90,6 +92,10 @@ public class Project {
     public void removeTag(Tag tag) {
         tags.remove(tag);
         tag.getProjects().remove(this);
+    }
+
+    public void addMetricsReport(MetricsReport metricsReport) {
+        this.metricsReports.add(metricsReport);
     }
 
     @Override

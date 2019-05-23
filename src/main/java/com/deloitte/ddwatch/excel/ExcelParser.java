@@ -116,8 +116,8 @@ public class ExcelParser {
         return Status.getStatusByExcelCode((String) getCellValue(sheet, position));
     }
 
-    private BigDecimal getNumericValue(Sheet sheet, ExcelCell position) {
-        return (BigDecimal) getCellValue(sheet, position);
+    private Double getNumericValue(Sheet sheet, ExcelCell position) {
+        return (Double) getCellValue(sheet, position);
     }
 
     private String getStringValue(Sheet sheet, ExcelCell position) {

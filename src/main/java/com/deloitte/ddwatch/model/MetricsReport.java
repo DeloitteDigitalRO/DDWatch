@@ -6,8 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -20,26 +19,26 @@ public class MetricsReport {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
 
     @Column(name = "empire_time_value")
-    private BigDecimal empireTimeValue;
+    private Double empireTimeValue;
 
     @Enumerated
     @Column(name = "empire_time_status")
     private Status empireTimeStatus;
 
     @Column(name = "delivery_value")
-    private BigDecimal deliveryValue;
+    private Double deliveryValue;
 
     @Enumerated
     @Column(name = "delivery_status")
     private Status deliveryStatus;
 
     @Column(name = "attrition_value")
-    private BigDecimal attritionValue;
+    private Double attritionValue;
 
     @Enumerated
     @Column(name = "attrition_status")
@@ -70,21 +69,21 @@ public class MetricsReport {
     private Status changeOrderStatus;
 
     @Column(name = "test_coverage_value")
-    private BigDecimal testCoverageValue;
+    private Double testCoverageValue;
 
     @Enumerated
     @Column(name = "test_coverage_status")
     private Status testCoverageStatus;
 
     @Column(name = "branch_coverage_value")
-    private BigDecimal branchCoverageValue;
+    private Double branchCoverageValue;
 
     @Enumerated
     @Column(name = "branch_coverage_status")
     private Status branchCoverageStatus;
 
     @Column(name = "duplication_density_value")
-    private BigDecimal duplicationDensityValue;
+    private Double duplicationDensityValue;
 
     @Enumerated
     @Column(name = "duplication_density_status")
@@ -97,7 +96,7 @@ public class MetricsReport {
     private Status riskOverallStatus;
 
     @Column(name = "created_on")
-    private Date createdOn;
+    private LocalDateTime createdOn;
 
     @Override
     public boolean equals(Object o) {
