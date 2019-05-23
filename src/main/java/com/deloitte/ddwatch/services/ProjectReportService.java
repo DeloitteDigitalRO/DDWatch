@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
+import java.util.List;
+
 @Slf4j
 @Service
 public class ProjectReportService {
@@ -32,7 +35,13 @@ public class ProjectReportService {
     @Transactional
     public MetricsReport saveMetricsReport(MetricsReport report, Project project) {
         report.setProject(project);
+        report.setCreatedOn(new Date());
         return metricsReportRepository.save(report);
+    }
+
+    @Transactional
+    public List<MetricsReport> getMetricsReport(Long projectId) {
+        return metricsReportRepository.findByProjectIdOrderByCreatedOnDesc(projectId);
     }
 
     public MetricsReportDTO convert(MetricsReport report) {
