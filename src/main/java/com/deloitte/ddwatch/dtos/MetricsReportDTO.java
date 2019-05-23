@@ -1,12 +1,12 @@
 package com.deloitte.ddwatch.dtos;
 
-import com.deloitte.ddwatch.model.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Data
 @Builder
@@ -58,4 +58,6 @@ public class MetricsReportDTO {
     private String riskOverallValue;
 
     private String riskOverallStatus;
+
+    private Date createdOn;
 }

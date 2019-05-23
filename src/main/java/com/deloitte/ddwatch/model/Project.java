@@ -118,7 +118,22 @@ public class Project {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this,
-                ToStringStyle.SHORT_PREFIX_STYLE);
+        return "Project{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", deliveryLead='" + deliveryLead + '\'' +
+                ", deliveryLeadEmail='" + deliveryLeadEmail + '\'' +
+                ", technicalLead='" + technicalLead + '\'' +
+                ", technicalLeadEmail='" + technicalLeadEmail + '\'' +
+                ", deliveryStatus=" + deliveryStatus +
+                ", qualityStatus=" + qualityStatus +
+                ", qualityReports=" + qualityReports +
+                ", lastQualityReport=" + lastQualityReport +
+                ", deliveryReports=" + deliveryReports +
+                ", lastDeliveryReport=" + lastDeliveryReport +
+                ", tags=" + tags +
+                ", sonarQubeUrl='" + sonarQubeUrl + '\'' +
+                ", sonarComponentKey='" + sonarComponentKey + '\'' +
+                '}';
     }
 }
