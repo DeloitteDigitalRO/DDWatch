@@ -42,7 +42,6 @@ public class DeliveryReportController {
         Project project = projectService.findById(projectId);
         MetricsReport metrics = projectReportService.parseProjectReportFile(projectReportFile);
         MetricsReport persistedMetrics = projectReportService.saveMetricsReport(metrics, project);
-        return ResponseEntity.ok(projectReportService.convert(persistedMetrics));
+        return ResponseEntity.ok(modelMapper.map(persistedMetrics, MetricsReportDTO.class));
     }
-
 }
