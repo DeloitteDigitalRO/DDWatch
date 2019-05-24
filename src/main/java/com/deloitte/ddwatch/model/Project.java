@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @Builder
@@ -57,7 +55,7 @@ public class Project {
 
     @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @OrderBy(value = "createdOn DESC")
-    Set<MetricsReport> metricsReports = new HashSet<>();
+    List<MetricsReport> metricsReports = new ArrayList<>();
 
     @Column(name = "last_delivery_report")
     LocalDateTime lastDeliveryReport;
@@ -95,6 +93,7 @@ public class Project {
     }
 
     public void addMetricsReport(MetricsReport metricsReport) {
+        metricsReport.setProject(this);
         this.metricsReports.add(metricsReport);
     }
 

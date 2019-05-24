@@ -96,7 +96,7 @@ public class ExcelParser {
         try {
             switch (excelCell.getType()) {
                 case CELL_TYPE_NUMERIC:
-                    cellValue = new BigDecimal(cell.getNumericCellValue());
+                    cellValue = cell.getNumericCellValue();
                     break;
                 case CELL_TYPE_STRING:
                     cellValue = cell.getStringCellValue();

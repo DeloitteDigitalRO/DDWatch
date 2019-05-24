@@ -8,6 +8,8 @@ import net.andreinc.mockneat.abstraction.MockUnitInt;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Period;
+import java.time.temporal.TemporalAmount;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -29,6 +31,8 @@ public class ProjectMock implements MockUnit<Project> {
             .thisMonth()
             .map(v -> LocalDateTime.of(v, LocalTime.of(0,0)));
 
+    public static final LocalDateTime lastMonth = LocalDateTime.now().minus(Period.ofMonths(1));
+
     public static final MockUnit<LocalDateTime> thisYear = localDates()
             .thisYear()
             .map(v -> LocalDateTime.of(v, LocalTime.of(0,0)));
@@ -43,6 +47,7 @@ public class ProjectMock implements MockUnit<Project> {
 
     // Metrics values
     private static final MockUnitDouble numericValues = doubles().range(30, 101);
+    private static final List<Status> metricStatuses = Arrays.asList(Status.AMBER, Status.GREEN, Status.RED);
     private static final List<String> invoicingValues = Arrays.asList(
             "Invoices outstanding for more than 60 days",
             "Invoices outstanding between 31-60 days",
@@ -93,16 +98,16 @@ public class ProjectMock implements MockUnit<Project> {
                     return p;
                 })
                 .map(p -> {
-                    Set<MetricsReport> metricsReports = filler(MetricsReport::new)
+                    List<MetricsReport> metricsReports = filler(MetricsReport::new)
                             .constant(MetricsReport::setProject, p)
-                            .setter(MetricsReport::setCreatedOn, thisMonth)
+                            .constant(MetricsReport::setCreatedOn, lastMonth)
                             .setter(MetricsReport::setDeliveryValue, numericValues)
-                            .setter(MetricsReport::setDeliveryStatus, from(Status.values()))
+                            .setter(MetricsReport::setDeliveryStatus, from(metricStatuses))
                             .setter(MetricsReport::setInvoicingValue, from(invoicingValues))
-                            .setter(MetricsReport::setInvoicingStatus, from(Status.values()))
+                            .setter(MetricsReport::setInvoicingStatus, from(metricStatuses))
                             .setter(MetricsReport::setChangeOrderValue, from(changeOrderValues))
-                            .setter(MetricsReport::setChangeOrderStatus, from(Status.values()))
-                            .set(5)
+                            .setter(MetricsReport::setChangeOrderStatus, from(metricStatuses))
+                            .list(4)
                             .get();
                     p.setMetricsReports(metricsReports);
 
