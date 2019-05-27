@@ -1,8 +1,10 @@
 package com.deloitte.ddwatch.controllers;
 
 import com.deloitte.ddwatch.dtos.MetricsReportDTO;
+import com.deloitte.ddwatch.model.DeliveryReport;
 import com.deloitte.ddwatch.model.MetricsReport;
 import com.deloitte.ddwatch.model.Project;
+import com.deloitte.ddwatch.services.DeliveryReportService;
 import com.deloitte.ddwatch.services.ProjectReportService;
 import com.deloitte.ddwatch.services.ProjectService;
 import org.modelmapper.ModelMapper;
@@ -33,15 +35,18 @@ public class DeliveryReportController {
     private ProjectReportService projectReportService;
 
     @Autowired
+    private DeliveryReportService deliveryReportService;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<MetricsReportDTO> addReport(@PathVariable @Valid @NotNull Long projectId,
-                                                                @RequestPart MultipartFile projectReportFile) {
+                                                      @RequestPart MultipartFile projectReportFile) {
         logger.info("Uploaded report {} for project {}", projectReportFile.getName(), projectId);
         Project project = projectService.findById(projectId);
         MetricsReport metrics = projectReportService.parseProjectReportFile(projectReportFile);
-        MetricsReport persistedMetrics = projectReportService.saveMetricsReport(metrics, project);
-        return ResponseEntity.ok(modelMapper.map(persistedMetrics, MetricsReportDTO.class));
+        DeliveryReport deliveryReport = deliveryReportService.createDeliveryReport(project, metrics);
+        return ResponseEntity.ok(modelMapper.map(deliveryReport.getMetricsReport(), MetricsReportDTO.class));
     }
 }

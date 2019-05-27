@@ -18,12 +18,12 @@ public class DeliveryReport {
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private Project project;
 
-//    @OneToOne(mappedBy = "deliveryReport", cascade = CascadeType.ALL)
-//    private MetricsReport metricsReport;
+    @OneToOne(mappedBy = "deliveryReport", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private MetricsReport metricsReport;
 
     private LocalDateTime updateDate;
 

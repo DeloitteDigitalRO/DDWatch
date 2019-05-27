@@ -18,6 +18,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 public class ProjectDTO implements Serializable {
+
     String id;
 
     @NotNull
@@ -52,8 +53,6 @@ public class ProjectDTO implements Serializable {
 
     Set<@Valid DeliveryReportDTO> deliveryReports;
     LocalDateTime lastDeliveryReport;
-
-    List<@Valid MetricsReportDTO> metricsReports;
 
     Set<@Alphanumeric @Size(min = 2, max=32) String> tags;
 

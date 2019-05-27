@@ -99,7 +99,6 @@ public class ProjectMock implements MockUnit<Project> {
                 })
                 .map(p -> {
                     List<MetricsReport> metricsReports = filler(MetricsReport::new)
-                            .constant(MetricsReport::setProject, p)
                             .constant(MetricsReport::setCreatedOn, lastMonth)
                             .setter(MetricsReport::setDeliveryValue, numericValues)
                             .setter(MetricsReport::setDeliveryStatus, from(metricStatuses))
@@ -109,7 +108,6 @@ public class ProjectMock implements MockUnit<Project> {
                             .setter(MetricsReport::setChangeOrderStatus, from(metricStatuses))
                             .list(4)
                             .get();
-                    p.setMetricsReports(metricsReports);
 
                     Set<QualityReport> qualityReports = filler(QualityReport::new)
                                                             .constant(QualityReport::setProject, p)

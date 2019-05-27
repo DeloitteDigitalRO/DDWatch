@@ -53,10 +53,6 @@ public class Project {
     @OrderBy(value = "updateDate DESC")
     Set<DeliveryReport> deliveryReports = new HashSet<>();
 
-    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @OrderBy(value = "createdOn DESC")
-    List<MetricsReport> metricsReports = new ArrayList<>();
-
     @Column(name = "last_delivery_report")
     LocalDateTime lastDeliveryReport;
 
@@ -90,11 +86,6 @@ public class Project {
     public void removeTag(Tag tag) {
         tags.remove(tag);
         tag.getProjects().remove(this);
-    }
-
-    public void addMetricsReport(MetricsReport metricsReport) {
-        metricsReport.setProject(this);
-        this.metricsReports.add(metricsReport);
     }
 
     @Override
