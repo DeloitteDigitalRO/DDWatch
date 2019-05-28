@@ -3,18 +3,30 @@ package com.deloitte.ddwatch.model;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 public enum Status {
-    RED(1), GREEN(3), AMBER(2);
+    RED(1, "R"),
+    AMBER(2, "A"),
+    GREEN(3, "G"),
+    UNDEFINED(0, "");
 
     private final int priority;
+    private final String excelCode;
 
-    Status(int priority) {
+    Status(int priority, String excelCode) {
         this.priority = priority;
+        this.excelCode = excelCode;
     }
 
     public int getPriority() {
         return priority;
     }
+
+    public String getExcelCode() {
+        return excelCode;
+    };
 
     public static Status getStatusByOverallCoverage(double coverage) {
         if (coverage < 0 || coverage > 100) {
@@ -41,6 +53,14 @@ public enum Status {
             return RED;
         }
     }
+
+    public static Status getStatusByExcelCode(String code) {
+        return Arrays.stream(values())
+                .filter(status -> status.getExcelCode().equals(code))
+                .findFirst()
+                .orElse(UNDEFINED);
+    }
+
 
     @Override
     public String toString() {

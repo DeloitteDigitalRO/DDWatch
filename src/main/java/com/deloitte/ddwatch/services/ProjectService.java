@@ -1,6 +1,8 @@
 package com.deloitte.ddwatch.services;
 
-import com.deloitte.ddwatch.model.*;
+import com.deloitte.ddwatch.model.Project;
+import com.deloitte.ddwatch.model.QualityReport;
+import com.deloitte.ddwatch.model.Tag;
 import com.deloitte.ddwatch.repositories.ProjectRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +56,10 @@ public class ProjectService {
         return project.get();
     }
 
+    public Optional<Project> findProject(Long id) {
+        return projectRepository.findById(id);
+    }
+
 
     public Set<Project> findByTag(String tagName) {
         Tag tag = tagService.safelyGetByName(tagName);
@@ -89,13 +95,18 @@ public class ProjectService {
         return project;
     }
 
-    @Transactional
-    public Project addDeliveryReport(long id, DeliveryReport deliveryReport) {
-        Project project = findById(id);
+//    @Transactional
+//    public Project addDeliveryReport(long id, DeliveryReport deliveryReport) {
+//        Project project = findById(id);
+//
+//        deliveryReport = deliveryReportService.create(deliveryReport);
+//        project.addDeliveryReport(deliveryReport);
+//        project.setLastDeliveryReport(deliveryReport.getUpdateDate());
+//        return project;
+//    }
 
-        deliveryReport = deliveryReportService.create(deliveryReport);
-        project.addDeliveryReport(deliveryReport);
-        project.setLastDeliveryReport(deliveryReport.getUpdateDate());
-        return project;
+    @Transactional
+    public void removeProject(Project project) {
+        projectRepository.delete(project);
     }
 }

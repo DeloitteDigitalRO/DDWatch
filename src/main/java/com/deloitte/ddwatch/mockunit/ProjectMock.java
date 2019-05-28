@@ -2,13 +2,15 @@ package com.deloitte.ddwatch.mockunit;
 
 import com.deloitte.ddwatch.model.*;
 import net.andreinc.mockneat.abstraction.MockUnit;
+import net.andreinc.mockneat.abstraction.MockUnitDouble;
 import net.andreinc.mockneat.abstraction.MockUnitInt;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.time.Period;
+import java.time.temporal.TemporalAmount;
+import java.util.*;
 import java.util.function.Supplier;
 
 import static net.andreinc.mockneat.types.enums.StringType.LETTERS;
@@ -24,11 +26,12 @@ import static net.andreinc.mockneat.unit.user.Emails.emails;
 import static net.andreinc.mockneat.unit.user.Names.names;
 
 public class ProjectMock implements MockUnit<Project> {
-
     // Dates related
     public static final MockUnit<LocalDateTime> thisMonth = localDates()
             .thisMonth()
             .map(v -> LocalDateTime.of(v, LocalTime.of(0,0)));
+
+    public static final LocalDateTime lastMonth = LocalDateTime.now().minus(Period.ofMonths(1));
 
     public static final MockUnit<LocalDateTime> thisYear = localDates()
             .thisYear()
@@ -41,6 +44,20 @@ public class ProjectMock implements MockUnit<Project> {
     public static final MockUnitInt critical = ints().range(0, 25);
     public static final MockUnitInt blocker = ints().range(0, 5);
     public static final List<String> possibleTags = Arrays.asList("hybris", "backend", "frontend", "scrum", "kanban", "uk", "de");
+
+    // Metrics values
+    private static final MockUnitDouble numericValues = doubles().range(30, 101);
+    private static final List<Status> metricStatuses = Arrays.asList(Status.AMBER, Status.GREEN, Status.RED);
+    private static final List<String> invoicingValues = Arrays.asList(
+            "Invoices outstanding for more than 60 days",
+            "Invoices outstanding between 31-60 days",
+            "Invoices outstanding between 31-60 days"
+    );
+    private static final List<String> changeOrderValues = Arrays.asList(
+            "Covers the current day",
+            "Expire in the following 30 days",
+            "Is expired"
+    );
 
     @Override
     public Supplier<Project> supplier() {
@@ -66,6 +83,23 @@ public class ProjectMock implements MockUnit<Project> {
                     return p;
                 })
                 .map(p -> {
+                    Set<DeliveryReport> deliveryReports = filler(DeliveryReport::new)
+                            .constant(DeliveryReport::setProject, p)
+                            .setter(DeliveryReport::setUpdateDate, thisMonth)
+                            .constant(DeliveryReport::setMetricsReport,
+                                        filler(MetricsReport::new)
+                                                .constant(MetricsReport::setCreatedOn, lastMonth)
+                                                .setter(MetricsReport::setDeliveryValue, numericValues)
+                                                .setter(MetricsReport::setDeliveryStatus, from(metricStatuses))
+                                                .setter(MetricsReport::setInvoicingValue, from(invoicingValues))
+                                                .setter(MetricsReport::setInvoicingStatus, from(metricStatuses))
+                                                .setter(MetricsReport::setChangeOrderValue, from(changeOrderValues))
+                                                .setter(MetricsReport::setChangeOrderStatus, from(metricStatuses))
+                                                .get())
+                            .set(5)
+                            .get();
+                    p.setDeliveryReports(deliveryReports);
+
                     Set<QualityReport> qualityReports = filler(QualityReport::new)
                                                             .constant(QualityReport::setProject, p)
                                                             .setter(QualityReport::setUpdateDate, thisYear)

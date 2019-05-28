@@ -29,7 +29,7 @@ public class DdwatchApplicationInit {
     @EventListener(ApplicationReadyEvent.class)
     public void init() {
 
-        final int numberOfMockProjects = 30;
+        final int numberOfMockProjects = 15;
 
         logger.info("Application ready.");
         logger.info("Building {} mock projects to be inserted in the database.", numberOfMockProjects);

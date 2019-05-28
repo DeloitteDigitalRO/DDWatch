@@ -1,0 +1,108 @@
+{
+  "sheet": "Metrics",
+  "empireTimeValue": {
+    "row": 6,
+    "col": 3,
+    "type": "numeric"
+  },
+  "deliveryValue": {
+    "row": 11,
+    "col": 3,
+    "type": "numeric"
+  },
+  "attritionValue": {
+    "row": 16,
+    "col": 3,
+    "type": "numeric"
+  },
+  "invoicingValue": {
+    "row": 21,
+    "col": 3,
+    "type": "text"
+  },
+  "escalationSeniorityValue": {
+    "row": 27,
+    "col": 3,
+    "type": "text"
+  },
+  "escalationRootCauseValue": {
+    "row": 27,
+    "col": 4,
+    "type": "text"
+  },
+  "changeOrderValue": {
+    "row": 33,
+    "col": 3,
+    "type": "text"
+  },
+  "testCodeCoverageValue": {
+    "row": 39,
+    "col": 3,
+    "type": "numeric"
+  },
+  "branchCoverageValue": {
+    "row": 44,
+    "col": 3,
+    "type": "numeric"
+  },
+  "duplicationDensityValue": {
+    "row": 49,
+    "col": 3,
+    "type": "numeric"
+  },
+  "empireTimeStatus": {
+    "row": 6,
+    "col": 7,
+    "type": "text"
+  },
+  "deliveryStatus": {
+    "row": 11,
+    "col": 7,
+    "type": "text"
+  },
+  "attritionStatus": {
+    "row": 16,
+    "col": 7,
+    "type": "text"
+  },
+  "invoicingStatus": {
+    "row": 22,
+    "col": 7,
+    "type": "text"
+  },
+  "escalationStatus": {
+    "row": 28,
+    "col": 7,
+    "type": "text"
+  },
+  "changeOrderStatus": {
+    "row": 34,
+    "col": 7,
+    "type": "text"
+  },
+  "testCodeCoverageStatus": {
+    "row": 39,
+    "col": 7,
+    "type": "text"
+  },
+  "branchCoverageStatus": {
+    "row": 44,
+    "col": 7,
+    "type": "text"
+  },
+  "duplicationDensityStatus": {
+    "row": 49,
+    "col": 7,
+    "type": "text"
+  },
+  "riskOverallStatus": {
+    "row": 17,
+    "col": 15,
+    "type": "text"
+  },
+  "riskOverallValue": {
+    "row": 20,
+    "col": 13,
+    "type": "text"
+  }
+}

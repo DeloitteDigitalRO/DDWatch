@@ -1,13 +1,8 @@
 package com.deloitte.ddwatch.configurations;
 
-import com.deloitte.ddwatch.dtos.ProjectDTO;
-import com.deloitte.ddwatch.dtos.QualityQuestionsAnswersDTO;
-import com.deloitte.ddwatch.dtos.QualityReportDTO;
+import com.deloitte.ddwatch.dtos.*;
 import com.deloitte.ddwatch.mockunit.ProjectMock;
-import com.deloitte.ddwatch.model.Project;
-import com.deloitte.ddwatch.model.QualityQuestionsAnswers;
-import com.deloitte.ddwatch.model.QualityReport;
-import com.deloitte.ddwatch.model.Tag;
+import com.deloitte.ddwatch.model.*;
 import com.deloitte.ddwatch.model.json.QualityQuestions;
 import com.deloitte.ddwatch.model.json.Question;
 import com.google.gson.Gson;
@@ -67,6 +62,17 @@ public class ApplicationConfig {
             }
         };
 
+        Converter<DeliveryReport, DeliveryReportDTO> deliveryReportConverter =  new Converter<DeliveryReport, DeliveryReportDTO>() {
+            public DeliveryReportDTO convert(MappingContext<DeliveryReport, DeliveryReportDTO> context) {
+                DeliveryReport s = context.getSource();
+                DeliveryReportDTO d = new DeliveryReportDTO();
+                d.setMetricsReport(modelMapper.map(s.getMetricsReport(), MetricsReportDTO.class));
+                d.setProjectId(s.getProject().getId());
+                d.setUpdateDate(s.getUpdateDate());
+                return d;
+            }
+        };
+
         Converter<Set<String>, Set<Tag>> projectTagConverter = new Converter<Set<String>, Set<Tag>>() {
             public Set<Tag> convert(MappingContext<Set<String>, Set<Tag>> context) {
                 return new HashSet<>();
@@ -87,6 +93,13 @@ public class ApplicationConfig {
         Converter<Set<Tag>, Set<String>> tagConverter = context -> context.getSource() == null ? null :
                                     context.getSource().stream().map(Tag::getName).collect(Collectors.toSet());
 
+
+        Converter<Status, String> statusStringConverter = new Converter<Status, String>() {
+            public String convert(MappingContext<Status, String> context) {
+                return context.getSource() == null ? null : context.getSource().getExcelCode();
+            }
+        };
+
         modelMapper.addMappings(new PropertyMap<Project, ProjectDTO>() {
             @Override
             protected void configure() {
@@ -105,6 +118,8 @@ public class ApplicationConfig {
         modelMapper.addConverter(questionTextConverter);
         modelMapper.addConverter(questionDTOConverter);
         modelMapper.addConverter(stringToTagConvertor);
+        modelMapper.addConverter(statusStringConverter);
+        modelMapper.addConverter(deliveryReportConverter);
 
         return modelMapper;
     }

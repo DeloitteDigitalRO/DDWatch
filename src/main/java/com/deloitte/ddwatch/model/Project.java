@@ -1,18 +1,18 @@
 package com.deloitte.ddwatch.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Data
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "project")
 public class Project {
@@ -114,7 +114,22 @@ public class Project {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this,
-                ToStringStyle.SHORT_PREFIX_STYLE);
+        return "Project{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", deliveryLead='" + deliveryLead + '\'' +
+                ", deliveryLeadEmail='" + deliveryLeadEmail + '\'' +
+                ", technicalLead='" + technicalLead + '\'' +
+                ", technicalLeadEmail='" + technicalLeadEmail + '\'' +
+                ", deliveryStatus=" + deliveryStatus +
+                ", qualityStatus=" + qualityStatus +
+                ", qualityReports=" + qualityReports +
+                ", lastQualityReport=" + lastQualityReport +
+                ", deliveryReports=" + deliveryReports +
+                ", lastDeliveryReport=" + lastDeliveryReport +
+                ", tags=" + tags +
+                ", sonarQubeUrl='" + sonarQubeUrl + '\'' +
+                ", sonarComponentKey='" + sonarComponentKey + '\'' +
+                '}';
     }
 }
