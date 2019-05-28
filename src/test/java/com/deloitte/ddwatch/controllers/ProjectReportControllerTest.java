@@ -1,10 +1,15 @@
 package com.deloitte.ddwatch.controllers;
 
+import com.deloitte.ddwatch.dtos.DeliveryReportDTO;
 import com.deloitte.ddwatch.dtos.MetricsReportDTO;
+import com.deloitte.ddwatch.dtos.QualityReportDTO;
+import com.deloitte.ddwatch.model.DeliveryReport;
 import com.deloitte.ddwatch.model.Project;
+import com.deloitte.ddwatch.model.QualityReport;
 import com.deloitte.ddwatch.model.Status;
 import com.deloitte.ddwatch.services.ProjectService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +20,13 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.io.File;
 import java.io.FileInputStream;
 
+import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -27,8 +34,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class ProjectReportControllerTest {
 
-    private final String REPORT_FILE_PARAM = "projectReportFile";
-    private final String PROJECT_ID_PARAM = "projectId";
+    private final String REPORT_FILE_PARAM = "deliveryReportFile";
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     MockMvc mockMvc;
@@ -38,6 +45,7 @@ public class ProjectReportControllerTest {
 
     @Test
     public void uploadMetricsReport() throws Exception {
+        objectMapper.registerModule(new JavaTimeModule());
         // Create test project
         Project project = projectService.create(Project.builder()
                 .name("test_project")
@@ -72,6 +80,7 @@ public class ProjectReportControllerTest {
                 .duplicationDensityValue(50d)
                 .duplicationDensityStatus(Status.GREEN.getExcelCode())
                 .riskOverallStatus(Status.AMBER.getExcelCode())
+                .riskOverallValue("MEDIUM RISK")
                 .build();
 
         // Load test resource
@@ -82,13 +91,16 @@ public class ProjectReportControllerTest {
                 MediaType.MULTIPART_FORM_DATA_VALUE, new FileInputStream(excelFile));
 
 
-        mockMvc.perform(
+        MvcResult result = mockMvc.perform(
                 MockMvcRequestBuilders
-                        .multipart("/project_report/metrics/upload")
+                        .multipart("/projects/" + project.getId() + "/deliveryReports/upload")
                         .file(mockMultipartFile)
-                        .param(PROJECT_ID_PARAM, project.getId().toString())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json(new ObjectMapper().writeValueAsString(reportDTO), false));
+                .andReturn();
+
+        DeliveryReportDTO deliveryReportDTO = objectMapper.readValue(
+                result.getResponse().getContentAsString(), DeliveryReportDTO.class);
+        assertEquals(reportDTO, deliveryReportDTO.getMetricsReport());
     }
 }

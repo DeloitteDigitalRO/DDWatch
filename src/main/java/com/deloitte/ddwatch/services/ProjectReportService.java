@@ -25,15 +25,9 @@ public class ProjectReportService {
     @Autowired
     private DeliveryReportRepository deliveryReportRepository;
 
-    @Autowired
-    private ExcelParser excelParser;
 
     @Autowired
     private ModelMapper modelMapper;
-
-    public MetricsReport parseProjectReportFile(MultipartFile projectReportFile) {
-        return excelParser.parseMetrics(projectReportFile);
-    }
 
     @Transactional
     public List<DeliveryReport> getDeliveryReports(Long projectId) {

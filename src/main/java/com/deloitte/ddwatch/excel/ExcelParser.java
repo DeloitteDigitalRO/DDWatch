@@ -1,6 +1,6 @@
 package com.deloitte.ddwatch.excel;
 
-import com.deloitte.ddwatch.exceptions.ProcessingException;
+import com.deloitte.ddwatch.exceptions.ExcelProcessingException;
 import com.deloitte.ddwatch.model.MetricsReport;
 import com.deloitte.ddwatch.model.Status;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,10 +9,10 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Optional;
 
 /**
@@ -31,13 +31,13 @@ public class ExcelParser {
     @Value("${excel.metrics_config_file}")
     private String metricsConfigFile;
 
-    public MetricsReport parseMetrics(MultipartFile rawExcel) {
+    public MetricsReport parseMetrics(InputStream rawExcel) {
         Workbook workbook = getWorkbook(rawExcel);
 
         MetricsExcelConfig config = getMetricsExcelConfig();
 
         Sheet sheet= Optional.ofNullable(workbook.getSheet(config.getSheet()))
-                .orElseThrow(() -> new ProcessingException("Could not open Metrics sheet."));
+                .orElseThrow(() -> new ExcelProcessingException("Could not open Metrics sheet."));
 
         return MetricsReport.builder()
                 .empireTimeValue(getNumericValue(sheet, config.getEmpireTimeValue()))
@@ -69,26 +69,26 @@ public class ExcelParser {
             return objectMapper.readValue(new File(metricsConfigFile), MetricsExcelConfig.class);
         } catch (IOException e) {
             e.printStackTrace();
-            throw new ProcessingException("Could not open metrics config file.");
+            throw new ExcelProcessingException("Could not open metrics config file.");
         }
     }
 
-    private Workbook getWorkbook(MultipartFile rawExcel) {
+    private Workbook getWorkbook(InputStream rawExcel) {
         try {
-            return new XSSFWorkbook(rawExcel.getInputStream());
+            return new XSSFWorkbook(rawExcel);
         } catch (IOException e) {
             e.printStackTrace();
-            throw new ProcessingException("Could not open project file.");
+            throw new ExcelProcessingException("Could not open project file.");
         }
     }
 
     private Object getCellValue(Sheet sheet, ExcelCell excelCell) {
         Row row = Optional.ofNullable(sheet.getRow(excelCell.getRow()))
-                .orElseThrow(() -> new ProcessingException(String.format("Could not find row %d",
+                .orElseThrow(() -> new ExcelProcessingException(String.format("Could not find row %d",
                         excelCell.getRow())));
 
         Cell cell = Optional.ofNullable(row.getCell(excelCell.getCol()))
-                .orElseThrow(() -> new ProcessingException(String.format("Could not find cell %d on row %d",
+                .orElseThrow(() -> new ExcelProcessingException(String.format("Could not find cell %d on row %d",
                         excelCell.getCol(), excelCell.getRow())));
 
         Object cellValue = null;
@@ -103,7 +103,7 @@ public class ExcelParser {
             }
         } catch (IllegalStateException exception) {
             log.error("{} {}", exception.getMessage(), excelCell);
-            throw new ProcessingException(String.format("Invalid type found on row %d cell %d. Expected %s",
+            throw new ExcelProcessingException(String.format("Invalid type found on row %d cell %d. Expected %s",
                     excelCell.getRow(), excelCell.getCol(), excelCell.getType()));
         }
 

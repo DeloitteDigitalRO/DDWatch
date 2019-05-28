@@ -13,10 +13,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DeliveryReportDTO implements Serializable {
-
-    private LocalDateTime updateDate;
-
     private Long projectId;
 
-    private MetricsReportDTO metricsReportDTO;
+    private MetricsReportDTO metricsReport;
+
+    private LocalDateTime updateDate;
 }

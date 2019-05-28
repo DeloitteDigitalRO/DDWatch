@@ -22,7 +22,8 @@ public class DeliveryReport {
     @JoinColumn(name = "project_id")
     private Project project;
 
-    @OneToOne(mappedBy = "deliveryReport", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "metrics_report_id")
     private MetricsReport metricsReport;
 
     private LocalDateTime updateDate;

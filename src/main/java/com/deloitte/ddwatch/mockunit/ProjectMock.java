@@ -58,21 +58,6 @@ public class ProjectMock implements MockUnit<Project> {
             "Expire in the following 30 days",
             "Is expired"
     );
-    private static final List<String> seniorityEscalationValues = Arrays.asList(
-            "",
-            "",
-            ""
-    );
-    private static final List<String> deliveryEscalationValues = Arrays.asList(
-            "",
-            "",
-            ""
-    );
-    private static final List<String> overallRiskValues = Arrays.asList(
-            "",
-            "",
-            ""
-    );
 
     @Override
     public Supplier<Project> supplier() {
@@ -98,16 +83,22 @@ public class ProjectMock implements MockUnit<Project> {
                     return p;
                 })
                 .map(p -> {
-                    List<MetricsReport> metricsReports = filler(MetricsReport::new)
-                            .constant(MetricsReport::setCreatedOn, lastMonth)
-                            .setter(MetricsReport::setDeliveryValue, numericValues)
-                            .setter(MetricsReport::setDeliveryStatus, from(metricStatuses))
-                            .setter(MetricsReport::setInvoicingValue, from(invoicingValues))
-                            .setter(MetricsReport::setInvoicingStatus, from(metricStatuses))
-                            .setter(MetricsReport::setChangeOrderValue, from(changeOrderValues))
-                            .setter(MetricsReport::setChangeOrderStatus, from(metricStatuses))
-                            .list(4)
+                    Set<DeliveryReport> deliveryReports = filler(DeliveryReport::new)
+                            .constant(DeliveryReport::setProject, p)
+                            .setter(DeliveryReport::setUpdateDate, thisMonth)
+                            .constant(DeliveryReport::setMetricsReport,
+                                        filler(MetricsReport::new)
+                                                .constant(MetricsReport::setCreatedOn, lastMonth)
+                                                .setter(MetricsReport::setDeliveryValue, numericValues)
+                                                .setter(MetricsReport::setDeliveryStatus, from(metricStatuses))
+                                                .setter(MetricsReport::setInvoicingValue, from(invoicingValues))
+                                                .setter(MetricsReport::setInvoicingStatus, from(metricStatuses))
+                                                .setter(MetricsReport::setChangeOrderValue, from(changeOrderValues))
+                                                .setter(MetricsReport::setChangeOrderStatus, from(metricStatuses))
+                                                .get())
+                            .set(5)
                             .get();
+                    p.setDeliveryReports(deliveryReports);
 
                     Set<QualityReport> qualityReports = filler(QualityReport::new)
                                                             .constant(QualityReport::setProject, p)

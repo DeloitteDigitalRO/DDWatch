@@ -66,7 +66,7 @@ public class ApplicationConfig {
             public DeliveryReportDTO convert(MappingContext<DeliveryReport, DeliveryReportDTO> context) {
                 DeliveryReport s = context.getSource();
                 DeliveryReportDTO d = new DeliveryReportDTO();
-                d.setMetricsReportDTO(modelMapper.map(s.getMetricsReport(), MetricsReportDTO.class));
+                d.setMetricsReport(modelMapper.map(s.getMetricsReport(), MetricsReportDTO.class));
                 d.setProjectId(s.getProject().getId());
                 d.setUpdateDate(s.getUpdateDate());
                 return d;

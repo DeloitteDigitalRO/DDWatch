@@ -20,8 +20,7 @@ public class MetricsReport {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "delivery_report_id")
+    @OneToOne(mappedBy = "metricsReport", fetch = FetchType.LAZY)
     private DeliveryReport deliveryReport;
 
     @Column(name = "empire_time_value")
