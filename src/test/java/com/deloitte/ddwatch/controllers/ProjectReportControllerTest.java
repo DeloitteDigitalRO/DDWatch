@@ -5,9 +5,7 @@ import com.deloitte.ddwatch.model.Project;
 import com.deloitte.ddwatch.model.Status;
 import com.deloitte.ddwatch.services.ProjectService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.experimental.results.ResultMatchers;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -21,7 +19,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.math.BigDecimal;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -54,7 +51,6 @@ public class ProjectReportControllerTest {
         // Expected result
         MetricsReportDTO reportDTO = MetricsReportDTO.builder()
                 .id(project.getId() + 1)
-                .projectId(project.getId())
                 .empireTimeValue(100d)
                 .empireTimeStatus(Status.GREEN.getExcelCode())
                 .deliveryValue(90d)

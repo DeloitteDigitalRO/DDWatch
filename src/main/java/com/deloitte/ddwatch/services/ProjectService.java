@@ -90,15 +90,15 @@ public class ProjectService {
         return project;
     }
 
-    @Transactional
-    public Project addDeliveryReport(long id, DeliveryReport deliveryReport) {
-        Project project = findById(id);
-
-        deliveryReport = deliveryReportService.create(deliveryReport);
-        project.addDeliveryReport(deliveryReport);
-        project.setLastDeliveryReport(deliveryReport.getUpdateDate());
-        return project;
-    }
+//    @Transactional
+//    public Project addDeliveryReport(long id, DeliveryReport deliveryReport) {
+//        Project project = findById(id);
+//
+//        deliveryReport = deliveryReportService.create(deliveryReport);
+//        project.addDeliveryReport(deliveryReport);
+//        project.setLastDeliveryReport(deliveryReport.getUpdateDate());
+//        return project;
+//    }
 
     @Transactional
     public void removeProject(Project project) {

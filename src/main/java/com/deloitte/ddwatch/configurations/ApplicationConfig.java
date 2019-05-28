@@ -1,8 +1,6 @@
 package com.deloitte.ddwatch.configurations;
 
-import com.deloitte.ddwatch.dtos.ProjectDTO;
-import com.deloitte.ddwatch.dtos.QualityQuestionsAnswersDTO;
-import com.deloitte.ddwatch.dtos.QualityReportDTO;
+import com.deloitte.ddwatch.dtos.*;
 import com.deloitte.ddwatch.mockunit.ProjectMock;
 import com.deloitte.ddwatch.model.*;
 import com.deloitte.ddwatch.model.json.QualityQuestions;
@@ -64,6 +62,17 @@ public class ApplicationConfig {
             }
         };
 
+        Converter<DeliveryReport, DeliveryReportDTO> deliveryReportConverter =  new Converter<DeliveryReport, DeliveryReportDTO>() {
+            public DeliveryReportDTO convert(MappingContext<DeliveryReport, DeliveryReportDTO> context) {
+                DeliveryReport s = context.getSource();
+                DeliveryReportDTO d = new DeliveryReportDTO();
+                d.setMetricsReportDTO(modelMapper.map(s.getMetricsReport(), MetricsReportDTO.class));
+                d.setProjectId(s.getProject().getId());
+                d.setUpdateDate(s.getUpdateDate());
+                return d;
+            }
+        };
+
         Converter<Set<String>, Set<Tag>> projectTagConverter = new Converter<Set<String>, Set<Tag>>() {
             public Set<Tag> convert(MappingContext<Set<String>, Set<Tag>> context) {
                 return new HashSet<>();
@@ -110,6 +119,7 @@ public class ApplicationConfig {
         modelMapper.addConverter(questionDTOConverter);
         modelMapper.addConverter(stringToTagConvertor);
         modelMapper.addConverter(statusStringConverter);
+        modelMapper.addConverter(deliveryReportConverter);
 
         return modelMapper;
     }

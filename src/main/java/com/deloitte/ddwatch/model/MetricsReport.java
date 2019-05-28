@@ -15,13 +15,14 @@ import java.util.Objects;
 @Table(name = "metrics_report")
 @Data @Builder
 public class MetricsReport {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "project_id")
-    private Project project;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "delivery_report_id")
+    private DeliveryReport deliveryReport;
 
     @Column(name = "empire_time_value")
     private Double empireTimeValue;

@@ -12,9 +12,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MetricsReportDTO {
-    private Long id;
 
-    private Long projectId;
+    private Long id;
 
     private Double empireTimeValue;
 
@@ -59,4 +58,7 @@ public class MetricsReportDTO {
     private String riskOverallStatus;
 
     private LocalDateTime createdOn;
+
+    private Long deliveryReportId;
+
 }
