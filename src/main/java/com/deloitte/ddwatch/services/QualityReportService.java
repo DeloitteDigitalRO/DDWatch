@@ -39,6 +39,17 @@ public class QualityReportService {
         return qualityReport;
     }
 
+    public QualityReport create(String sonarBaseUrl, String sonarComponentKey, ProjectRepo projectRepo) {
+        QualityReport qualityReport = new QualityReport();
+        SonarQubeReport sonarQubeReport = sonarQubeReportService.createReportFromUrl(sonarBaseUrl, sonarComponentKey);
+        qualityReport.setQualityStatus(calculateStatus(sonarQubeReport));
+        qualityReport.setUpdateDate(LocalDateTime.now());
+        qualityReport.addSonarQubeReport(sonarQubeReport);
+        qualityReport.setProjectRepo(projectRepo);
+        projectRepo.addQualityReport(qualityReport);
+        return qualityReport;
+    }
+
     private Status calculateStatus(SonarQubeReport sonarQubeReport) {
         Status statusForCoverage = Status.getStatusByOverallCoverage(sonarQubeReport.getOverallCoverage());
         Status statusForDefectDensity = Status.getStatusByDefectDensity(sonarQubeReport.getDefectDensity());

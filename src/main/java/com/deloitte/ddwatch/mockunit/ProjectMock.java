@@ -5,16 +5,13 @@ import net.andreinc.mockneat.abstraction.MockUnit;
 import net.andreinc.mockneat.abstraction.MockUnitDouble;
 import net.andreinc.mockneat.abstraction.MockUnitInt;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Period;
-import java.time.temporal.TemporalAmount;
 import java.util.*;
 import java.util.function.Supplier;
 
 import static net.andreinc.mockneat.types.enums.StringType.LETTERS;
-import static net.andreinc.mockneat.unit.networking.URLs.urls;
 import static net.andreinc.mockneat.unit.objects.Filler.filler;
 import static net.andreinc.mockneat.unit.objects.From.from;
 import static net.andreinc.mockneat.unit.text.Formatter.fmt;
@@ -77,11 +74,13 @@ public class ProjectMock implements MockUnit<Project> {
                 .setter(Project::setQualityStatus, from(Status.class))
                 .setter(Project::setLastQualityReport, thisMonth)
                 .setter(Project::setLastDeliveryReport, thisMonth)
-                .setter(Project::setSonarQubeUrl, urls().append("/sonarqube/"))
-                .map(p -> {
-                    p.setSonarComponentKey(p.getName());
-                    return p;
-                })
+//                .setter(Project::setSonarQubeUrl, urls().append("/sonarqube/"))
+//                .constant(Project::setSonarQubeUrl,"http://localhost:9000")
+//                .constant(Project::setSonarComponentKey, "com.deloitte:ddwatch")
+//                .map(p -> {
+//                    p.setSonarComponentKey(p.getName()); //com.deloitte:ddwatch
+//                    return p;
+//                })
                 .map(p -> {
                     Set<DeliveryReport> deliveryReports = filler(DeliveryReport::new)
                             .constant(DeliveryReport::setProject, p)
@@ -101,14 +100,14 @@ public class ProjectMock implements MockUnit<Project> {
                     p.setDeliveryReports(deliveryReports);
 
                     Set<QualityReport> qualityReports = filler(QualityReport::new)
-                                                            .constant(QualityReport::setProject, p)
+//                                                            .constant(QualityReport::setProject, p)
                                                             .setter(QualityReport::setUpdateDate, thisYear)
                                                             .map(thisQualityReport -> {
                                                                 thisQualityReport.setSonarQubeReport(
                                                                         filler(SonarQubeReport::new)
                                                                                 .constant(SonarQubeReport::setQualityReport, thisQualityReport)
                                                                                 .constant(SonarQubeReport::setName, p.getName())
-                                                                                .constant(SonarQubeReport::setKey, p.getSonarComponentKey())
+//                                                                                .constant(SonarQubeReport::setKey, p.getSonarComponentKey())
                                                                                 .setter(SonarQubeReport::setLinesOfCode, ints().range(10000, 50000))
 
                                                                                 // Bugs
@@ -187,7 +186,17 @@ public class ProjectMock implements MockUnit<Project> {
                                                             })
                                                             .set(10)
                                                             .get();
-                    p.setQualityReports(qualityReports);
+//                    p.setQualityReports(qualityReports);
+
+                    Set<ProjectRepo> projectRepos = filler(ProjectRepo::new)
+                            .constant(ProjectRepo::setProject, p)
+                            .constant(ProjectRepo::setSonarQubeUrl,"http://localhost:9000")
+                            .constant(ProjectRepo::setSonarComponentKey, "com.deloitte:ddwatch")
+                            .constant(ProjectRepo::setQualityReports, qualityReports)
+                            .set(5)
+                            .get();
+                    p.setProjectRepos(projectRepos);
+
                     return p;
                 })
                 .supplier();

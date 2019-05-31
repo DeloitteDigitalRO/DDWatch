@@ -40,11 +40,8 @@ public class Project {
     String technicalLeadEmail;
 
     Status deliveryStatus;
-    Status qualityStatus;
 
-    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @OrderBy(value = "updateDate DESC")
-    Set<QualityReport> qualityReports = new HashSet<>();
+    Status qualityStatus;
 
     @Column(name = "last_quality_report")
     LocalDateTime lastQualityReport;
@@ -62,15 +59,12 @@ public class Project {
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags = new HashSet<>();
 
-    @Column(name = "sonarqube_url", length = 1024)
-    String sonarQubeUrl;
+    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    Set<ProjectRepo> projectRepos = new HashSet<>();
 
-    @Column(name = "sonarqube_component_url", length = 256)
-    String sonarComponentKey;
-
-    public void addQualityReport(QualityReport qualityReport) {
-        qualityReports.add(qualityReport);
-        qualityReport.setProject(this);
+    public void addProjectRepo(ProjectRepo projectRepo) {
+        projectRepos.add(projectRepo);
+        projectRepo.setProject(this);
     }
 
     public void addDeliveryReport(DeliveryReport deliveryReport) {
@@ -102,14 +96,12 @@ public class Project {
                 getDeliveryStatus() == project.getDeliveryStatus() &&
                 getQualityStatus() == project.getQualityStatus() &&
                 Objects.equals(getLastQualityReport(), project.getLastQualityReport()) &&
-                Objects.equals(getLastDeliveryReport(), project.getLastDeliveryReport()) &&
-                Objects.equals(getSonarQubeUrl(), project.getSonarQubeUrl()) &&
-                Objects.equals(getSonarComponentKey(), project.getSonarComponentKey());
+                Objects.equals(getLastDeliveryReport(), project.getLastDeliveryReport());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(), getDescription(), getDeliveryLead(), getDeliveryLeadEmail(), getTechnicalLead(), getTechnicalLeadEmail(), getDeliveryStatus(), getQualityStatus(), getLastQualityReport(), getLastDeliveryReport(), getSonarQubeUrl(), getSonarComponentKey());
+        return Objects.hash(getName(), getDescription(), getDeliveryLead(), getDeliveryLeadEmail(), getTechnicalLead(), getTechnicalLeadEmail(), getDeliveryStatus(), getQualityStatus(), getLastQualityReport(), getLastDeliveryReport());
     }
 
     @Override
@@ -123,13 +115,11 @@ public class Project {
                 ", technicalLeadEmail='" + technicalLeadEmail + '\'' +
                 ", deliveryStatus=" + deliveryStatus +
                 ", qualityStatus=" + qualityStatus +
-                ", qualityReports=" + qualityReports +
                 ", lastQualityReport=" + lastQualityReport +
                 ", deliveryReports=" + deliveryReports +
                 ", lastDeliveryReport=" + lastDeliveryReport +
                 ", tags=" + tags +
-                ", sonarQubeUrl='" + sonarQubeUrl + '\'' +
-                ", sonarComponentKey='" + sonarComponentKey + '\'' +
+                ", projectRepos=" + projectRepos +
                 '}';
     }
 }

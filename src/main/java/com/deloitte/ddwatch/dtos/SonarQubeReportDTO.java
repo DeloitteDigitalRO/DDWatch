@@ -5,9 +5,7 @@ import lombok.Data;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 @Data
 public class SonarQubeReportDTO implements Serializable {

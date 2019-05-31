@@ -1,17 +1,12 @@
 package com.deloitte.ddwatch.controllers;
 
 import com.deloitte.ddwatch.dtos.DeliveryReportDTO;
-import com.deloitte.ddwatch.dtos.MetricsReportDTO;
 import com.deloitte.ddwatch.model.DeliveryReport;
-import com.deloitte.ddwatch.model.MetricsReport;
 import com.deloitte.ddwatch.model.Project;
 import com.deloitte.ddwatch.services.DeliveryReportService;
-import com.deloitte.ddwatch.services.ProjectReportService;
 import com.deloitte.ddwatch.services.ProjectService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

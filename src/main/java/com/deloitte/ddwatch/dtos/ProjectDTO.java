@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.andreinc.jbvext.annotations.misc.OneOfStrings;
 import net.andreinc.jbvext.annotations.str.Alphanumeric;
-import org.hibernate.validator.constraints.URL;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
@@ -12,7 +11,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
 @Data
@@ -48,18 +46,14 @@ public class ProjectDTO implements Serializable {
     @OneOfStrings({"RED", "GREEN", "AMBER"})
     String qualityStatus;
 
-    List<@Valid QualityReportDTO> qualityReports;
     LocalDateTime lastQualityReport;
 
     Set<@Valid DeliveryReportDTO> deliveryReports;
+
     LocalDateTime lastDeliveryReport;
+
+    Set<@Valid ProjectRepoDTO> projectRepos;
 
     Set<@Alphanumeric @Size(min = 2, max=32) String> tags;
 
-    @URL
-    @Size(max = 1024)
-    String sonarQubeUrl;
-
-    @Size(max = 256)
-    String sonarComponentKey;
 }
