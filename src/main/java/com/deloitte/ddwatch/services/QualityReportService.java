@@ -21,8 +21,9 @@ public class QualityReportService {
     private SonarQubeReportService sonarQubeReportService;
 
     @Transactional
-    public QualityReport create(String sonarBaseUrl, String sonarComponentKey, QualityReport qualityReport) {
+    public QualityReport create(String sonarBaseUrl, String sonarComponentKey) {
         SonarQubeReport sonarQubeReport = sonarQubeReportService.createReportFromUrl(sonarBaseUrl, sonarComponentKey);
+        QualityReport qualityReport = new QualityReport();
         qualityReport.setQualityStatus(calculateStatus(sonarQubeReport));
         qualityReport.setUpdateDate(LocalDateTime.now());
         qualityReport.addSonarQubeReport(sonarQubeReport);
@@ -36,17 +37,6 @@ public class QualityReportService {
         qualityReport.setUpdateDate(LocalDateTime.now());
         qualityReport.addSonarQubeReport(sonarQubeReport);
         inputStream.close();
-        return qualityReport;
-    }
-
-    public QualityReport create(String sonarBaseUrl, String sonarComponentKey, ProjectRepo projectRepo) {
-        QualityReport qualityReport = new QualityReport();
-        SonarQubeReport sonarQubeReport = sonarQubeReportService.createReportFromUrl(sonarBaseUrl, sonarComponentKey);
-        qualityReport.setQualityStatus(calculateStatus(sonarQubeReport));
-        qualityReport.setUpdateDate(LocalDateTime.now());
-        qualityReport.addSonarQubeReport(sonarQubeReport);
-        qualityReport.setProjectRepo(projectRepo);
-        projectRepo.addQualityReport(qualityReport);
         return qualityReport;
     }
 

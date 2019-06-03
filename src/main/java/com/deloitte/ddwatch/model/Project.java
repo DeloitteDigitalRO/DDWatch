@@ -22,36 +22,36 @@ public class Project {
     Long id;
 
     @Column(name = "name", nullable = false, length=64, unique = true)
-    String name;
+    private String name;
 
     @Column(name = "description", length = 1024)
-    String description;
+    private String description;
 
     @Column(name = "delivery_lead", nullable=false, length = 64)
-    String deliveryLead;
+    private String deliveryLead;
 
     @Column(name = "delivery_lead_email", nullable = false, length = 128)
-    String deliveryLeadEmail;
+    private String deliveryLeadEmail;
 
     @Column(name = "tech_lead", nullable = false, length = 64)
-    String technicalLead;
+    private String technicalLead;
 
     @Column(name = "tech_lead_email", nullable = false, length = 128)
-    String technicalLeadEmail;
+    private String technicalLeadEmail;
 
-    Status deliveryStatus;
+    private Status deliveryStatus;
 
-    Status qualityStatus;
+    private Status qualityStatus;
 
     @Column(name = "last_quality_report")
-    LocalDateTime lastQualityReport;
+    private LocalDateTime lastQualityReport;
 
     @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @OrderBy(value = "updateDate DESC")
-    Set<DeliveryReport> deliveryReports = new HashSet<>();
+    private Set<DeliveryReport> deliveryReports = new HashSet<>();
 
     @Column(name = "last_delivery_report")
-    LocalDateTime lastDeliveryReport;
+    private LocalDateTime lastDeliveryReport;
 
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
     @JoinTable(name = "project_tag",
@@ -60,7 +60,7 @@ public class Project {
     private Set<Tag> tags = new HashSet<>();
 
     @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    Set<ProjectRepo> projectRepos = new HashSet<>();
+    private Set<ProjectRepo> projectRepos = new HashSet<>();
 
     public void addProjectRepo(ProjectRepo projectRepo) {
         projectRepos.add(projectRepo);

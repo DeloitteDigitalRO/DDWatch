@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -71,37 +69,6 @@ public class ProjectService {
         return projects;
     }
 
-//    @Transactional
-//    public Project addReport(long id, QualityReport qualityReport) {
-//        Project project = findById(id);
-//
-//        qualityReport = qualityReportService.create(project.getSonarQubeUrl(), project.getSonarComponentKey(), qualityReport);
-//
-//        project.addQualityReport(qualityReport);
-//        project.setQualityStatus(qualityReport.getQualityStatus());
-//        project.setLastQualityReport(qualityReport.getUpdateDate());
-//        return project;
-//    }
-//
-//    @Transactional
-//    public Project addReport(long id, InputStream inputStream, QualityReport qualityReport) throws IOException {
-//        Project project = findById(id);
-//
-//        qualityReport = qualityReportService.create(inputStream, qualityReport);
-//        project.addQualityReport(qualityReport);
-//        project.setLastQualityReport(qualityReport.getUpdateDate());
-//        project.setQualityStatus(qualityReport.getQualityStatus());
-//        return project;
-//    }
-//
-//    @Transactional
-//    public void addQualityReportDetails(Long projectId, Status qualityStatus, boolean isDefault) {
-//        Project project = findById(projectId);
-//        project.setQualityStatus(qualityStatus);
-//        project.setLastQualityReport(isDefault ? LocalDateTime.now() : project.getLastQualityReport());
-//        projectRepository.save(project);
-//    }
-
     @Transactional
     public Project addProjectRepo(ProjectRepo projectRepo) {
         Project project = findById(projectRepo.getProject().getId());
@@ -110,17 +77,6 @@ public class ProjectService {
         projectRepository.save(project);
         return project;
     }
-
-
-//    @Transactional
-//    public Project addDeliveryReport(long id, DeliveryReport deliveryReport) {
-//        Project project = findById(id);
-//
-//        deliveryReport = deliveryReportService.create(deliveryReport);
-//        project.addDeliveryReport(deliveryReport);
-//        project.setLastDeliveryReport(deliveryReport.getUpdateDate());
-//        return project;
-//    }
 
     @Transactional
     public void removeProject(Project project) {
