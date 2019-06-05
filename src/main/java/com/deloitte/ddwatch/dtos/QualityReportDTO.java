@@ -20,6 +20,7 @@ public class QualityReportDTO implements Serializable {
     private String qualityStatus;
 
     private LocalDateTime updateDate;
+
     private List<@Valid QualityQuestionsAnswersDTO> questionsAnswers;
 
 }

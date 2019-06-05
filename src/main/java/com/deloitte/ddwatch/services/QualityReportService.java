@@ -21,8 +21,9 @@ public class QualityReportService {
     private SonarQubeReportService sonarQubeReportService;
 
     @Transactional
-    public QualityReport create(String sonarBaseUrl, String sonarComponentKey, QualityReport qualityReport) {
+    public QualityReport create(String sonarBaseUrl, String sonarComponentKey) {
         SonarQubeReport sonarQubeReport = sonarQubeReportService.createReportFromUrl(sonarBaseUrl, sonarComponentKey);
+        QualityReport qualityReport = new QualityReport();
         qualityReport.setQualityStatus(calculateStatus(sonarQubeReport));
         qualityReport.setUpdateDate(LocalDateTime.now());
         qualityReport.addSonarQubeReport(sonarQubeReport);

@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.andreinc.jbvext.annotations.misc.OneOfStrings;
 import net.andreinc.jbvext.annotations.str.Alphanumeric;
-import org.hibernate.validator.constraints.URL;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
@@ -12,54 +11,49 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
 @Data
 @NoArgsConstructor
 public class ProjectDTO implements Serializable {
 
-    String id;
+    private String id;
 
     @NotNull
     @Size(min = 2, max = 64)
-    String name;
+    private String name;
 
     @Size(max=1024)
-    String description;
+    private String description;
 
     @Size(max = 64)
-    String deliveryLead;
+    private String deliveryLead;
 
     @Email
     @Size(min = 6, max=128)
-    String deliveryLeadEmail;
+    private String deliveryLeadEmail;
 
     @Size(min =3, max=64)
-    String technicalLead;
+    private String technicalLead;
 
     @Email
     @Size(min=6, max=128)
-    String technicalLeadEmail;
+    private String technicalLeadEmail;
 
     @OneOfStrings({"RED", "GREEN", "AMBER"})
-    String deliveryStatus;
+    private String deliveryStatus;
 
     @OneOfStrings({"RED", "GREEN", "AMBER"})
-    String qualityStatus;
+    private String qualityStatus;
 
-    List<@Valid QualityReportDTO> qualityReports;
-    LocalDateTime lastQualityReport;
+    private LocalDateTime lastQualityReport;
 
-    Set<@Valid DeliveryReportDTO> deliveryReports;
-    LocalDateTime lastDeliveryReport;
+    private Set<@Valid DeliveryReportDTO> deliveryReports;
 
-    Set<@Alphanumeric @Size(min = 2, max=32) String> tags;
+    private LocalDateTime lastDeliveryReport;
 
-    @URL
-    @Size(max = 1024)
-    String sonarQubeUrl;
+    private Set<@Valid ProjectRepoDTO> projectRepos;
 
-    @Size(max = 256)
-    String sonarComponentKey;
+    private Set<@Alphanumeric @Size(min = 2, max=32) String> tags;
+
 }

@@ -22,39 +22,36 @@ public class Project {
     Long id;
 
     @Column(name = "name", nullable = false, length=64, unique = true)
-    String name;
+    private String name;
 
     @Column(name = "description", length = 1024)
-    String description;
+    private String description;
 
     @Column(name = "delivery_lead", nullable=false, length = 64)
-    String deliveryLead;
+    private String deliveryLead;
 
     @Column(name = "delivery_lead_email", nullable = false, length = 128)
-    String deliveryLeadEmail;
+    private String deliveryLeadEmail;
 
     @Column(name = "tech_lead", nullable = false, length = 64)
-    String technicalLead;
+    private String technicalLead;
 
     @Column(name = "tech_lead_email", nullable = false, length = 128)
-    String technicalLeadEmail;
+    private String technicalLeadEmail;
 
-    Status deliveryStatus;
-    Status qualityStatus;
+    private Status deliveryStatus;
 
-    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @OrderBy(value = "updateDate DESC")
-    Set<QualityReport> qualityReports = new HashSet<>();
+    private Status qualityStatus;
 
     @Column(name = "last_quality_report")
-    LocalDateTime lastQualityReport;
+    private LocalDateTime lastQualityReport;
 
     @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @OrderBy(value = "updateDate DESC")
-    Set<DeliveryReport> deliveryReports = new HashSet<>();
+    private Set<DeliveryReport> deliveryReports = new HashSet<>();
 
     @Column(name = "last_delivery_report")
-    LocalDateTime lastDeliveryReport;
+    private LocalDateTime lastDeliveryReport;
 
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
     @JoinTable(name = "project_tag",
@@ -62,15 +59,12 @@ public class Project {
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags = new HashSet<>();
 
-    @Column(name = "sonarqube_url", length = 1024)
-    String sonarQubeUrl;
+    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<ProjectRepo> projectRepos = new HashSet<>();
 
-    @Column(name = "sonarqube_component_url", length = 256)
-    String sonarComponentKey;
-
-    public void addQualityReport(QualityReport qualityReport) {
-        qualityReports.add(qualityReport);
-        qualityReport.setProject(this);
+    public void addProjectRepo(ProjectRepo projectRepo) {
+        projectRepos.add(projectRepo);
+        projectRepo.setProject(this);
     }
 
     public void addDeliveryReport(DeliveryReport deliveryReport) {
@@ -102,14 +96,12 @@ public class Project {
                 getDeliveryStatus() == project.getDeliveryStatus() &&
                 getQualityStatus() == project.getQualityStatus() &&
                 Objects.equals(getLastQualityReport(), project.getLastQualityReport()) &&
-                Objects.equals(getLastDeliveryReport(), project.getLastDeliveryReport()) &&
-                Objects.equals(getSonarQubeUrl(), project.getSonarQubeUrl()) &&
-                Objects.equals(getSonarComponentKey(), project.getSonarComponentKey());
+                Objects.equals(getLastDeliveryReport(), project.getLastDeliveryReport());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(), getDescription(), getDeliveryLead(), getDeliveryLeadEmail(), getTechnicalLead(), getTechnicalLeadEmail(), getDeliveryStatus(), getQualityStatus(), getLastQualityReport(), getLastDeliveryReport(), getSonarQubeUrl(), getSonarComponentKey());
+        return Objects.hash(getName(), getDescription(), getDeliveryLead(), getDeliveryLeadEmail(), getTechnicalLead(), getTechnicalLeadEmail(), getDeliveryStatus(), getQualityStatus(), getLastQualityReport(), getLastDeliveryReport());
     }
 
     @Override
@@ -123,13 +115,11 @@ public class Project {
                 ", technicalLeadEmail='" + technicalLeadEmail + '\'' +
                 ", deliveryStatus=" + deliveryStatus +
                 ", qualityStatus=" + qualityStatus +
-                ", qualityReports=" + qualityReports +
                 ", lastQualityReport=" + lastQualityReport +
                 ", deliveryReports=" + deliveryReports +
                 ", lastDeliveryReport=" + lastDeliveryReport +
                 ", tags=" + tags +
-                ", sonarQubeUrl='" + sonarQubeUrl + '\'' +
-                ", sonarComponentKey='" + sonarComponentKey + '\'' +
+                ", projectRepos=" + projectRepos +
                 '}';
     }
 }

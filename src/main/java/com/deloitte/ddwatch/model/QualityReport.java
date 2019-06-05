@@ -22,18 +22,18 @@ public class QualityReport {
     Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id")
-    private Project project;
+    @JoinColumn(name = "project_repo_id")
+    private ProjectRepo projectRepo;
 
     @OneToOne(mappedBy = "qualityReport", cascade = CascadeType.ALL)
     private SonarQubeReport sonarQubeReport;
 
     @OneToMany(mappedBy = "qualityReport", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-//    @OrderBy(value = "updateDate DESC")
     private Set<QualityQuestionsAnswers> questionsAnswers = new HashSet<>();
 
     @Enumerated
     private Status qualityStatus;
+
     private LocalDateTime updateDate;
 
     public void addSonarQubeReport(SonarQubeReport sonarQubeReport) {
