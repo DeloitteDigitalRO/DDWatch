@@ -61,18 +61,11 @@ public class ProjectRepoService {
     public void updateProject(ProjectRepo projectRepo, QualityReport qualityReport) {
         Project project = projectRepo.getProject();
 
-        Status status;
-        LocalDateTime lastQualityReportDate;
         if (projectRepo.getIsDefault()) {
-            status = qualityReport.getQualityStatus();
-            lastQualityReportDate = qualityReport.getUpdateDate();
-        } else {
-            status = project.getQualityStatus();
-            lastQualityReportDate = project.getLastQualityReport();
+            project.setQualityStatus(qualityReport.getQualityStatus());
+            project.setLastQualityReport(qualityReport.getUpdateDate());
         }
-        project.setQualityStatus(status);
         project.addProjectRepo(projectRepo);
-        project.setLastQualityReport(lastQualityReportDate);
 
         projectRepository.save(project);
     }
