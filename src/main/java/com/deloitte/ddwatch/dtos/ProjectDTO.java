@@ -17,43 +17,43 @@ import java.util.Set;
 @NoArgsConstructor
 public class ProjectDTO implements Serializable {
 
-    String id;
+    private String id;
 
     @NotNull
     @Size(min = 2, max = 64)
-    String name;
+    private String name;
 
     @Size(max=1024)
-    String description;
+    private String description;
 
     @Size(max = 64)
-    String deliveryLead;
+    private String deliveryLead;
 
     @Email
     @Size(min = 6, max=128)
-    String deliveryLeadEmail;
+    private String deliveryLeadEmail;
 
     @Size(min =3, max=64)
-    String technicalLead;
+    private String technicalLead;
 
     @Email
     @Size(min=6, max=128)
-    String technicalLeadEmail;
+    private String technicalLeadEmail;
 
     @OneOfStrings({"RED", "GREEN", "AMBER"})
-    String deliveryStatus;
+    private String deliveryStatus;
 
     @OneOfStrings({"RED", "GREEN", "AMBER"})
-    String qualityStatus;
+    private String qualityStatus;
 
-    LocalDateTime lastQualityReport;
+    private LocalDateTime lastQualityReport;
 
-    Set<@Valid DeliveryReportDTO> deliveryReports;
+    private Set<@Valid DeliveryReportDTO> deliveryReports;
 
-    LocalDateTime lastDeliveryReport;
+    private LocalDateTime lastDeliveryReport;
 
-    Set<@Valid ProjectRepoDTO> projectRepos;
+    private Set<@Valid ProjectRepoDTO> projectRepos;
 
-    Set<@Alphanumeric @Size(min = 2, max=32) String> tags;
+    private Set<@Alphanumeric @Size(min = 2, max=32) String> tags;
 
 }

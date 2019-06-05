@@ -99,6 +99,7 @@ public class ProjectMock implements MockUnit<Project> {
                             .constant(ProjectRepo::setIsDefault, false)
                             .constant(ProjectRepo::setSonarQubeUrl,"http://localhost:9000")
                             .constant(ProjectRepo::setSonarComponentKey, "com.deloitte:ddwatch")
+                            .constant(ProjectRepo::setUrl, "https://github.com/DeloitteDigitalRO/DDWatch/")
                             .map(projectRepo -> {
                                 Set<QualityReport> qualityReports = filler(QualityReport::new)
                                                             .constant(QualityReport::setProjectRepo, projectRepo)

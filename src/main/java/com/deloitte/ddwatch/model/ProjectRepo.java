@@ -34,6 +34,9 @@ public class ProjectRepo {
     @Column(name = "sonarqube_url", length = 1024)
     private String sonarQubeUrl;
 
+    @Column(name = "url", length = 1024)
+    private String url;
+
     @Column(name = "sonarqube_component_url", length = 256)
     private String sonarComponentKey;
 
