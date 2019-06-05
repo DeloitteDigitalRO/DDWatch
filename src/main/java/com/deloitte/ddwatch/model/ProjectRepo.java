@@ -27,7 +27,7 @@ public class ProjectRepo {
     @Column(name = "is_default")
     private Boolean isDefault;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "project_id")
     private Project project;
 
