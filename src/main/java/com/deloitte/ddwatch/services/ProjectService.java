@@ -33,10 +33,10 @@ public class ProjectService {
 
 
     @Transactional
-    public Project create(Project project, Set<Tag> tags) {
+    public Project create(final Project project, Set<Tag> tags) {
         tagService.setTags(project, tags);
-        project = projectRepository.save(project);
-        return project;
+        project.getProjectRepos().forEach(repo -> repo.setProject(project));
+        return projectRepository.save(project);
     }
 
     @Transactional

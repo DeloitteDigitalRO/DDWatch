@@ -42,7 +42,6 @@ public class ProjectController {
                 .stream()
                 .map(t -> modelMapper.map(t, Tag.class))
                 .collect(Collectors.toSet());
-
         project = projectService.create(project, tags);
         return new ResponseEntity<>(project.getId(), HttpStatus.CREATED);
     }
@@ -54,7 +53,7 @@ public class ProjectController {
                 .stream()
                 .map(p -> modelMapper.map(p, ProjectDTO.class))
                 .collect(Collectors.toList());
-        return new ResponseEntity(projectDTOS, HttpStatus.OK);
+       return new ResponseEntity(projectDTOS, HttpStatus.OK);
     }
 
 
