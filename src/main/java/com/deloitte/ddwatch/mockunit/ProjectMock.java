@@ -44,7 +44,7 @@ public class ProjectMock implements MockUnit<Project> {
     public static final List<String> possibleTags = Arrays.asList("hybris", "backend", "frontend", "scrum", "kanban", "uk", "de");
 
     // Metrics values
-    private static final MockUnitDouble numericValues = doubles().range(30, 101);
+    private static final MockUnitDouble numericValues = doubles().range(30, 100);
     private static final List<Status> metricStatuses = Arrays.asList(Status.AMBER, Status.GREEN, Status.RED);
     private static final List<String> invoicingValues = Arrays.asList(
             "Invoices outstanding for more than 60 days",
