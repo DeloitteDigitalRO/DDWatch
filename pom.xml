@@ -172,7 +172,7 @@
 								<namingStrategy>alias</namingStrategy>
 								<env>
 									<POSTGRES_DB>${pg.db.name}</POSTGRES_DB>
-									<POSTGRES_USER>${pg.db.user</POSTGRES_USER>
+									<POSTGRES_USER>${pg.db.user}</POSTGRES_USER>
 									<POSTGRES_PASSWORD>${pg.db.pass}</POSTGRES_PASSWORD>
 								</env>
 								<ports>
@@ -195,7 +195,7 @@
 				<executions>
 					<execution>
 						<id>start</id>
-						<phase>pre-integration-test</phase>
+						<phase>none</phase>
 						<goals>
 							<goal>build</goal>
 							<goal>start</goal>
@@ -203,7 +203,7 @@
 					</execution>
 					<execution>
 						<id>stop</id>
-						<phase>post-integration-test</phase>
+						<phase>none</phase>
 						<goals>
 							<goal>stop</goal>
 						</goals>
