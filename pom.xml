@@ -189,6 +189,26 @@
 								</log>
 							</run>
 						</image>
+						<image>
+							<alias>dd-watch-sonar</alias>
+							<name>sonarqube:7.4-community</name>
+							<run>
+								<namingStrategy>alias</namingStrategy>
+								<ports>
+									<port>9000:9000</port>
+								</ports>
+								<wait>
+									<log>SonarQube is up</log>
+									<time>120000</time>
+									<kill>500</kill>
+									<shutdown>100</shutdown>
+								</wait>
+								<log>
+									<prefix>SONAR</prefix>
+									<color>green</color>
+								</log>
+							</run>
+						</image>
 					</images>
 				</configuration>
 				<executions>
