@@ -48,7 +48,7 @@ public class Project {
 
     @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @OrderBy(value = "updateDate DESC")
-    private Set<DeliveryReport> deliveryReports = new HashSet<>();
+    private List<DeliveryReport> deliveryReports = new ArrayList<>();
 
     @Column(name = "last_delivery_report")
     private LocalDateTime lastDeliveryReport;
