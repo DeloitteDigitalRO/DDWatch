@@ -25,7 +25,7 @@ import static net.andreinc.mockneat.unit.user.Names.names;
 
 public class ProjectMock implements MockUnit<Project> {
     // Dates related
-    public static final MockUnit<LocalDateTime> thisMonth = localDates()
+    public static final MockUnit<LocalDateTime> pastMonthFromCurrentDate = localDates()
             .past(LocalDate.now().minus(Period.ofMonths(1)))
             .map(v -> LocalDateTime.of(v, LocalTime.of(0,0)));
 
@@ -73,14 +73,14 @@ public class ProjectMock implements MockUnit<Project> {
                 .constant(Project::setDescription, "Project description.")
                 .setter(Project::setDeliveryStatus, from(Status.class))
                 .setter(Project::setQualityStatus, from(Status.class))
-                .setter(Project::setLastQualityReport, thisMonth)
-                .setter(Project::setLastDeliveryReport, thisMonth)
+                .setter(Project::setLastQualityReport, pastMonthFromCurrentDate)
+                .setter(Project::setLastDeliveryReport, pastMonthFromCurrentDate)
                 .map(p -> {
                     List<DeliveryReport> deliveryReports = filler(DeliveryReport::new)
                             .constant(DeliveryReport::setProject, p)
-                            .setter(DeliveryReport::setUpdateDate, thisMonth)
-                            .map(thisDeliveryReport -> {
-                                thisDeliveryReport.setMetricsReport(filler(MetricsReport::new)
+                            .setter(DeliveryReport::setUpdateDate, pastMonthFromCurrentDate)
+                            .map(deliveryReport -> {
+                                deliveryReport.setMetricsReport(filler(MetricsReport::new)
                                         .constant(MetricsReport::setCreatedOn, lastMonth)
                                         .setter(MetricsReport::setDeliveryValue, numericValues)
                                         .setter(MetricsReport::setDeliveryStatus, from(metricStatuses))
@@ -90,7 +90,7 @@ public class ProjectMock implements MockUnit<Project> {
                                         .setter(MetricsReport::setChangeOrderStatus, from(metricStatuses))
                                         .get());
 
-                                return thisDeliveryReport;
+                                return deliveryReport;
 
                             })
                             .list(5)
