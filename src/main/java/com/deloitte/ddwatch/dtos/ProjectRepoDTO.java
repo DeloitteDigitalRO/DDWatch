@@ -13,6 +13,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 public class ProjectRepoDTO implements Serializable {
+    private Long id;
 
     private Long projectId;
 
@@ -32,5 +33,4 @@ public class ProjectRepoDTO implements Serializable {
     private String sonarComponentKey;
 
     private Set<@Valid QualityReportDTO> qualityReports;
-
 }
