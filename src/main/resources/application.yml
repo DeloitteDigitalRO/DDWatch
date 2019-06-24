@@ -1,0 +1,24 @@
+server:
+    port: 9090
+spring:
+    datasource:
+        password: root
+        platform: postgres
+        url: jdbc:postgresql://localhost:5432/postgres?createDatabaseIfNotExist=true
+        username: postgres
+    jpa:
+        database: POSTGRESQL
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        generate-ddl: true
+        hibernate:
+            ddl-auto: create-drop
+        properties:
+            hibernate:
+                jdbc:
+                    lob:
+                        non_contextual_creation: true
+        show-sql: false
+excel:
+    metrics_config_file: metrics_xls.json
+jasperReport: ./src/main/jasperreports/Blank_A4.jrxml
+pdfFile: ./src/main/jasperreports/export.pdf

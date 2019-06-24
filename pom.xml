@@ -25,6 +25,9 @@
 
 	<properties>
 		<java.version>12</java.version>
+		<pg.db.name>postgresql</pg.db.name>
+		<pg.db.user>postgres</pg.db.user>
+		<pg.db.pass>root</pg.db.pass>
 	</properties>
 
 	<dependencies>
@@ -85,7 +88,7 @@
 		<dependency>
 			<groupId>org.modelmapper</groupId>
 			<artifactId>modelmapper</artifactId>
-			<version>2.3.0</version>
+			<version>2.3.4</version>
 		</dependency>
 
 		<dependency>
@@ -153,59 +156,79 @@
 
 	<build>
 		<plugins>
-<!--			<plugin>-->
-<!--				<groupId>io.fabric8</groupId>-->
-<!--				<artifactId>docker-maven-plugin</artifactId>-->
-<!--				<version>0.18.1</version>-->
-<!--				<configuration>-->
-<!--					<logDate>default</logDate>-->
-<!--					<autoPull>true</autoPull>-->
-<!--					<images>-->
-<!--						<image>-->
-<!--							<alias>db</alias>-->
-<!--							<name>postgres:11</name>-->
-<!--							<build>-->
-<!--								<ports>-->
-<!--									<port>5432</port>-->
-<!--								</ports>-->
-<!--								<dockerFileDir>${project.basedir}/src/main/resources</dockerFileDir>-->
-<!--							</build>-->
-<!--							<run>-->
-<!--								<ports>-->
-<!--									<port>5432:5432</port>-->
-<!--								</ports>-->
-<!--								<wait>-->
-<!--									<log>database system is ready to accept connections</log>-->
-<!--									<time>20000</time>-->
-<!--									<kill>500</kill>-->
-<!--									<shutdown>100</shutdown>-->
-<!--								</wait>-->
-<!--								<log>-->
-<!--									<prefix>DB</prefix>-->
-<!--									<color>yellow</color>-->
-<!--								</log>-->
-<!--							</run>-->
-<!--						</image>-->
-<!--					</images>-->
-<!--				</configuration>-->
-<!--				<executions>-->
-<!--					<execution>-->
-<!--						<id>start</id>-->
-<!--						<phase>pre-integration-test</phase>-->
-<!--						<goals>-->
-<!--							<goal>build</goal>-->
-<!--							<goal>start</goal>-->
-<!--						</goals>-->
-<!--					</execution>-->
-<!--					<execution>-->
-<!--						<id>stop</id>-->
-<!--						<phase>post-integration-test</phase>-->
-<!--						<goals>-->
-<!--							<goal>stop</goal>-->
-<!--						</goals>-->
-<!--					</execution>-->
-<!--				</executions>-->
-<!--			</plugin>-->
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>0.29.0</version>
+				<configuration>
+					<logDate>default</logDate>
+					<autoPull>true</autoPull>
+					<images>
+						<image>
+							<alias>dd-watch-db</alias>
+							<name>postgres:11</name>
+							<run>
+								<namingStrategy>alias</namingStrategy>
+								<env>
+									<POSTGRES_DB>${pg.db.name}</POSTGRES_DB>
+									<POSTGRES_USER>${pg.db.user}</POSTGRES_USER>
+									<POSTGRES_PASSWORD>${pg.db.pass}</POSTGRES_PASSWORD>
+								</env>
+								<ports>
+									<port>5432:5432</port>
+								</ports>
+								<wait>
+									<log>database system is ready to accept connections</log>
+									<time>20000</time>
+									<kill>500</kill>
+									<shutdown>100</shutdown>
+								</wait>
+								<log>
+									<prefix>DB</prefix>
+									<color>yellow</color>
+								</log>
+							</run>
+						</image>
+						<image>
+							<alias>dd-watch-sonar</alias>
+							<name>sonarqube:7.4-community</name>
+							<run>
+								<namingStrategy>alias</namingStrategy>
+								<ports>
+									<port>9000:9000</port>
+								</ports>
+								<wait>
+									<log>SonarQube is up</log>
+									<time>120000</time>
+									<kill>500</kill>
+									<shutdown>100</shutdown>
+								</wait>
+								<log>
+									<prefix>SONAR</prefix>
+									<color>green</color>
+								</log>
+							</run>
+						</image>
+					</images>
+				</configuration>
+				<executions>
+					<execution>
+						<id>start</id>
+						<phase>none</phase>
+						<goals>
+							<goal>build</goal>
+							<goal>start</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>stop</id>
+						<phase>none</phase>
+						<goals>
+							<goal>stop</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
