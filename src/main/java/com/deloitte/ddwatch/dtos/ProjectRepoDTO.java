@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.URL;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -32,5 +33,5 @@ public class ProjectRepoDTO implements Serializable {
     @Size(max = 256)
     private String sonarComponentKey;
 
-    private Set<@Valid QualityReportDTO> qualityReports;
+    private List<@Valid QualityReportDTO> qualityReports;
 }
