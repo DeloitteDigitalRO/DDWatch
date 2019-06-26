@@ -3,6 +3,7 @@ package com.deloitte.ddwatch.services;
 
 import com.deloitte.ddwatch.model.Project;
 import com.deloitte.ddwatch.model.ProjectRepo;
+import com.deloitte.ddwatch.model.Status;
 import com.deloitte.ddwatch.model.Tag;
 import com.deloitte.ddwatch.repositories.ProjectRepository;
 import org.junit.Before;
@@ -10,16 +11,17 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.rest.core.annotation.Description;
 
-import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -93,9 +95,96 @@ public class ProjectServiceTest {
     @Test(expected = RuntimeException.class)
     public void findByIdShouldThrowExceptionWhenProjectNotFound() {
         // When
-        Mockito.when(projectRepository.findById(1L)).thenReturn(Optional.empty());
+        when(projectRepository.findById(1L)).thenReturn(Optional.empty());
 
         // Then
         projectService.findById(1L);
     }
+
+    @Test(expected = RuntimeException.class)
+    public void findByIdWithIdNull(){
+        //arrange
+        Project nullProject = null;
+        when(projectRepository.findById(null)).thenReturn(Optional.ofNullable(nullProject));
+
+        //act
+        projectService.findById(null);
+    }
+
+    @Description("Should find a project")
+    @Test
+    public void findByIdShouldReturnProperProject() {
+        //arrange
+        Project project = Project.builder()
+                .name("test_project1")
+                .deliveryLead("test_lead")
+                .deliveryLeadEmail("test_delivery_lead@deloitte.com")
+                .technicalLead("test_technical_lead")
+                .technicalLeadEmail("test_technical_lead@deloitte.com")
+                .deliveryStatus(Status.GREEN)
+                .deliveryReports(List.of())
+                .projectRepos(Set.of())
+                .build();
+        when(projectRepository.findById(anyLong())).thenReturn(Optional.of(project));
+
+        //act
+        Project projectReturned = projectService.findById(123L);
+
+        //assert
+        assertNotNull(projectReturned);
+        assertEquals(project, projectReturned);
+        assertEquals(project.getName(), projectReturned.getName());
+        assertEquals(project.getDeliveryLead(), projectReturned.getDeliveryLead());
+        assertEquals(project.getDeliveryLeadEmail(), projectReturned.getDeliveryLeadEmail());
+        assertEquals(project.getTechnicalLead(), projectReturned.getTechnicalLead());
+        assertEquals(project.getTechnicalLeadEmail(), projectReturned.getTechnicalLeadEmail());
+        assertEquals(project.getDeliveryStatus(), projectReturned.getDeliveryStatus());
+        assertEquals(project.getDeliveryReports(),projectReturned.getDeliveryReports());
+    }
+
+    @Test
+    public void findByTagShouldReturnATag(){
+        //arrange
+        Set<Project> projects = Set.of(
+                Project.builder().name("Test Project 1").build(),
+                Project.builder().name("Test Project 2").build(),
+                Project.builder().name("Test Project 3").build());
+        Tag tag = Tag.builder()
+                .name("test_tag")
+                .projects(projects)
+                .build();
+        when(tagService.safelyGetByName("test_name")).thenReturn(tag);
+
+        //act
+        Set<Project> projectsReturned = projectService.findByTag("test_name");
+
+        //assert
+        assertNotNull(projectsReturned);
+        assertFalse(projectsReturned.isEmpty());
+        assertEquals(3, projectsReturned.size());
+        assertEquals(tag.getProjects(), projectsReturned);
+    }
+
+    @Test (expected = RuntimeException.class)
+    public void findByTagShouldThrowException(){
+        //arrange
+        when(tagService.safelyGetByName("test_name")).thenThrow(RuntimeException.class);
+
+        //act
+        Set<Project> projectsReturned = projectService.findByTag("test_name");
+    }
+
+    @Test
+    public void removeShouldDeleteProject(){
+        //arrange
+        Project projectToBeRemoved = Project.builder().name("test_remove_project").build();
+        doNothing().when(projectRepository).delete(projectToBeRemoved);
+
+        //act
+        projectService.removeProject(projectToBeRemoved);
+
+        //assert
+        verify(projectRepository, times(1)).delete(projectToBeRemoved);
+    }
+
 }

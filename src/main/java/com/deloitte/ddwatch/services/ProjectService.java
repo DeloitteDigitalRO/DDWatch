@@ -46,7 +46,7 @@ public class ProjectService {
 
 
     public Project findById(Long id) {
-        Optional<Project> project = projectRepository.findById(id);
+        Optional<Project> project = findProject(id);
         if (!project.isPresent()) {
             throw new RuntimeException("No such project found");
         }
@@ -60,13 +60,11 @@ public class ProjectService {
 
     public Set<Project> findByTag(String tagName) {
         Tag tag = tagService.safelyGetByName(tagName);
-        Set<Project> projects = tag.getProjects();
-        return projects;
+        return tag.getProjects();
     }
 
     public List<Project> findAll() {
-        List<Project> projects = projectRepository.findAll();
-        return projects;
+        return projectRepository.findAll();
     }
 
     @Transactional

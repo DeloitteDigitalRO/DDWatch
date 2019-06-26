@@ -41,6 +41,4 @@ public class QualityReportServiceTest {
         assertEquals(qualityReport.getQualityStatus(), Status.RED);
     }
 
-
-
 }
