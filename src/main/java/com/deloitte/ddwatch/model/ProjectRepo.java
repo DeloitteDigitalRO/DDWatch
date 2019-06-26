@@ -6,9 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @NoArgsConstructor
@@ -41,7 +39,8 @@ public class ProjectRepo {
     private String sonarComponentKey;
 
     @OneToMany(mappedBy = "projectRepo", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<QualityReport> qualityReports = new HashSet<>();
+    @OrderBy(value = "update_date DESC")
+    private List<QualityReport> qualityReports = new ArrayList<>();
 
     public void addQualityReport(QualityReport qualityReport) {
         qualityReports.add(qualityReport);

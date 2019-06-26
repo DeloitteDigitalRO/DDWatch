@@ -31,8 +31,8 @@ public class ProjectMock implements MockUnit<Project> {
 
     public static final LocalDateTime lastMonth = LocalDateTime.now().minus(Period.ofMonths(1));
 
-    public static final MockUnit<LocalDateTime> thisYear = localDates()
-            .thisYear()
+    public static final MockUnit<LocalDateTime> pastYearFromCurrentDate = localDates()
+            .past(LocalDate.now().minus(Period.ofYears(1)))
             .map(v -> LocalDateTime.of(v, LocalTime.of(0,0)));
 
     // Code issues related
@@ -100,15 +100,16 @@ public class ProjectMock implements MockUnit<Project> {
 
                     Set<ProjectRepo> projectRepos = filler(ProjectRepo::new)
                             .constant(ProjectRepo::setProject, p)
-                            .constant(ProjectRepo::setName, "Project Repo")
+                            .setter(ProjectRepo::setName,  fmt("Project Repo #{number}")
+                                    .param("number", ints().range(0,1000)))
                             .constant(ProjectRepo::setIsDefault, false)
                             .constant(ProjectRepo::setSonarQubeUrl,"http://localhost:9000")
                             .constant(ProjectRepo::setSonarComponentKey, "com.deloitte:ddwatch")
                             .constant(ProjectRepo::setUrl, "https://github.com/DeloitteDigitalRO/DDWatch/")
                             .map(projectRepo -> {
-                                Set<QualityReport> qualityReports = filler(QualityReport::new)
+                                List<QualityReport> qualityReports = filler(QualityReport::new)
                                     .constant(QualityReport::setProjectRepo, projectRepo)
-                                    .setter(QualityReport::setUpdateDate, thisYear)
+                                    .setter(QualityReport::setUpdateDate, pastYearFromCurrentDate)
                                     .map(thisQualityReport -> {
                                         thisQualityReport.setSonarQubeReport(
                                             filler(SonarQubeReport::new)
@@ -191,7 +192,7 @@ public class ProjectMock implements MockUnit<Project> {
                                             );
                                         return thisQualityReport;
                                         })
-                                        .set(10)
+                                        .list(10)
                                         .get();
 
                                 projectRepo.setQualityReports(qualityReports);
