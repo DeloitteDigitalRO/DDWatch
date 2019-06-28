@@ -27,13 +27,13 @@ public class ProjectMock implements MockUnit<Project> {
     // Dates related
     public static final MockUnit<LocalDateTime> pastMonthFromCurrentDate = localDates()
             .past(LocalDate.now().minus(Period.ofMonths(1)))
-            .map(v -> LocalDateTime.of(v, LocalTime.of(0,0)));
+            .map(v -> LocalDateTime.of(v, LocalTime.of(0, 0)));
 
     public static final LocalDateTime lastMonth = LocalDateTime.now().minus(Period.ofMonths(1));
 
     public static final MockUnit<LocalDateTime> pastYearFromCurrentDate = localDates()
             .past(LocalDate.now().minus(Period.ofYears(1)))
-            .map(v -> LocalDateTime.of(v, LocalTime.of(0,0)));
+            .map(v -> LocalDateTime.of(v, LocalTime.of(0, 0)));
 
     // Code issues related
     public static final MockUnitInt other = ints().range(0, 120);
@@ -88,7 +88,15 @@ public class ProjectMock implements MockUnit<Project> {
                                         .setter(MetricsReport::setInvoicingStatus, from(metricStatuses))
                                         .setter(MetricsReport::setChangeOrderValue, from(changeOrderValues))
                                         .setter(MetricsReport::setChangeOrderStatus, from(metricStatuses))
+                                        .setter(MetricsReport::setAttritionValue, numericValues)
+                                        .setter(MetricsReport::setBranchCoverageValue, numericValues)
+                                        .setter(MetricsReport::setDuplicationDensityValue, numericValues)
+                                        .setter(MetricsReport::setEmpireTimeValue, numericValues)
+                                        .setter(MetricsReport::setTestCoverageValue, numericValues)
+                                        .setter(MetricsReport::setRiskOverallStatus, from(metricStatuses))
                                         .get());
+
+                                deliveryReport.getMetricsReport().setRiskOverallValue(Status.getFormatedString(deliveryReport.getMetricsReport().getRiskOverallStatus()));
 
                                 return deliveryReport;
 
@@ -100,97 +108,97 @@ public class ProjectMock implements MockUnit<Project> {
 
                     Set<ProjectRepo> projectRepos = filler(ProjectRepo::new)
                             .constant(ProjectRepo::setProject, p)
-                            .setter(ProjectRepo::setName,  fmt("Project Repo #{number}")
-                                    .param("number", ints().range(0,1000)))
+                            .setter(ProjectRepo::setName, fmt("Project Repo #{number}")
+                                    .param("number", ints().range(0, 1000)))
                             .constant(ProjectRepo::setIsDefault, false)
-                            .constant(ProjectRepo::setSonarQubeUrl,"http://localhost:9000")
+                            .constant(ProjectRepo::setSonarQubeUrl, "http://localhost:9000")
                             .constant(ProjectRepo::setSonarComponentKey, "com.deloitte:ddwatch")
                             .constant(ProjectRepo::setUrl, "https://github.com/DeloitteDigitalRO/DDWatch/")
                             .map(projectRepo -> {
                                 List<QualityReport> qualityReports = filler(QualityReport::new)
-                                    .constant(QualityReport::setProjectRepo, projectRepo)
-                                    .setter(QualityReport::setUpdateDate, pastYearFromCurrentDate)
-                                    .map(thisQualityReport -> {
-                                        thisQualityReport.setSonarQubeReport(
-                                            filler(SonarQubeReport::new)
-                                                .constant(SonarQubeReport::setQualityReport, thisQualityReport)
-                                                .constant(SonarQubeReport::setName, p.getName())
-                                                .constant(SonarQubeReport::setKey, projectRepo.getSonarComponentKey())
-                                                .setter(SonarQubeReport::setLinesOfCode, ints().range(10000, 50000))
+                                        .constant(QualityReport::setProjectRepo, projectRepo)
+                                        .setter(QualityReport::setUpdateDate, pastYearFromCurrentDate)
+                                        .map(thisQualityReport -> {
+                                            thisQualityReport.setSonarQubeReport(
+                                                    filler(SonarQubeReport::new)
+                                                            .constant(SonarQubeReport::setQualityReport, thisQualityReport)
+                                                            .constant(SonarQubeReport::setName, p.getName())
+                                                            .constant(SonarQubeReport::setKey, projectRepo.getSonarComponentKey())
+                                                            .setter(SonarQubeReport::setLinesOfCode, ints().range(10000, 50000))
 
-                                                // Bugs
-                                                .setter(SonarQubeReport::setBlockerBugs, blocker)
-                                                .setter(SonarQubeReport::setCriticalBugs, critical)
-                                                .setter(SonarQubeReport::setMajorBugs, major)
-                                                .setter(SonarQubeReport::setMinorBugs, minor)
-                                                .setter(SonarQubeReport::setOtherBugs, other)
+                                                            // Bugs
+                                                            .setter(SonarQubeReport::setBlockerBugs, blocker)
+                                                            .setter(SonarQubeReport::setCriticalBugs, critical)
+                                                            .setter(SonarQubeReport::setMajorBugs, major)
+                                                            .setter(SonarQubeReport::setMinorBugs, minor)
+                                                            .setter(SonarQubeReport::setOtherBugs, other)
 
-                                                // Vulnerabilities
-                                                .setter(SonarQubeReport::setBlockerVulnerabilities, blocker)
-                                                .setter(SonarQubeReport::setCriticalVulnerabilities, critical)
-                                                .setter(SonarQubeReport::setMajorVulnerabilities, major)
-                                                .setter(SonarQubeReport::setMinorVulnerabilities, minor)
-                                                .setter(SonarQubeReport::setOtherVulnerabilities, other)
+                                                            // Vulnerabilities
+                                                            .setter(SonarQubeReport::setBlockerVulnerabilities, blocker)
+                                                            .setter(SonarQubeReport::setCriticalVulnerabilities, critical)
+                                                            .setter(SonarQubeReport::setMajorVulnerabilities, major)
+                                                            .setter(SonarQubeReport::setMinorVulnerabilities, minor)
+                                                            .setter(SonarQubeReport::setOtherVulnerabilities, other)
 
-                                                // Code Smells
-                                                .setter(SonarQubeReport::setBlockerCodeSmells, blocker)
-                                                .setter(SonarQubeReport::setCriticalCodeSmells, critical)
-                                                .setter(SonarQubeReport::setMajorCodeSmells, major)
-                                                .setter(SonarQubeReport::setMinorCodeSmells, minor)
-                                                .setter(SonarQubeReport::setOtherCodeSmells, other)
+                                                            // Code Smells
+                                                            .setter(SonarQubeReport::setBlockerCodeSmells, blocker)
+                                                            .setter(SonarQubeReport::setCriticalCodeSmells, critical)
+                                                            .setter(SonarQubeReport::setMajorCodeSmells, major)
+                                                            .setter(SonarQubeReport::setMinorCodeSmells, minor)
+                                                            .setter(SonarQubeReport::setOtherCodeSmells, other)
 
-                                                // Duplication
-                                                .setter(SonarQubeReport::setDuplicatedLines, ints().range(500, 5000))
-                                                .setter(SonarQubeReport::setDuplicatedBlocks, ints().range(10, 20))
-                                                .setter(SonarQubeReport::setDefectDensity, doubles().range(1,2))
+                                                            // Duplication
+                                                            .setter(SonarQubeReport::setDuplicatedLines, ints().range(500, 5000))
+                                                            .setter(SonarQubeReport::setDuplicatedBlocks, ints().range(10, 20))
+                                                            .setter(SonarQubeReport::setDefectDensity, doubles().range(1, 2))
 
-                                                // Complexities
-                                                .setter(SonarQubeReport::setCyclomaticComplexity, ints().range(1000, 5000))
-                                                .setter(SonarQubeReport::setCognitiveComplexity, ints().range(1000, 5000))
+                                                            // Complexities
+                                                            .setter(SonarQubeReport::setCyclomaticComplexity, ints().range(1000, 5000))
+                                                            .setter(SonarQubeReport::setCognitiveComplexity, ints().range(1000, 5000))
 
-                                                // Coverage
-                                                .setter(SonarQubeReport::setOverallCoverage, doubles().range(10, 90))
-                                                .setter(SonarQubeReport::setLineCoverage, doubles().range(10, 90))
-                                                .setter(SonarQubeReport::setConditionsCoverage, doubles().range(10, 90))
+                                                            // Coverage
+                                                            .setter(SonarQubeReport::setOverallCoverage, doubles().range(10, 90))
+                                                            .setter(SonarQubeReport::setLineCoverage, doubles().range(10, 90))
+                                                            .setter(SonarQubeReport::setConditionsCoverage, doubles().range(10, 90))
 
-                                                .map(sqr -> {
-                                                    // Return total number of bugs
-                                                    sqr.setTotalBugs(
-                                                            sqr.getBlockerBugs() +
-                                                                    sqr.getCriticalBugs() +
-                                                                    sqr.getMajorBugs() +
-                                                                    sqr.getMinorBugs() +
-                                                                    sqr.getOtherBugs()
-                                                    );
-                                                    // Return total number of vulnerabilities
-                                                    sqr.setTotalVulnerabilities(
-                                                            sqr.getBlockerVulnerabilities() +
-                                                                    sqr.getCriticalVulnerabilities() +
-                                                                    sqr.getMajorVulnerabilities() +
-                                                                    sqr.getMinorVulnerabilities() +
-                                                                    sqr.getOtherVulnerabilities()
-                                                    );
-                                                    // Return total number of issues
-                                                    sqr.setTotalCodeSmells(
-                                                            sqr.getBlockerCodeSmells() +
-                                                                    sqr.getCriticalCodeSmells() +
-                                                                    sqr.getMajorCodeSmells() +
-                                                                    sqr.getMinorCodeSmells() +
-                                                                    sqr.getOtherBugs()
-                                                    );
-                                                    // Rentru total number of issues
-                                                    sqr.setTotalIssues(
-                                                            sqr.getTotalBugs() +
-                                                                    sqr.getTotalVulnerabilities() +
-                                                                    sqr.getTotalCodeSmells()
-                                                    );
+                                                            .map(sqr -> {
+                                                                // Return total number of bugs
+                                                                sqr.setTotalBugs(
+                                                                        sqr.getBlockerBugs() +
+                                                                                sqr.getCriticalBugs() +
+                                                                                sqr.getMajorBugs() +
+                                                                                sqr.getMinorBugs() +
+                                                                                sqr.getOtherBugs()
+                                                                );
+                                                                // Return total number of vulnerabilities
+                                                                sqr.setTotalVulnerabilities(
+                                                                        sqr.getBlockerVulnerabilities() +
+                                                                                sqr.getCriticalVulnerabilities() +
+                                                                                sqr.getMajorVulnerabilities() +
+                                                                                sqr.getMinorVulnerabilities() +
+                                                                                sqr.getOtherVulnerabilities()
+                                                                );
+                                                                // Return total number of issues
+                                                                sqr.setTotalCodeSmells(
+                                                                        sqr.getBlockerCodeSmells() +
+                                                                                sqr.getCriticalCodeSmells() +
+                                                                                sqr.getMajorCodeSmells() +
+                                                                                sqr.getMinorCodeSmells() +
+                                                                                sqr.getOtherBugs()
+                                                                );
+                                                                // Rentru total number of issues
+                                                                sqr.setTotalIssues(
+                                                                        sqr.getTotalBugs() +
+                                                                                sqr.getTotalVulnerabilities() +
+                                                                                sqr.getTotalCodeSmells()
+                                                                );
 
-                                                    return sqr;
+                                                                return sqr;
 
-                                                })
-                                                .get()
+                                                            })
+                                                            .get()
                                             );
-                                        return thisQualityReport;
+                                            return thisQualityReport;
                                         })
                                         .list(10)
                                         .get();
