@@ -158,7 +158,7 @@ public class ProjectServiceTest {
         Set<Project> projectsReturned = projectService.findByTag("test_name");
 
         //assert
-        assertNotNull(projectsReturned);
+        assertEquals(tag.getProjects(),projectsReturned);
     }
 
     @Test (expected = RuntimeException.class)

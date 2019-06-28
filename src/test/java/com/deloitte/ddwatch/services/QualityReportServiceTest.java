@@ -36,7 +36,7 @@ public class QualityReportServiceTest {
     }
 
     @Test
-    public void createSonarQubeReport() {
+    public void createSonarQubeReportWithDifferentCoverageAndDensity() {
         SonarQubeReport sonarQubeReport = new SonarQubeReport();
         sonarQubeReport.setOverallCoverage(2.5);
         sonarQubeReport.setDefectDensity(1D);
