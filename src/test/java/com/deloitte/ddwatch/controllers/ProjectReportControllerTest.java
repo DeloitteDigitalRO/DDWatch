@@ -47,6 +47,7 @@ public class ProjectReportControllerTest {
     @Test
     public void uploadMetricsReport() throws Exception {
         objectMapper.registerModule(new JavaTimeModule());
+
         // Create test project
         Project project = projectService.create(Project.builder()
                 .name("test_project")
