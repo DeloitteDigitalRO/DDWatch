@@ -61,6 +61,20 @@ public enum Status {
                 .orElse(UNDEFINED);
     }
 
+    public static String getFormatedString(Status status){
+        switch (status){
+            case AMBER:
+                return "MEDIUM RISK";
+            case RED:
+                return "HIGH RISK";
+            case GREEN:
+                return "LOW RISK";
+            default:
+                return "";
+
+        }
+    }
+
 
     @Override
     public String toString() {
