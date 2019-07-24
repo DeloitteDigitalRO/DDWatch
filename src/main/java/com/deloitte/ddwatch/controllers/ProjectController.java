@@ -46,6 +46,14 @@ public class ProjectController {
         return new ResponseEntity<>(project.getId(), HttpStatus.CREATED);
     }
 
+    @PostMapping("/edit/{id}")
+    public ResponseEntity<ProjectDTO> updateProjectById(@PathVariable @NotNull Long id,
+                                                        @RequestBody ProjectDTO projectDTO) {
+        Project updatedProject = projectService.updateProject(id, projectDTO);
+        ProjectDTO updatedProjectDTO = modelMapper.map(updatedProject, ProjectDTO.class);
+        return new ResponseEntity<>(updatedProjectDTO, HttpStatus.OK);
+    }
+
     @GetMapping
     public ResponseEntity<List<ProjectDTO>> getAll() {
         List<Project> projects = projectService.findAll();

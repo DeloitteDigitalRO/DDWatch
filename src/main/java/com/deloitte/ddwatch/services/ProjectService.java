@@ -1,5 +1,6 @@
 package com.deloitte.ddwatch.services;
 
+import com.deloitte.ddwatch.dtos.ProjectDTO;
 import com.deloitte.ddwatch.model.*;
 import com.deloitte.ddwatch.repositories.ProjectRepository;
 import org.slf4j.Logger;
@@ -65,6 +66,21 @@ public class ProjectService {
 
     public List<Project> findAll() {
         return projectRepository.findAll();
+    }
+
+    public Project updateProject(Long id, ProjectDTO projectDTO){
+        Project updateProject = projectRepository.getOne(id);
+        if (projectDTO.getName() != null) {
+            logger.info(String.format("Name was updated from: %s to %s for project with id:%d", updateProject.getName(), projectDTO.getName(), id));
+            updateProject.setName(projectDTO.getName());
+        }
+
+        if(projectDTO.getDescription() != null){
+            logger.info(String.format("Description was updated from: %s to %s for project with id:%d", updateProject.getDescription(), projectDTO.getDescription(), id));
+            updateProject.setDescription(projectDTO.getDescription());
+        }
+
+        return projectRepository.save(updateProject);
     }
 
     @Transactional
